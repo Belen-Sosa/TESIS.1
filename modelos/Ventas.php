@@ -371,8 +371,8 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
         */
         $total= $subtotal;
        //IMPORTANTE: hay que sacar la consulta INSERT INTO VENTAS fuera del foreach sino se repetiria el registro en la tabla ventas
-
-     
+       
+       
 
           $sql2="insert into ventas 
           values(null,now(),?,?,?,?,?,?,?,?,?,?);";
@@ -393,7 +393,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           $sql2->bindValue(10,$id_cliente);
           $sql2->execute();
 
-          
+         
           
 
      }
@@ -750,7 +750,22 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
 
    }
+   public function get_ventas_cc_por_cliente($id_cliente){
 
+    $conectar= parent::conexion();
+
+
+     $sql="select * from ventas where id_cliente=? and tipo_pago=´CUENTA CORRIENTE´";
+
+     $sql=$conectar->prepare($sql);
+
+     $sql->bindValue(1, $numero_venta);
+     $sql->execute();
+
+     return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+
+
+}
    public function get_venta_por_num_venta($numero_venta){
 
     $conectar= parent::conexion();

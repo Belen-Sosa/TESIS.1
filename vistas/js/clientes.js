@@ -219,7 +219,7 @@ function guardaryeditar(e)
 		          mostrarform(false);
 		          tabla.ajax.reload();*/
 
-		         alert(datos);
+		         
                  
                  /*imprimir consulta en la consola debes hacer un print_r($_POST) al final del metodo 
                     y si se muestran los valores es que esta bien, y se puede imprimir la consulta desde el metodo

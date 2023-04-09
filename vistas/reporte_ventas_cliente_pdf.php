@@ -15,7 +15,7 @@ $vent = new Ventas();
 $informacion_empresa=new Empresa();
 
 
-$datos=$clientes->get_cliente_por_cedula($_POST["cedula"]);
+$datos=$clientes->get_cliente_por_dni($_POST["dni"]);
 $venta=$vent->get_venta_por_fecha($_POST["cedula"],$_POST["datepicker"],$_POST["datepicker2"]);
 
 $total_productos=$vent->get_cant_productos_por_fecha($_POST["cedula"],$_POST["datepicker"],$_POST["datepicker2"]);

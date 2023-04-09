@@ -640,11 +640,15 @@
 	    $venta = new Ventas();
 
 	    $venta->agrega_detalle_venta();
-
+        
+	
 
 
      break;
+	 
 
+
+  
 
      case "eliminar_producto":
 

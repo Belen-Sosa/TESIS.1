@@ -61,11 +61,11 @@
 
    	   	
 
-              $sql="select c.id_cliente,c.nombre_cliente,c.apellido_cliente,cc.saldo from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente";
+              $sql="select c.id_cliente,c.nombre_cliente,c.apellido_cliente,c.dni_cliente,c.direccion_cliente,c.telefono_cliente,cc.saldo from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente";
 
    	   	  $sql=$conectar->prepare($sql);
    	   	  $sql->execute();
-
+           
    	   	  return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
    	   }
 
@@ -95,21 +95,14 @@
         }
          //método para crear detalle de cuenta corriente
 
-         public function registrar_detalle_cc($id_venta,$id_cc,$total){
-
-              $numero_venta = $_POST["numero_venta"];
-              $dni_cliente = $_POST["dni"];
-              $tipo_pago = $_POST["tipo_pago"];
-              $id_usuario = $_POST["id_usuario"];
-              $id_cliente = $_POST["id_cliente"];
-        
+         public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente){
 
 
             $conectar= parent::conexion();
             parent::set_names();
  
             $sql="insert into detalle_cuentas_corrientes
-            values(null,?,?,now(),?,?,?);";
+            values(null,?,?,now(),?,?,?)";
  
            
              $sql=$conectar->prepare($sql);
@@ -121,23 +114,59 @@
              $sql->bindValue(5, $id_usuario);
              $sql->execute();
        
+            
+
+
+             $sql= "select saldo from cuentas_corrientes where id_cuentas_corrientes=?";
+             $sql=$conectar->prepare($sql);
+             $sql->bindValue(1, $id_cc);
+             $sql->execute();
+             $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+           
+
+             foreach($resultado as $row)
+             {
+                $saldo_actual= $row["saldo"];
+             }         
+             require_once("consolelog.php");
+             echo Console::log('un_nombre', $saldo_actual);
+
+
+
+             $saldo_final= $saldo_actual+$total;
+
+             $sql2 = "update cuentas_corrientes set 
+                     
+              saldo=?
+              where 
+              id_cuentas_corrientes=?
+              ";
+
+
+              $sql2 = $conectar->prepare($sql2);
+              $sql2->bindValue(1,$saldo_final);
+              $sql2->bindValue(2,$id_cc);
+              $sql2->execute(); 
+
+            
+
        
           
          }
 
 
          //método para mostrar los datos de un registro a modificar
-        public function get_cc_por_cliente($dni_cliente){
+        public function get_cc_por_cliente($id_cliente){
 
             
             $conectar= parent::conexion();
             parent::set_names();
 
-            $sql="select * from cuentas_corrientes where dni_cliente=?";
+            $sql="select * from cuentas_corrientes where id_cliente=?";
 
             $sql=$conectar->prepare($sql);
 
-            $sql->bindValue(1, $dni_cliente);
+            $sql->bindValue(1, $id_cliente);
             $sql->execute();
             return $resultado=$sql->fetchAll();
         }

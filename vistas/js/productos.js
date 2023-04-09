@@ -1207,7 +1207,7 @@ obj.value es el valor del campo de texto*/
 
   	function  eliminarProd(event, idx){
   		event.preventDefault();
-  		console.log('ELIMINAR Eyter');
+
   		detalles[idx].estado = 0;
 			 
 		   /*con el splice se elimina el registro del array detalles*/
@@ -1269,36 +1269,68 @@ obj.value es el valor del campo de texto*/
       
 			
 		success:function(data){
+			
 
-
-			//IMPORTANTE: esta se descomenta cuando imprimo el console.log
-			/*if (typeof data == "string"){
-			      data = $.parseJSON(data);
-			}*/
-			//console.log(data);
-             
-			//alert(data);
-
-            //IMPORTANTE:limpia los campos despues de enviarse
-            //cuando se imprime el alert(data) estas variables deben comentarse
-			var dni = $("#dni").val("");
-		    var nombre = $("#nombre").val("");
-            var apellido = $("#apellido").val("");
-		    var direccion = $("#direccion").val("");
-		   
+			if(tipo_pago=="CUENTA CORRIENTE"){
+				
             
-            detalles = [];
-            $('#listProdVentas').html('');
-            
+			
+					$.ajax({
+						url:"../ajax/cuenta_corriente.php?op=registrar_detalle_cc",
+						method:"POST",
+						data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente},
+						cache: false,
+						dataType:"html",
+						error:function(x,y,z){
+							console.log(x);
+							console.log(y);
+							console.log(z);
+						},  
+				
+				
+						
+					success:function(data){
+						
+							
+			
+				
+						//IMPORTANTE: esta se descomenta cuando imprimo el console.log
+						/*if (typeof data == "string"){
+							data = $.parseJSON(data);
+						}*/
+						console.log(data);
+						
+						//alert(data);
+			
+						//IMPORTANTE:limpia los campos despues de enviarse
+						//cuando se imprime el alert(data) estas variables deben comentarse
+						var dni = $("#dni").val("");
+						var nombre = $("#nombre").val("");
+						var apellido = $("#apellido").val("");
+						var direccion = $("#direccion").val("");
+					
+						
+						detalles = [];
+						$('#listProdVentas').html('');
+						
+						//muestra un mensaje de exito
+						setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
+					
+					
+				
+					}	}); 
+			}
               //muestra un mensaje de exito
-          setTimeout ("bootbox.alert('Se ha registrado la venta con éxito');", 100); 
+            setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
           
-          //refresca la pagina, se llama a la funtion explode
-          setTimeout ("explode();", 2000); 
-         	
+          
+       
 		}
 
 	});	
+
+
+
 	
 
 	 //cierre del condicional de validacion de los campos del cliente

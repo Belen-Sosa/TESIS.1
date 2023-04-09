@@ -266,24 +266,6 @@
 
 
 
-         <?php if($_SESSION["clientes"]==1)
-          {
-
-            echo '
-
-             <li class="">
-              <a href="clientes.php">
-                <i class="fa fa-users"></i> <span>Clientes</span>
-                <span class="pull-right-container badge bg-blue">
-                  <i class="fa fa-bell pull-right">'.$cliente->get_filas_cliente().'</i>
-                </span>
-              </a>
-           
-            </li>';
-
-            }
-
-         ?>
 
 <?php if($_SESSION["clientes"]==1)
           {
@@ -302,7 +284,7 @@
            
             <li><a href="clientes.php"><i class="fa fa-circle-o"></i>Listado de Clientes</a></li>
             
-            <li><a href="reporte_ventas_mensual.php"><i class="fa fa-circle-o"></i> Cuentas Corrientes</a></li>
+            <li><a href="cuentas_corrientes.php"><i class="fa fa-circle-o"></i> Cuentas Corrientes</a></li>
           </ul>
          
         </li>';

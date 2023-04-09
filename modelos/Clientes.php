@@ -28,6 +28,7 @@
        //método para seleccionar registros
 
       public function get_clientes(){
+       
 
             $conectar=parent::conexion();
             parent::set_names();
