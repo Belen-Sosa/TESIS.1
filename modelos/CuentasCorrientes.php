@@ -175,25 +175,8 @@
      
 
 
-         //este metodo es para validar el id del cliente(luego llamamos el metodo de editar_estado()) 
-        //el id_cliente se envia por ajax cuando se editar el boton cambiar estado y que se ejecuta el evento onclick y llama la funcion de javascript
-       /* public function get_cliente_por_id($id_cliente){
-
-          $conectar= parent::conexion();
-
-          //$output = array();
-
-          $sql="select * from clientes where id_cliente=?";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $id_cliente);
-                $sql->execute();
-
-                return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-
-
-        } */
+         
+       
 
          //método para editar saldo de cc
        
@@ -219,6 +202,22 @@
          $sql->execute();
 
         }
+        public function get_detalle_ventas_cc_cliente($id_cliente){
+
+         $conectar=parent::conexion();
+
+         $sql= "select * from detalle_cuentas_corrientes where id_cliente=?";
+
+         $sql=$conectar->prepare($sql);
+
+     
+         $sql->bindValue(1, $id_cliente);
+         $sql->execute();
+
+         //print_r($email); exit();
+
+         return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+      }
 
 
 
@@ -279,27 +278,10 @@
         	 $sql->execute();
         }
 */
-         //método si el cliente existe en la base de datos
-        //valida si existe la dni, cliente , si existe entonces se hace el registro del cliente
-        /*public function get_datos_cliente($dni,$cliente){
-
-           $conectar=parent::conexion();
-
-           $sql= "select * from clientes where dni_cliente=? or nombre_cliente=? ";
-
-	        $sql=$conectar->prepare($sql);
-
-	        $sql->bindValue(1, $dni);
-	        $sql->bindValue(2, $cliente);
-	        $sql->execute();
-
-           //print_r($email); exit();
-
-           return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-        }
-
         
-         public function eliminar_cliente($id_cliente){
+       
+        
+       /*     public function eliminar_cliente($id_cliente){
 
                 $conectar=parent::conexion();
 
@@ -314,7 +296,7 @@
         }
 
 */
-  /*       public function get_cliente_por_id_usuario($id_usuario){
+     /*    public function get_cliente_por_id_usuario($id_usuario){
 
            $conectar= parent::conexion();
 

@@ -184,7 +184,7 @@
 					$sub_array[] = $row["direccion_cliente"];
 					$sub_array[] = $row["telefono_cliente"];
 					$sub_array[] = $row["saldo"];
-					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["id_cliente"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
+					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["id_cliente"].'"  data-toggle="modal" data-target="#detalle_venta_cc"><i class="fa fa-eye"></i></button>';
                  
 
 				   $data[] = $sub_array;
@@ -207,7 +207,12 @@
 
 
 
+		case "ver_detalle_ventas_cc_cliente":
 
+			$datos= $cuentaCorriente->get_detalle_ventas_cc_cliente($_POST["id_cliente"]);	
+   
+   
+		  break;
 
 
 		

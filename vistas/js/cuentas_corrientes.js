@@ -90,6 +90,29 @@ function listar()
 			   }//cerrando language
 	       
 	}).DataTable();
+     
+	//VER DETALLE COMPRA
+    $(document).on('click', '.detalle', function(){
+        //toma el valor del id
+       var id_cliente = $(this).attr("id");
+
+       $.ajax({
+           url:"../ajax/compras.php?op=ver_detalle_ventas_cc_cliente",
+           method:"POST",
+           data:{id_cliente:id_cliente},
+           cache:false,
+           //dataType:"json",
+           success:function(data)
+           {
+               
+               $("#detalles").html(data);
+                
+                //puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+               //alert(data);
+               
+           }
+       })
+   });
 }
 
 
