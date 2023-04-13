@@ -128,9 +128,7 @@
              {
                 $saldo_actual= $row["saldo"];
              }         
-             require_once("consolelog.php");
-             echo Console::log('un_nombre', $saldo_actual);
-
+        
 
 
              $saldo_final= $saldo_actual+$total;
@@ -155,14 +153,14 @@
          }
 
 
-         //método para mostrar los datos de un registro a modificar
+         //método para mostrar los datos en detalles cuenta corriente por cliente
         public function get_cc_por_cliente($id_cliente){
 
             
             $conectar= parent::conexion();
             parent::set_names();
 
-            $sql="select * from cuentas_corrientes where id_cliente=?";
+            $sql="select dc.id_ventas,v.numero_venta,v.fecha_venta,v.total from detalle_cuentas_corrientes as dc,ventas as v where v.id_cliente=? and v.id_ventas=dc.id_ventas";
 
             $sql=$conectar->prepare($sql);
 
@@ -170,8 +168,23 @@
             $sql->execute();
             return $resultado=$sql->fetchAll();
         }
+     
 
-      
+        //metodo para tomar la id_cc de una cuenta corriente 
+        public function get_idcc_por_cliente($id_cliente){
+
+            
+         $conectar= parent::conexion();
+         parent::set_names();
+
+         $sql="select * from cuentas_corrientes where id_cliente=?";
+         $sql=$conectar->prepare($sql);
+
+         $sql->bindValue(1, $id_cliente);
+         $sql->execute();
+         return $resultado=$sql->fetchAll();
+     }
+
      
 
 

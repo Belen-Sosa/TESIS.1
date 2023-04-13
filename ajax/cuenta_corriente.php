@@ -31,15 +31,17 @@
    $estado=isset($_POST["estado"]);
 
 
-      switch($_GET["op"]){
+    switch($_GET["op"]){
 
          
 	 case "registrar_detalle_cc";
 	
 	  
         //se llama al modelo Ventas.php
-		
-		$datos=$cuentaCorriente->get_cc_por_cliente($_POST["id_cliente"]);
+
+		require_once("../modelos/consolelog.php");
+
+		$datos=$cuentaCorriente->get_idcc_por_cliente($_POST["id_cliente"]);
 		if(is_array($datos)==true and count($datos)>0){
 			foreach($datos as $row)
 			{
@@ -50,7 +52,8 @@
 
 
 		}
-
+		echo Console::log('un_nombre',"id cc en cuenta corriente ajax");
+		echo Console::log('un_nombre',$id_cc);
 		require_once('../modelos/Ventas.php');
 
 	    $venta = new Ventas();
@@ -95,59 +98,7 @@
 
      break;
 	 
-	 case "ver_detalle_cuenta_corriente":
-		require_once("../modelos/Ventas.php");
-		$ventas= new Ventas();
-
-		$datos= $ventas-> get_ventas_cc_por_cliente($id_cliente);	
 	 
-				 // si existe el proveedor entonces recorre el array
-			   if(is_array($datos)==true and count($datos)>0){
-	 
-					 foreach($datos as $row)
-					 {
-						 
-						 $output["proveedor"] = $row["proveedor"];
-						 $output["numero_compra"] = $row["numero_compra"];
-						 $output["cuit_proveedor"] = $row["cuit_proveedor"];
-						 $output["direccion"] = $row["direccion"];
-						 $output["fecha_compra"] = date("d-m-Y", strtotime($row["fecha_compra"]));
-										 
-					 }
-			 
-				   
-					   echo json_encode($output);
-	 
-	 
-				 } else {
-					  
-					  //si no existe el registro entonces no recorre el array
-					 $errors[]="no existe";
-	 
-				 }
-	 
-	 
-				  //inicio de mensaje de error
-	 
-					 if (isset($errors)){
-				 
-						 ?>
-						 <div class="alert alert-danger" role="alert">
-							 <button type="button" class="close" data-dismiss="alert">&times;</button>
-								 <strong>Error!</strong> 
-								 <?php
-									 foreach ($errors as $error) {
-											 echo $error;
-										 }
-									 ?>
-						 </div>
-						 <?php
-					   }
-	 
-				 //fin de mensaje de error	    
-	 
-	 
-		   break;
 
   
      case "buscar_cuentas_corrientes":
@@ -184,7 +135,65 @@
 					$sub_array[] = $row["direccion_cliente"];
 					$sub_array[] = $row["telefono_cliente"];
 					$sub_array[] = $row["saldo"];
-					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["id_cliente"].'"  data-toggle="modal" data-target="#detalle_venta_cc"><i class="fa fa-eye"></i></button>';
+					$sub_array[] = '<a href="consultar_cuenta_corriente_cliente.php?id_cliente='.$row["id_cliente"].'" class="btn btn-warning detalle" ><i class="fa fa-eye"></i> </a>';
+
+					
+
+				   $data[] = $sub_array;
+			
+
+				   
+	
+			   }
+   
+		 $results = array(
+				"sEcho"=>1, //Información para el datatables
+				"iTotalRecords"=>count($data), //enviamos el total registros al datatable
+				"iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+				"aaData"=>$data);
+			echo json_encode($results);
+          
+	
+		break;
+
+
+
+
+		case "ver_detalle_ventas_cc_cliente":
+		$id_cliente=$_GET["id_cliente"];
+		
+
+	
+		$datos=$cuentaCorriente->get_cc_por_cliente($id_cliente);
+   
+		//Vamos a declarar un array
+		 $data= Array();
+
+		foreach($datos as $row)
+			   {
+				   $sub_array = array();
+   
+				  /* $est = '';
+				   
+					$atrib = "btn btn-danger btn-md estado";
+				   if($row["estado"] == 1){
+					   $est = 'PAGADO';
+					   $atrib = "btn btn-success btn-md estado";
+				   }
+				   else{
+					   if($row["estado"] == 0){
+						   $est = 'ANULADO';
+						   
+					   }	
+				   }
+                   */
+				   
+   
+
+					$sub_array[] = $row["fecha_venta"];
+					$sub_array[] = $row["numero_venta"];
+					$sub_array[] = $row["total"];			
+					$sub_array[] = '<button class="btn btn-warning detalle" value="'.$row["id_ventas"].'"  data-toggle="modal" data-target="#detalle_venta_cc"><i class="fa fa-eye"></i></button>';
                  
 
 				   $data[] = $sub_array;
@@ -201,15 +210,6 @@
 				"aaData"=>$data);
 			echo json_encode($results);
    
-	
-		break;
-
-
-
-
-		case "ver_detalle_ventas_cc_cliente":
-
-			$datos= $cuentaCorriente->get_detalle_ventas_cc_cliente($_POST["id_cliente"]);	
    
    
 		  break;

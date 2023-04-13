@@ -22,6 +22,8 @@
      ?>
 
 
+       <!--VISTA MODAL PARA VER DETALLE DE CUENTAS CORRIENTES EN VISTA MODAL-->
+  
   <!--Contenido-->
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">        
@@ -29,9 +31,8 @@
         <section class="content">
              
              <div id="resultados_ajax"></div>
-
-             <h2>Listado Cuentas Corrientes</h2>
-
+              <h2>Listado Cuentas Corrientes</h2>
+              <a href="consultar_compras.php" class="btn btn-primary btn-lg" ><i class="fa fa-search" aria-hidden="true"></i> </a>
             <div class="row">
               <div class="col-md-12">
                   <div class="box">
@@ -58,6 +59,7 @@
                                 <th>Telefono</th>
                                 <th>Saldo</th>
                                 <th>Ver mas</th>
+                                
                         
 
 
