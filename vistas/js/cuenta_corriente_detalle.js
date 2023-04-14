@@ -88,4 +88,57 @@ function listar_detalle_cc()
 	
 }
 
+
+	  //VER DETALLE CLIENTE-VENTA
+	  $(document).on('click', '.detalle', function(){
+		//toma el valor del id
+	   var numero_venta = $(this).attr("id");
+
+	   $.ajax({
+		   url:"../ajax/ventas.php?op=ver_detalle_cliente_venta",
+		   method:"POST",
+		   data:{numero_venta:numero_venta},
+		   cache:false,
+		   dataType:"json",
+		   success:function(data)
+		   {
+			   
+			   $("#cliente").html(data.cliente);
+			   $("#numero_venta").html(data.numero_venta);
+			   $("#dni_cliente").html(data.dni_cliente);
+			   $("#direccion").html(data.direccion);
+			   $("#fecha_venta").html(data.fecha_venta);
+				
+				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+			   //alert(data);
+			   
+		   }
+	   })
+   });
+
+	 //VER DETALLE VENTA
+	$(document).on('click', '.detalle', function(){
+		//toma el valor del id
+	   var numero_venta = $(this).attr("id");
+
+	   $.ajax({
+		   url:"../ajax/ventas.php?op=ver_detalle_venta",
+		   method:"POST",
+		   data:{numero_venta:numero_venta},
+		   cache:false,
+		   //dataType:"json",
+		   success:function(data)
+		   {
+			   
+			   $("#detalles").html(data);
+				
+				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+			   //alert(data);
+			   
+		   }
+	   })
+   });
+	
+
+
 listar_detalle_cc();

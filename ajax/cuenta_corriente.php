@@ -193,7 +193,7 @@
 					$sub_array[] = $row["fecha_venta"];
 					$sub_array[] = $row["numero_venta"];
 					$sub_array[] = $row["total"];			
-					$sub_array[] = '<button class="btn btn-warning detalle" value="'.$row["id_ventas"].'"  data-toggle="modal" data-target="#detalle_venta_cc"><i class="fa fa-eye"></i></button>';
+					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                  
 
 				   $data[] = $sub_array;

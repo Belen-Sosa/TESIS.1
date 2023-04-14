@@ -36,8 +36,8 @@
     
 
 
-       <!--VISTA MODAL PARA VER DETALLE COMPRA EN VISTA MODAL-->
-     <?php require_once("modal/detalle_compra_modal.php");?>
+       <!--VISTA MODAL PARA VER DETALLE VENTA EN VISTA MODAL-->
+       <?php require_once("modal/detalle_venta_modal.php");?>
     
    
       <div class="row">

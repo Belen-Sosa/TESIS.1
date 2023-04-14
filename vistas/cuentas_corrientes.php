@@ -32,7 +32,7 @@
              
              <div id="resultados_ajax"></div>
               <h2>Listado Cuentas Corrientes</h2>
-              <a href="consultar_compras.php" class="btn btn-primary btn-lg" ><i class="fa fa-search" aria-hidden="true"></i> </a>
+
             <div class="row">
               <div class="col-md-12">
                   <div class="box">
