@@ -68,7 +68,23 @@
            
    	   	  return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
    	   }
+         
+       #metodo para saber el total de cc por cliente
+        public function ver_total_cc_cliente($id_cliente){
 
+          $conectar=parent::conexion();
+          parent::set_names();
+
+        
+
+            $sql="select saldo from cuentas_corrientes  where id_cliente=?";
+
+          $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $id_cliente);
+          $sql->execute();
+         
+          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+      }
 
    	     //método para crear cuenta corriente
 

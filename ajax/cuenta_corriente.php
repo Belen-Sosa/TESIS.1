@@ -214,7 +214,16 @@
    
 		  break;
 
+		  #ver el total que adeuda la cc de un cliente
+		  case "ver_total_cc_cliente":
 
+			$datos= $cuentaCorriente->ver_total_cc_cliente($_POST["id_cliente"]);	
+            
+			foreach($datos as $row)
+			{
+				$dato= $row["saldo"];
+			}
+		  break;
 		
 
       case "activarydesactivar":

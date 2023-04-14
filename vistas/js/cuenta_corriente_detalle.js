@@ -1,4 +1,6 @@
 var tabla;
+var id_cliente= getParameterByName('id_cliente');
+console.log("id:"+id_cliente);
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -7,8 +9,7 @@ function getParameterByName(name) {
 }
 function listar_detalle_cc()
 {  
-	 var id_cliente= getParameterByName('id_cliente');
-     console.log("id:"+id_cliente);
+	 
 	tabla=$('#cuenta_corriente_data').dataTable(
 	{
 		"aProcessing": true,//Activamos el procesamiento del datatables
@@ -108,7 +109,7 @@ function listar_detalle_cc()
 			   $("#dni_cliente").html(data.dni_cliente);
 			   $("#direccion").html(data.direccion);
 			   $("#fecha_venta").html(data.fecha_venta);
-				
+			
 				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
 			   //alert(data);
 			   
@@ -138,7 +139,25 @@ function listar_detalle_cc()
 		   }
 	   })
    });
-	
-
+   function listar_detalle_cc(){
+	$.ajax({
+		url:"../ajax/cuenta_corriente.php?op=ver_total_cc_cliente",
+		method:"POST",
+		data:{id_cliente:id_cliente},
+		cache:false,
+		//dataType:"json",
+		success:function(dato)
+		{
+			
+			$('#total_compra').html(dato);
+			 
+			 //puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+			//alert(data);
+			
+		}
+	})
+ 
+   }
+  
 
 listar_detalle_cc();
