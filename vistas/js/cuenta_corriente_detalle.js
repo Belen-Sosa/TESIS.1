@@ -127,7 +127,7 @@ function listar_detalle_cc()
 		   method:"POST",
 		   data:{numero_venta:numero_venta},
 		   cache:false,
-		   //dataType:"json",
+		   dataType:"json",
 		   success:function(data)
 		   {
 			   
@@ -139,25 +139,92 @@ function listar_detalle_cc()
 		   }
 	   })
    });
-   function listar_detalle_cc(){
+
+   function mostrar_total(){
+
 	$.ajax({
 		url:"../ajax/cuenta_corriente.php?op=ver_total_cc_cliente",
 		method:"POST",
 		data:{id_cliente:id_cliente},
 		cache:false,
-		//dataType:"json",
+		
 		success:function(dato)
-		{
-			
-			$('#total_compra').html(dato);
+		{ 
+		
+	      
+			$('#total_cc').html("$"+dato);
+			$('#total_venta_cc').html("$"+dato);
 			 
-			 //puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-			//alert(data);
-			
+			 
 		}
 	})
  
    }
   
+   //CAMBIAR ESTADO DE LA VENTA
+
+   
+   function cambiarEstado(id_detalle_cc,id_cuenta_corriente,est){
+    
+
+    console.log(id_detalle_cc,id_cuenta_corriente,est);
+    	
+
+	bootbox.confirm("¿Estas seguro que deseas cambiar el estado de esta venta?", function(result){
+		if(result)
+		{
+
+
+			$.ajax({
+				url:"../ajax/cuenta_corriente.php?op=cambiar_estado_venta_dc",
+				 method:"POST",
+				//data:dataString,
+				//toma el valor del id y del estado
+				data:{id_detalle_cc:id_detalle_cc,id_cuenta_corriente:id_cuenta_corriente,est:est},
+				cache: false,
+				
+				success:function(data){
+					
+                 $('#cuenta_corriente_data').DataTable().ajax.reload();               
+				 mostrar_total();
+				}
+
+			});
+			
+			$.ajax({
+				url:"../ajax/ventas.php?op=cambiar_estado_venta_cc",
+				 method:"POST",
+				//data:dataString,
+				//toma el valor del id y del estado
+				data:{id_detalle_cc:id_detalle_cc,est:est},
+				cache: false,
+				
+				success:function(data){
+				
+	              //alert(data);
+                 $('#ventas_data').DataTable().ajax.reload();
+
+                  //refresca el datatable de ventas por fecha
+                 $('#ventas_fecha_data').DataTable().ajax.reload();
+
+
+                 //refresca el datatable de ventas por fecha - mes
+                 $('#ventas_fecha_mes_data').DataTable().ajax.reload();
+                 
+
+				}
+
+			});
+			
+
+		   } 
+
+		
+		});//bootbox
+
+
+	  }
+
 
 listar_detalle_cc();
+mostrar_total();

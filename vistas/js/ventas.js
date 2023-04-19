@@ -169,7 +169,7 @@ function listar()
 				cache: false,
 				
 				success:function(data){
-	              
+	              console.log(data);
 	              //alert(data);
                  $('#ventas_data').DataTable().ajax.reload();
 

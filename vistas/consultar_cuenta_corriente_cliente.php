@@ -18,7 +18,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     
-   
+  <?php require_once("modal/pago_cuenta_corriente_modal.php");?>
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -32,20 +32,7 @@
     <section class="content">
     
    <div id="resultados_ajax"></div>
-   <div class="panel panel-default">
-        
-        <div class="panel-body">
-
-         <div class="btn-group text-center">
-          <a href="compras.php" id="add_button" class="btn btn-primary btn-lg" ><i class="fa fa-plus" aria-hidden="true"></i> Nueva Compra</a>
-         </div>
-         <div class="btn-group text-center">
-          <a href="compras.php" id="add_button" class="btn btn-primary btn-lg" ><i class="fa fa-plus" aria-hidden="true"></i> Nueva Compra</a>
-         </div>
-
-
-       </div>
-      </div>
+  
 
     
 
@@ -73,7 +60,10 @@
                   <th>Fecha Venta</th>
                   <th>Número Venta</th>
                   <th>Total</th>
+                  <th>Estado</th>
                   <th>Ver Detalle</th>
+                  <th>Accion</th>
+                  <th>Fecha Pago</th>
              
                   
                  
@@ -102,7 +92,7 @@
                         <td></td>
                       
                         <!--IMPORTANTE: hay que poner el name=total en el h4 para que lo pueda enviar, NO se envia si lo pones en el input hidden-->
-                        <td class="col-lg-4"><h4 id="total" name="total"> 0.00</h4><input type="hidden" name="total_compra" id="total_compra"></td>
+                        <td class="col-lg-4"><h4 id="total_cc" name="total_cc"> 0.00</h4><input type="hidden" name="total_venta_cc" id="total_venta_cc"></td>
                                
                      
                       </tr>

@@ -7,6 +7,9 @@
 
       //llamo al modelo Ventas
      require_once("../modelos/Ventas.php");
+
+
+	 $venta = new Ventas();
 	 require_once("../modelos/CuentasCorrientes.php");
   
      $clientes = new Cliente();
@@ -39,7 +42,6 @@
 	  
         //se llama al modelo Ventas.php
 
-		require_once("../modelos/consolelog.php");
 
 		$datos=$cuentaCorriente->get_idcc_por_cliente($_POST["id_cliente"]);
 		if(is_array($datos)==true and count($datos)>0){
@@ -52,11 +54,8 @@
 
 
 		}
-		echo Console::log('un_nombre',"id cc en cuenta corriente ajax");
-		echo Console::log('un_nombre',$id_cc);
-		require_once('../modelos/Ventas.php');
 
-	    $venta = new Ventas();
+		
 
 		$datos=$venta->get_venta_por_num_venta($_POST["numero_venta"]);
 		if(is_array($datos)==true and count($datos)>0){
@@ -71,7 +70,7 @@
 		}
 
 
-	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"]);
+	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"],$_POST["estado"]);
 		
 		
 
@@ -173,34 +172,42 @@
 			   {
 				   $sub_array = array();
    
-				  /* $est = '';
+				 
 				   
-					$atrib = "btn btn-danger btn-md estado";
-				   if($row["estado"] == 1){
-					   $est = 'PAGADO';
-					   $atrib = "btn btn-success btn-md estado";
-				   }
-				   else{
-					   if($row["estado"] == 0){
-						   $est = 'ANULADO';
-						   
-					   }	
-				   }
-                   */
+					
+				  
 				   
    
 
 					$sub_array[] = $row["fecha_venta"];
 					$sub_array[] = $row["numero_venta"];
-					$sub_array[] = $row["total"];			
+					
+					$sub_array[] = $row["total"];
+					$sub_array[] = $row["estado"];	
+
 					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                  
-
-				   $data[] = $sub_array;
-			
-
+				   $est = '';
 				   
-	
+				   $atrib = "btn btn-danger btn-md estado";
+				   if($row["estado"] == "adeuda"){
+					$est = 'PAGAR';
+					  
+				   }
+				   else{
+					   if($row["estado"] == "pagado"){
+						   $est = 'ANULAR PAGO';
+						   $atrib = "btn btn-success btn-md estado";
+						   
+					   }	
+				   }
+                   
+					
+					
+			   
+					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["estado"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
+					$sub_array[] = $row["fecha_pago"];
+					$data[] = $sub_array;
 			   }
    
 		 $results = array(
@@ -216,17 +223,16 @@
 
 		  #ver el total que adeuda la cc de un cliente
 		  case "ver_total_cc_cliente":
-
+		
+  
 			$datos= $cuentaCorriente->ver_total_cc_cliente($_POST["id_cliente"]);	
-            
-			foreach($datos as $row)
-			{
-				$dato= $row["saldo"];
-			}
+
+			
+			
 		  break;
 		
 
-      case "activarydesactivar":
+     /* case "activarydesactivar":
      
      //los parametros id_cliente y est vienen por via ajax
      $datos=$clientes->get_cliente_por_id($_POST["id_cliente"]);
@@ -239,15 +245,33 @@
 		     
 	        } 
 
-     break;
+     break;*/
 
     
 
 
 
 	 	
-	 }
+	 
   
+	 case "cambiar_estado_venta_dc":
+		
+		
+	   
+		$datos=$cuentaCorriente->get_detalle_cc_por_id($_POST["id_detalle_cc"]);
+
+		// si existe el id de la detalle cc entonces se edita el estado 
+		if(is_array($datos)==true and count($datos)>0){
+
+				//cambia el estado de la venta en cc
+				$cuentaCorriente->cambiar_estado($_POST["id_detalle_cc"],$_POST["id_cuenta_corriente"],$_POST["est"]);
+	            
+				
+
+		    
+		  } 
 
 
+      break;
+		}
    ?>

@@ -415,6 +415,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
    
    }
+   
 
      /*cambiar estado de la venta, solo se cambia si se quiere eliminar una venta y se revertería la cantidad de venta al stock*/
 
@@ -422,18 +423,41 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
      $conectar=parent::conexion();
      parent::set_names();
-           
+           //estado 1= pagado, 2=pendiente,0=cancelado
            //si estado es igual a 0 entonces lo cambia a 1
      $estado = 0;
      //el parametro est se envia por via ajax, viene del $est:est
      /*si el estado es ==0 cambiaria a PAGADO Y SE EJECUTARIA TODO LO QUE ESTA ABAJO*/
-   if($_POST["est"] == 0){
-       $estado = 1;
-     
-
-     //declaro $numero_venta, viene via ajax
-
      $numero_venta=$_POST["numero_venta"];
+     $id_ventas=$_POST["id_ventas"];
+     $est=$_POST["est"];
+
+
+     //si la venta es a cuenta corriente no puede cambiar a pagado desde la seccion de ventas, debe ir a cuentas corrientes.
+     $sql="select tipo_pago from ventas where id_ventas=? ";
+     $sql=$conectar->prepare($sql);
+     $sql->bindValue(1,$id_ventas);
+     $sql->execute();
+     $datos= $sql->fetch(PDO::FETCH_ASSOC);
+
+     foreach($datos as $row)
+     {
+        $tipo_pago= $row;
+     } 
+
+     require_once("consolelog.php");
+     echo Console::log('un_nombre',"numero venta");
+     echo Console::log('un_nombre', $numero_venta);
+     echo Console::log('un_nombre',"id_ventas");
+     echo Console::log('un_nombre', $id_ventas);
+    
+     if($_POST["est"] == 0 and $tipo_pago!="CUENTA CORRIENTE"){
+       $estado = 1;
+
+       
+    
+
+
 
 
      $sql="update ventas set 
@@ -449,7 +473,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            $sql=$conectar->prepare($sql);
 
            $sql->bindValue(1,$estado);
-           $sql->bindValue(2,$_POST["id_ventas"]);
+           $sql->bindValue(2,$id_ventas);
            $sql->execute();
 
            $resultado= $sql->fetch(PDO::FETCH_ASSOC);
@@ -544,17 +568,12 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          }//cierre del if del estado
 
-         else {
+         
 
              /*si el estado es igual a 0, entonces pasaria a ANULADO y reverteria de nuevo la cantidad de productos al stock*/
 
              if($_POST["est"] == 1){
        $estado = 0;
-
-     //declaro $numero_venta, viene via ajax
-
-     $numero_venta=$_POST["numero_venta"];
-
 
      $sql="update ventas set 
            
@@ -569,13 +588,13 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            $sql=$conectar->prepare($sql);
 
            $sql->bindValue(1,$estado);
-           $sql->bindValue(2,$_POST["id_ventas"]);
+           $sql->bindValue(2,$id_ventas);
            $sql->execute();
 
            $resultado= $sql->fetch(PDO::FETCH_ASSOC);
 
 
-     $sql_detalle= "update detalle_ventas set
+        $sql_detalle= "update detalle_ventas set
 
          estado=?
          where 
@@ -663,17 +682,259 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
              }//cierre del foreach
 
+     if($tipo_pago="CUENTA CORRIENTE"){
+      $sqlcc="update detalle_cuentas_corrientes set 
+          
+          estado=?,fecha_pago=null
+          where 
+          id_ventas=?";
+
+          // echo $sql; 
+
+          $sqlcc=$conectar->prepare($sqlcc);
+
+          $sqlcc->bindValue(1,"anulado");
+          $sqlcc->bindValue(2,$id_ventas);
+          $sqlcc->execute();
+     }
 
 
-        }//cierre del if del estado del else
+       
 
 
          }
 
+         if($est==2){
+          $estado=0;
+        
+         
+    
+          $sql="update ventas set 
+                
+                estado=?
+                where 
+                id_ventas=?";
+     
+                // echo $sql; 
+     
+                $sql=$conectar->prepare($sql);
+     
+                $sql->bindValue(1,$estado);
+                $sql->bindValue(2,$id_ventas);
+                $sql->execute();
+     
+     
+     
+     
+          $sql_detalle= "update detalle_ventas set
+     
+              estado=?
+              where 
+              numero_venta=?
+              ";
+     
+                $sql_detalle=$conectar->prepare($sql_detalle);
+     
+                $sql_detalle->bindValue(1,$estado);
+                $sql_detalle->bindValue(2,$numero_venta);
+                $sql_detalle->execute();
+     
+          $sqlcc="update detalle_cuentas_corrientes set 
+          
+          estado=?
+          where 
+          id_ventas=?";
+
+          // echo $sql; 
+
+          $sqlcc=$conectar->prepare($sqlcc);
+
+          $sqlcc->bindValue(1,"anulado");
+          $sqlcc->bindValue(2,$id_ventas);
+          $sqlcc->execute();
+     
+     
+     
+     
+     
+                /*una vez se cambie de estado a PAGADO entonces revertimos la cantidad de stock en productos*/
+     
+         }
+
+         if($est==0 and $tipo_pago="CUENTA CORRIENTE"){
+          $estado=2;
+        
+         
+    
+          $sql="update ventas set 
+                
+                estado=?
+                where 
+                id_ventas=?";
+     
+                // echo $sql; 
+     
+                $sql=$conectar->prepare($sql);
+     
+                $sql->bindValue(1,$estado);
+                $sql->bindValue(2,$id_ventas);
+                $sql->execute();
+     
+     
+     
+     
+          $sql_detalle= "update detalle_ventas set
+     
+              estado=?
+              where 
+              numero_venta=?
+              ";
+     
+                $sql_detalle=$conectar->prepare($sql_detalle);
+     
+                $sql_detalle->bindValue(1,$estado);
+                $sql_detalle->bindValue(2,$numero_venta);
+                $sql_detalle->execute();
+     
+             
+            $sqlcc="update detalle_cuentas_corrientes set 
+      
+            estado=?,fecha_pago=null
+            where 
+            id_ventas=?";
+  
+            // echo $sql; 
+  
+            $sqlcc=$conectar->prepare($sqlcc);
+  
+            $sqlcc->bindValue(1,"adeuda");
+            $sqlcc->bindValue(2,$id_ventas);
+            $sqlcc->execute();
+
+           
+      
+            
+     
+     
+             
+         }
+         
+        
+     
+     
+     
+         
+       
+       
 
    }//CIERRE DEL METODO
 
+   public function cambiar_estado_venta_cc($est,$id_ventas){
+   
+     $numero_venta=0;
 
+     //estado 1 = pagado ,2=pendiente
+    //tomando numero venta
+    $conectar=parent::conexion();
+    parent::set_names();
+    $sql_detalle= "select numero_venta from ventas where id_ventas=?";
+
+    $sql_detalle=$conectar->prepare($sql_detalle);
+    $sql_detalle->bindValue(1,$id_ventas);
+    $sql_detalle->execute();
+    $dato= $sql_detalle->fetch(PDO::FETCH_ASSOC);
+
+    foreach($dato as $row)
+    {
+      $numero_venta= $row;
+    }
+
+    if($est==2){
+      $estado=1;
+    
+     
+
+      $sql="update ventas set 
+            
+            estado=?
+            where 
+            id_ventas=?";
+ 
+            // echo $sql; 
+ 
+            $sql=$conectar->prepare($sql);
+ 
+            $sql->bindValue(1,$estado);
+            $sql->bindValue(2,$id_ventas);
+            $sql->execute();
+ 
+ 
+ 
+ 
+      $sql_detalle= "update detalle_ventas set
+ 
+          estado=?
+          where 
+          numero_venta=?
+          ";
+ 
+            $sql_detalle=$conectar->prepare($sql_detalle);
+ 
+            $sql_detalle->bindValue(1,$estado);
+            $sql_detalle->bindValue(2,$numero_venta);
+            $sql_detalle->execute();
+ 
+         
+ 
+ 
+ 
+            /*una vez se cambie de estado a PAGADO entonces revertimos la cantidad de stock en productos*/
+ 
+     }
+     if($est== 1){
+      $estado=2;
+     
+     
+
+      $sql="update ventas set 
+            
+            estado=?
+            where 
+            id_ventas=?
+           
+              ";
+ 
+            // echo $sql; 
+ 
+            $sql=$conectar->prepare($sql);
+ 
+            $sql->bindValue(1,$estado);
+            $sql->bindValue(2,$id_ventas);
+            $sql->execute();
+ 
+ 
+ 
+      $sql_detalle= "update detalle_ventas set
+ 
+          estado=?
+          where 
+          numero_venta=?
+          ";
+ 
+            $sql_detalle=$conectar->prepare($sql_detalle);
+ 
+            $sql_detalle->bindValue(1,$estado);
+            $sql_detalle->bindValue(2,$numero_venta);
+            $sql_detalle->execute();
+
+         
+ 
+ 
+            /*una vez se cambie de estado a PAGADO entonces revertimos la cantidad de stock en productos*/
+ 
+     }
+
+   }
 
    //BUSCA REGISTROS VENTAS-FECHA
 

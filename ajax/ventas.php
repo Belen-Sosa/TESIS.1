@@ -20,22 +20,26 @@
      //Vamos a declarar un array
  	 $data= Array();
 
-     	foreach($datos as $row)
-			{
+     	foreach($datos as $row){
+			
 				$sub_array = array();
 
 				$est = '';
 				//$atrib = 'activo';
 				 $atrib = "btn btn-danger btn-md estado";
+				 if($row["estado"] == 0){
+					$est = 'ANULADO';
+					//$atrib = '';
+				}
 				if($row["estado"] == 1){
 					$est = 'PAGADO';
 					$atrib = "btn btn-success btn-md estado";
 				}
-				else{
-					if($row["estado"] == 0){
-						$est = 'ANULADO';
-						//$atrib = '';
-					}	
+				
+					
+				if($row["estado"] == 2){
+					$est = 'PENDIENTE';
+					//$atrib = '';
 				}
 
 				
@@ -71,7 +75,7 @@
      case "ver_detalle_cliente_venta":
 
 
-   $datos= $ventas->get_detalle_cliente($_POST["numero_venta"]);	
+     $datos= $ventas->get_detalle_cliente($_POST["numero_venta"]);	
 
             // si existe el proveedor entonces recorre el array
 	      if(is_array($datos)==true and count($datos)>0){
@@ -225,6 +229,35 @@
 
 
      break;
+	 case "cambiar_estado_venta_cc":
+		 //llamo al modelo Venta
+		 require_once("../modelos/CuentasCorrientes.php");
+
+		 $CuentaCorriente = new CuentaCorriente();
+		
+		 
+	
+		if($_POST["est"]=="pagado"){
+			$estado_venta=1;
+			
+		}
+		if($_POST["est"]=="adeuda"){
+			$estado_venta=2;
+			
+		}
+		require_once("../modelos/consolelog.php");
+		$hola="id_detalle_cc en ventas php ajax";
+	   echo Console::log('un_nombre', $hola);
+	   echo Console::log('un_nombre', $_POST["id_detalle_cc"]);
+		$dato= $CuentaCorriente->get_id_ventas_por_id_detalle_cc($_POST["id_detalle_cc"]);
+				foreach($dato as $row)
+				{
+					$id_venta= $row["id_ventas"];
+				}
+		
+	    $ventas->cambiar_estado_venta_cc($estado_venta,$id_venta);
+
+   break;
 
       case "buscar_ventas_fecha":
           
@@ -233,23 +266,27 @@
      //Vamos a declarar un array
  	 $data= Array();
 
-    foreach($datos as $row)
-      {
+    foreach($datos as $row) {
         $sub_array = array();
 
         $est = '';
         
          $atrib = "btn btn-danger btn-md estado";
+		 if($row["estado"] == 0){
+            $est = 'ANULADO';
+           
+          
+        }
         if($row["estado"] == 1){
           $est = 'PAGADO';
           $atrib = "btn btn-success btn-md estado";
         }
-        else{
-          if($row["estado"] == 0){
-            $est = 'ANULADO';
-           
-          } 
-        }
+       
+          
+		if($row["estado"] == 2){
+			$est = 'PENDIENTE';
+			//$atrib = '';
+		}
 
         
          $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
@@ -263,7 +300,7 @@
 
         
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
+        $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
                 
         $data[] = $sub_array;
       }
@@ -301,12 +338,15 @@
 		          $est = 'PAGADO';
 		          $atrib = "btn btn-success btn-md estado";
 		        }
-		        else{
-		          if($row["estado"] == 0){
+		        
+		       if($row["estado"] == 0){
 		            $est = 'ANULADO';
 		           
 		          } 
-	        }
+				  if($row["estado"] == 2){
+					$est = 'PENDIENTE';
+					//$atrib = '';
+				}
 
         
        

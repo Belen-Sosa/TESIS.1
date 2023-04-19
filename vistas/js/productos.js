@@ -1273,12 +1273,12 @@ obj.value es el valor del campo de texto*/
 
 			if(tipo_pago=="CUENTA CORRIENTE"){
 				
-            
+
 			
 					$.ajax({
 						url:"../ajax/cuenta_corriente.php?op=registrar_detalle_cc",
 						method:"POST",
-						data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente},
+						data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente,"estado":"adeuda"},
 						cache: false,
 						dataType:"html",
 						error:function(x,y,z){
