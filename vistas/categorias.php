@@ -54,7 +54,7 @@
                                 <th width="8%">Categoría</th>
                                 <th width="5%">Estado</th>
                                 <th width="5%">Editar</th>
-                                <th width="5%">Eliminar</th>
+                              
 
 
 

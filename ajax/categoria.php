@@ -228,7 +228,6 @@
                   
                  $sub_array[] = '<button type="button" onClick="mostrar('.$row["id_categoria"].');"  id="'.$row["id_categoria"].'" class="btn btn-warning btn-md update"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
 
-                 $sub_array[] = '<button type="button" onClick="eliminar('.$row["id_categoria"].');"  id="'.$row["id_categoria"].'" class="btn btn-danger btn-md"><i class="glyphicon glyphicon-edit"></i> Eliminar</button>';
                 
         $data[] = $sub_array;
       }

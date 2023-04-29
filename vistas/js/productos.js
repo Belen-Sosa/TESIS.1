@@ -269,7 +269,7 @@ function guardaryeditar(e)
 
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
-				
+				location.reload();
                 limpiar();
 					
 		    }
@@ -1382,8 +1382,17 @@ obj.value es el valor del campo de texto*/
 
    }
 
+   //activar o desactivar campo stock en formulario de carniceria 
+  
 
-
+   function myFunction() {
+	var element = document.getElementById("stock");
+	if (element.disabled) element.removeAttribute("disabled", "");
+	console.log("putos");
+}
+	
+  
+	
 
  init();
 

@@ -59,8 +59,7 @@
                                 <th>Fecha Alta</th>
                                 <th>Estado</th>
                                 <th width="10%">Editar</th>
-                                <th width="10%">Eliminar</th>
-
+                                
 
 
                                 </tr>

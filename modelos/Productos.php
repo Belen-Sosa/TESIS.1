@@ -48,6 +48,30 @@
          
          }
 
+     //metodo para listar en productos al registrar un producto de carniceria
+         public function get_productos_carniceria(){
+
+          $conectar= parent::conexion();
+    
+          //declaramos que el estado esté activo, igual a 1
+    
+           $estado=1;
+    
+    
+           $sql="select p.estado,c.categoria,p.id_producto,p.id_categoria,p.producto,c.id_categoria 
+           from producto as p,categoria as c 
+           where c.id_categoria=p.id_categoria and c.categoria='carnes' and p.estado=?";
+    
+           $sql=$conectar->prepare($sql);
+
+           $sql->bindValue(1, $estado);
+           $sql->execute();
+    
+           return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+    
+    
+    }
+
           //método para seleccionar registros
 
       public function get_productos_en_ventas(){
@@ -136,21 +160,21 @@
 
 
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?,?,?);";
+            values(null,?,?,?,?,?,?,?,?,?,?);";
 
 
             $sql=$conectar->prepare($sql);
 
             $sql->bindValue(1, $_POST["categoria"]);
             $sql->bindValue(2, $_POST["producto"]);
-            $sql->bindValue(4, $_POST["moneda"]);
-            $sql->bindValue(5, $_POST["precio_compra"]);
-            $sql->bindValue(6, $_POST["precio_venta"]);
-            $sql->bindValue(7, $stocker);
-            $sql->bindValue(8, $_POST["estado"]);
-            $sql->bindValue(9, $image);
-            $sql->bindValue(10, $fecha);
-            $sql->bindValue(11, $_POST["id_usuario"]);
+            $sql->bindValue(3, $_POST["moneda"]);
+            $sql->bindValue(4, $_POST["precio_compra"]);
+            $sql->bindValue(5, $_POST["precio_venta"]);
+            $sql->bindValue(6, $stocker);
+            $sql->bindValue(7, $_POST["estado"]);
+            $sql->bindValue(8, $image);
+            $sql->bindValue(9, $fecha);
+            $sql->bindValue(10, $_POST["id_usuario"]);
             $sql->execute();
 
            
@@ -200,6 +224,8 @@
 
 
     }
+    
+    
 
 
 
