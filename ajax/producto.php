@@ -20,8 +20,10 @@
    $precio_venta=isset($_POST["precio_venta"]);
    $stock = isset($_POST["stock"]);
    $estado = isset($_POST["estado"]);
+   $procedente=isset($_POST["procedente"]);
    $imagen = isset($_POST["hidden_producto_imagen"]);
         
+
 
          switch($_GET["op"]){
 
@@ -29,36 +31,80 @@
 
            	   /*si el id no existe entonces lo registra
 	           importante: se debe poner el $_POST sino no funciona*/
-	          if(empty($_POST["id_producto"])){
-
-	       	  /*verificamos si existe el producto en la base de datos, si ya existe un registro con la categoria entonces no se registra*/
-
-	       	    //importante: se debe poner el $_POST sino no funciona
-              $datos = $productos->get_producto_nombre($_POST["producto"]);
+	        if(empty($_POST["id_producto"])){
 
 
-			       	   if(is_array($datos)==true and count($datos)==0){
+				require_once("../modelos/consolelog.php");
+       
+				echo Console::log('un_nombre', $_POST["procedente"]);
 
-			       	   	  //no existe el producto por lo tanto hacemos el registros
+               //si tiene procedente verificamos si tiene stock 
 
-			$productos->registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario);
+             if($_POST["procedente"]!= 0){
+				require_once('../modelos/Productos.php');
+
+				$producto = new Producto();
+		   
+				$producto=$producto->get_producto_procente($_POST["procedente"]);
+				
+				foreach($producto as $row)
+				{
+					$stock_procedente = $row["stock"];
+				}
+				
+                // verificamos que el stock_procedente sea mayor al stock del producto 
+				if($stock_procedente>$_POST["stock"]){
+					    $datos = $productos->get_producto_nombre($_POST["producto"]);
+
+
+						if(is_array($datos)==true and count($datos)==0){
+
+						//no existe el producto por lo tanto hacemos el registros
+						
+
+					    $productos->registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
 
 
 
-			       	   	  $messages[]="El producto se registró correctamente";
+						$messages[]="El producto se registró correctamente";
+					
+			 		    }
+				}else{
+					$errors[]="El procedente no tiene stock suficiente.";
+				}
+			 }else{
 
-			       	   } //cierre de validacion de $datos 
+					//si no tiene procedente continuamos registro normal 
 
 
-			       	      /*si ya existe el producto entonces aparece el mensaje*/
-				              else {
 
-				              	  $errors[]="El producto ya existe";
-				              }
+					/*verificamos si existe el producto en la base de datos, si ya existe un registro con la categoria entonces no se registra*/
 
-			    }//cierre de empty
+					//importante: se debe poner el $_POST sino no funciona
+						$datos = $productos->get_producto_nombre($_POST["producto"]);
 
-	            else {
+
+					if(is_array($datos)==true and count($datos)==0){
+
+							//no existe el producto por lo tanto hacemos el registros
+
+					$productos->registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
+	
+
+
+					$messages[]="El producto se registró correctamente";
+
+					} //cierre de validacion de $datos 
+
+
+					else {
+
+						$errors[]="El producto ya existe";
+					}
+				}//cierre del if procedentte
+			}//cierre de empty
+
+	        else {
 
 
 	            	/*si ya existe entonces editamos el producto*/
@@ -67,10 +113,10 @@
 	             $productos->editar_producto($id_producto,$id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario);
 
 
-	            	  $messages[]="El producto se editó correctamente";
+	            $messages[]="El producto se editó correctamente";
 
 	            	 
-	            }
+	        }
 
     
       
@@ -143,7 +189,7 @@
 				$output["precio_venta"] = $row["precio_venta"];
 				$output["stock"] = $row["stock"];
 				$output["estado"] = $row["estado"];
-
+				$output["procedente"] = $row["procedente"];
 
 				if($row["imagen"] != '')
 					
@@ -175,6 +221,8 @@
 					$output["precio_venta"] = $row["precio_venta"];
 					$output["stock"] = $row["stock"];
 					$output["estado"] = $row["estado"];
+					$output["procedente"] = $row["procedente"];
+
 
 
 					if($row["imagen"] != '')
@@ -275,10 +323,14 @@
 				$sub_array[] = $row["producto"];
 				$sub_array[] = $moneda." ".$row["precio_compra"];
 				$sub_array[] = $moneda." ".$row["precio_venta"];
-
+                if($row["categoria"]=="carnes"){
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
+                  grs.</span>';}
+				  else{
+					$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
                   </span>';
-               
+				  }
+				  $sub_array[] = $row["procedente"];
 
 				$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_categoria"].','.$row["id_producto"].','.$row["estado"].');" name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
 
@@ -643,7 +695,7 @@
 
      break;
 	 
-
+  
 
   
 

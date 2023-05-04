@@ -30,11 +30,13 @@
 
            $conectar= parent::conexion();
        
-          $sql= "select p.id_producto,p.id_categoria,p.producto, p.moneda, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+          $sql= "select p.id_producto,p.id_categoria,p.producto, p.moneda, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
            
-           from producto p 
+           from producto p ,
+           (select producto, id_procedente from productos) as proc where 
+           proc.id_procedente= p.id_procedente
               
-              INNER JOIN categoria c ON p.id_categoria=c.id_categoria
+           INNER JOIN categoria c ON p.id_categoria=c.id_categoria
              
 
            ";
@@ -71,6 +73,24 @@
     
     
     }
+
+     //metodo para ver el stock de un producto procedente para otro 
+     public function get_producto_procente($id_procedente){
+
+      $conectar= parent::conexion();
+
+
+       $sql="select * from producto where id_producto=?";
+
+       $sql=$conectar->prepare($sql);
+
+       $sql->bindValue(1, $id_procedente);
+       $sql->execute();
+
+       return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+
+
+}
 
           //método para seleccionar registros
 
@@ -118,24 +138,22 @@
 
           //método para insertar registros
 
-        public function registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario){
+        public function registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
 
             $conectar=parent::conexion();
             parent::set_names();
            
-         //declaro que si el campo stock es vacio entonces seria un 0 en caso contrario se pondria el valor que se envia 
+           //declaro que si el campo stock es vacio entonces seria un 0 en caso contrario se pondria el valor que se envia 
 
-               $stock = "";
+            if($stock==""){
+                      
+            $stocker=0;
+          
+            } else {
 
-               if($stock==""){
-                         
-                $stocker=0;
-              
-               } else {
-
-                  $stocker = $_POST["stock"];
-               }
+              $stocker = $_POST["stock"];
+            }
 
 
             //llamo a la funcion upload_image()
@@ -158,12 +176,15 @@
               $date_inicial = str_replace('/', '-', $date);
               $fecha = date("Y-m-d",strtotime($date_inicial));
 
-
+              require_once("consolelog.php");
+       
+              echo Console::log('un_nombre', $procedente);
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?,?);";
+            values(null,?,?,?,?,?,?,?,?,?,?,?);";
 
-
+            
             $sql=$conectar->prepare($sql);
+          
 
             $sql->bindValue(1, $_POST["categoria"]);
             $sql->bindValue(2, $_POST["producto"]);
@@ -174,7 +195,9 @@
             $sql->bindValue(7, $_POST["estado"]);
             $sql->bindValue(8, $image);
             $sql->bindValue(9, $fecha);
+         
             $sql->bindValue(10, $_POST["id_usuario"]);
+            $sql->bindValue(11, $_POST["procedente"]);
             $sql->execute();
 
            
@@ -203,7 +226,7 @@
 
 
          /*metodo que valida si hay registros activos*/
-        public function get_producto_por_id_estado($id_producto,$estado){
+    public function get_producto_por_id_estado($id_producto,$estado){
 
            $conectar= parent::conexion();
 
@@ -231,7 +254,7 @@
 
          //método para editar registros
 
-    public function editar_producto($id_producto,$id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario){
+    public function editar_producto($id_producto,$id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
       $conectar=parent::conexion();
       parent::set_names();
@@ -305,7 +328,8 @@
                        estado=?,
                        imagen=?,
                        fecha_vencimiento=?,
-                       id_usuario=?
+                       id_usuario=?,
+                       procedente=?
                        where 
                        id_producto=?
                 ";
@@ -323,6 +347,7 @@
                 $sql->bindValue(8, $imagen);
                 $sql->bindValue(9, $fecha);
                 $sql->bindValue(10, $_POST["id_usuario"]);
+                $sql->bindValue(11, $_POST["procedente"]);
                 $sql->bindValue(11, $_POST["id_producto"]);
                 $sql->execute();
 
@@ -364,7 +389,7 @@
       
         //método para activar Y/0 desactivar el estado del producto
 
-             public function editar_estado($id_producto,$estado){
+     public function editar_estado($id_producto,$estado){
 
               $conectar=parent::conexion();
               parent::set_names();

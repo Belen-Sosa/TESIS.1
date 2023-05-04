@@ -51,7 +51,6 @@ function limpiar()
 	
 	
     $("#id_producto").val("");
-	//$("#id_usuario").val("");
     $("#categoria").val("");
 	$('#producto').val("");
     $('#presentacion').val("");
@@ -63,6 +62,9 @@ function limpiar()
 	$('#estado').val("");
 	$('#datepicker').val("");
 	$('#producto_imagen').val("");
+
+	$('#procedente').hide();
+	$('#titulo_procedente').hide();
 	
 }
 
@@ -257,7 +259,6 @@ function guardaryeditar(e)
 		          mostrarform(false);
 		          tabla.ajax.reload();*/
 
-		         //alert(datos);
                  
                  /*imprimir consulta en la consola debes hacer un print_r($_POST) al final del metodo 
                     y si se muestran los valores es que esta bien, y se puede imprimir la consulta desde el metodo
@@ -270,7 +271,7 @@ function guardaryeditar(e)
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
 				location.reload();
-                limpiar();
+               limpiar();
 					
 		    }
 
@@ -1355,44 +1356,65 @@ obj.value es el valor del campo de texto*/
 
  //ELIMINAR PRODUCTOS
 
-	 function eliminar(id_producto){
+function eliminar(id_producto){
 
    
-	    bootbox.confirm("¿Está Seguro de eliminar el producto?", function(result){
-		if(result)
-		{
+	bootbox.confirm("¿Está Seguro de eliminar el producto?", function(result){
+	if(result)
+	{
 
-				$.ajax({
-					url:"../ajax/producto.php?op=eliminar_producto",
-					method:"POST",
-					data:{id_producto:id_producto},
+			$.ajax({
+				url:"../ajax/producto.php?op=eliminar_producto",
+				method:"POST",
+				data:{id_producto:id_producto},
 
-					success:function(data)
-					{
-						//alert(data);
-						$("#resultados_ajax").html(data);
-						$("#producto_data").DataTable().ajax.reload();
-					}
-				});
+				success:function(data)
+				{
+					//alert(data);
+					$("#resultados_ajax").html(data);
+					$("#producto_data").DataTable().ajax.reload();
+				}
+			});
 
-		      }
+		}
 
-		 });//bootbox
+	});//bootbox
 
 
-   }
+}
 
    //activar o desactivar campo stock en formulario de carniceria 
   
 
-   function myFunction() {
-	var element = document.getElementById("stock");
-	if (element.disabled) element.removeAttribute("disabled", "");
-	console.log("putos");
+
+function habilitar_stock(id_procedente){
+
+	d = id_procedente.value;
+	console.log(d);
+	if(d != "0"){
+		$('#stock').attr('disabled', false);
+     	//muestra un mensaje de exito
+
+	}else{
+		$('#stock').attr('disabled', true);
+
+	}
+	
 }
+
+  $("#categoria").change(function() {
 	
-  
+	var categoria = $(this).find('option:selected').text(); // Capturamos el texto del option seleccionado
 	
+    if(categoria=="carnes"){
+		$('#procedente').show();
+		$('#titulo_procedente').show();
+	}else{
+		$('#procedente').hide();
+		$('#titulo_procedente').hide();
+	}
+  });
+
 
  init();
 
