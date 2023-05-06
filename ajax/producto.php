@@ -15,7 +15,7 @@
    $id_producto=isset($_POST["id_producto"]);
    $id_categoria=isset($_POST["categoria"]);
    $id_usuario=isset($_POST["id_usuario"]);
-   $producto=isset($_POST["producto"]);   $moneda=isset($_POST["moneda"]);
+   $producto=isset($_POST["producto"]);  
    $precio_compra=isset($_POST["precio_compra"]);
    $precio_venta=isset($_POST["precio_venta"]);
    $stock = isset($_POST["stock"]);
@@ -62,7 +62,7 @@
 						//no existe el producto por lo tanto hacemos el registros
 						
 
-					    $productos->registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
+					    $productos->registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
 
 
 
@@ -88,7 +88,7 @@
 
 							//no existe el producto por lo tanto hacemos el registros
 
-					$productos->registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
+					$productos->registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
 	
 
 
@@ -110,7 +110,7 @@
 	            	/*si ya existe entonces editamos el producto*/
 
 
-	             $productos->editar_producto($id_producto,$id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario);
+	             $productos->editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario);
 
 
 	            $messages[]="El producto se editó correctamente";
@@ -183,8 +183,8 @@
 			{
 				$output["id_producto"] = $row["id_producto"];
 				$output["categoria"] = $row["id_categoria"];
+				$output["categoria_nombre"] = $row["categoria"];
 				$output["producto"] = $row["producto"];
-				$output["moneda"] = $row["moneda"];
 				$output["precio_compra"] = $row["precio_compra"];
 				$output["precio_venta"] = $row["precio_venta"];
 				$output["stock"] = $row["stock"];
@@ -216,11 +216,11 @@
 					$output["producto_id"] = $row["id_producto"];
 					$output["categoria"] = $row["id_categoria"];
 					$output["producto"] = $row["producto"];
-					$output["moneda"] = $row["moneda"];
 					$output["precio_compra"] = $row["precio_compra"];
 					$output["precio_venta"] = $row["precio_venta"];
 					$output["stock"] = $row["stock"];
 					$output["estado"] = $row["estado"];
+					$output["categoria_nombre"] = $row["categoria"];
 					$output["procedente"] = $row["procedente"];
 
 
@@ -313,16 +313,14 @@
                  }
 
 
-                 //moneda
-
-                 $moneda = $row["moneda"];
+                
 
 				
 				//$sub_array = array();
 				$sub_array[] = $row["categoria"];
 				$sub_array[] = $row["producto"];
-				$sub_array[] = $moneda." ".$row["precio_compra"];
-				$sub_array[] = $moneda." ".$row["precio_venta"];
+				$sub_array[] = "$ ".$row["precio_compra"];
+				$sub_array[] = "$ ".$row["precio_venta"];
                 if($row["categoria"]=="carnes"){
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
                   grs.</span>';}
@@ -420,16 +418,14 @@
                  }
 
 
-                 //moneda
-
-                 $moneda = $row["moneda"];
+                
 
 				
 				//$sub_array = array();
 				$sub_array[] = $row["categoria"];
 				$sub_array[] = $row["producto"];
-				$sub_array[] = $moneda." ".$row["precio_compra"];
-				$sub_array[] = $moneda." ".$row["precio_venta"];
+				$sub_array[] = "$ ".$row["precio_compra"];
+				$sub_array[] = "$ ".$row["precio_venta"];
 
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
                   </span>';
@@ -498,7 +494,7 @@
 					$output["id_producto"] = $row["id_producto"];
 					$output["id_categoria"] = $row["id_categoria"];
 					$output["producto"] = $row["producto"];
-					$output["moneda"] = $row["moneda"];
+					
 					$output["precio_compra"] = $row["precio_compra"];
 					$output["stock"] = $row["stock"];
 				     
@@ -584,16 +580,13 @@
                 
 
 
-                 //moneda
-
-                 $moneda = $row["moneda"];
 
 				
 				//$sub_array = array();
 				$sub_array[] = $row["categoria"];
 				$sub_array[] = $row["producto"];
-				$sub_array[] = $moneda." ".$row["precio_compra"];
-				$sub_array[] = $moneda." ".$row["precio_venta"];
+				$sub_array[] = "$ ".$row["precio_compra"];
+				$sub_array[] = "$ ".$row["precio_venta"];
 
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
                   </span>';
@@ -659,7 +652,6 @@
 				{
 					$output["id_producto"] = $row["id_producto"];
 					$output["producto"] = $row["producto"];
-					$output["moneda"] = $row["moneda"];
 					$output["precio_venta"] = $row["precio_venta"];
 					$output["stock"] = $row["stock"];
 					$output["estado"] = $row["estado"];

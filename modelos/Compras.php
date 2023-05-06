@@ -143,7 +143,6 @@
       $codProd = $v->codProd;
           $codCat = $v->codCat;
       $producto = $v->producto;
-      $moneda = $v->moneda;
       $precio = $v->precio; 
       $dscto = $v->dscto;
       $importe = $v->importe;
@@ -151,7 +150,7 @@
       $estado = $v->estado;
 
       //echo "***************";
-      //echo "Cant: ".$cantidad." codProd: ".$codProd. " Producto: ". $producto. " moneda: ".$moneda. " precio: ".$precio. " descuento: ".$dscto. " estado: ".$estado;
+      //echo "Cant: ".$cantidad." codProd: ".$codProd. " Producto: ". $producto. " " precio: ".$precio. " descuento: ".$dscto. " estado: ".$estado;
         
         $numero_compra = $_POST["numero_compra"];
         $cuit_proveedor = $_POST["cuit"];
@@ -187,7 +186,7 @@
           
 
           $sql="insert into detalle_compras
-          values(null,?,?,?,?,?,?,?,?,?,now(),?,?,?,?);";
+          values(null,?,?,?,?,?,?,?,?,?,now(),?,?,?);";
 
 
           $sql=$conectar->prepare($sql);
@@ -200,15 +199,14 @@
         $sql->bindValue(2,$cuit_proveedor);
         $sql->bindValue(3,$codProd);
         $sql->bindValue(4,$producto);
-        $sql->bindValue(5,$moneda);
-        $sql->bindValue(6,$precio);
-        $sql->bindValue(7,$cantidad);
-        $sql->bindValue(8,$dscto);
-        $sql->bindValue(9,$importe);
-        $sql->bindValue(10,$id_usuario);
-        $sql->bindValue(11,$id_proveedor);
-        $sql->bindValue(12,$estado);
-        $sql->bindValue(13,$codCat);
+        $sql->bindValue(4,$precio);
+        $sql->bindValue(5,$cantidad);
+        $sql->bindValue(6,$dscto);
+        $sql->bindValue(7,$importe);
+        $sql->bindValue(8,$id_usuario);
+        $sql->bindValue(9,$id_proveedor);
+        $sql->bindValue(10,$estado);
+        $sql->bindValue(11,$codCat);
        
         $sql->execute();
 
@@ -318,7 +316,7 @@
 		   //la fecha no se puede formatear por es un objeto date, solo se formatea en el select, cuando se va a obtener una fecha, por lo tanto la fecha queda en el formato y/m/d en la tabla de la bd	
 
            $sql2="insert into compras 
-           values(null,now(),?,?,?,?,?,?,?,?,?,?);";
+           values(null,now(),?,?,?,?,?,?,?,?,?);";
 
 
            $sql2=$conectar->prepare($sql2);
@@ -328,12 +326,11 @@
            $sql2->bindValue(2,$proveedor);
            $sql2->bindValue(3,$cuit_proveedor);
            $sql2->bindValue(4,$comprador);
-           $sql2->bindValue(5,$moneda);
-           $sql2->bindValue(6,$total);
-           $sql2->bindValue(7,$tipo_pago);
-           $sql2->bindValue(8,$estado);
-           $sql2->bindValue(9,$id_usuario);
-           $sql2->bindValue(10,$id_proveedor);
+           $sql2->bindValue(5,$total);
+           $sql2->bindValue(6,$tipo_pago);
+           $sql2->bindValue(7,$estado);
+           $sql2->bindValue(8,$id_usuario);
+           $sql2->bindValue(9,$id_proveedor);
           
            $sql2->execute();
 
@@ -376,7 +373,7 @@
            $conectar=parent::conexion();
            parent::set_names();
 
-          $sql="select d.numero_compra,d.cuit_proveedor,d.producto, d.moneda, d.precio_compra,d.cantidad_compra,d.descuento,d.importe, d.fecha_compra,c.numero_compra, c.moneda, c.total,p.id_proveedor,p.cuit,p.razon_social,p.telefono,p.correo,p.direccion,p.fecha_alta,p.estado
+          $sql="select d.numero_compra,d.cuit_proveedor,d.producto, d.precio_compra,d.cantidad_compra,d.descuento,d.importe, d.fecha_compra,c.numero_compra, c.total,p.id_proveedor,p.cuit,p.razon_social,p.telefono,p.correo,p.direccion,p.fecha_alta,p.estado
           from detalle_compras as d, compras as c, proveedor as p
           where 
           
@@ -420,11 +417,11 @@
         {
 
          
-        $html.="<tr class='filas'><td>".$row['cantidad_compra']."</td><td>".$row['producto']."</td> <td>".$row["moneda"]." ".$row['precio_compra']."</td> <td>".$row['descuento']."</td> <td>".$row["moneda"]." ".$row['importe']."</td></tr>";
+        $html.="<tr class='filas'><td>".$row['cantidad_compra']."</td><td>".$row['producto']."</td> <td>$  ".$row['precio_compra']."</td> <td>".$row['descuento']."</td> <td>$" .$row['importe']."</td></tr>";
                    
                 
                  
-                   $total= $row["moneda"]." ".$row["total"];
+                   $total="$ ".$row["total"];
         }
 
          $html .= "<tfoot>
@@ -852,8 +849,7 @@
        //hacer la consulta que seleccione la fecha de mayor a menos
 
 
-      $sql="SELECT MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra, moneda
-        FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc, month(fecha_compra) desc";
+      $sql="SELECT MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc, month(fecha_compra) desc";
 
       
          $sql=$conectar->prepare($sql);
@@ -870,7 +866,7 @@
       $conectar=parent::conexion();
 
 
-       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total) as total_compra_ano, moneda FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc";
+       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total) as total_compra_ano FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->execute();
@@ -1029,7 +1025,7 @@
 
           $fecha=$_POST["year"];
 
-        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra, moneda
+        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra
         from compras where YEAR(fecha_compra)=? and estado='1' group by MONTHname(fecha_compra) asc";
           
 
@@ -1046,7 +1042,7 @@
 
               $fecha_inicial=date("Y");
 
-                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra, moneda
+                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra
             from compras where YEAR(fecha_compra)=? and estado='1' group by MONTHname(fecha_compra) asc";
               
 
@@ -1135,7 +1131,7 @@
             $conectar=parent::conexion();
             parent::set_names();
 
-            $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes, moneda FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_compra) desc";
+            $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_compra) desc";
 
             $sql=$conectar->prepare($sql);
             $sql->execute();

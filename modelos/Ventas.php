@@ -73,7 +73,7 @@ require_once("../config/conexion.php");
       $conectar=parent::conexion();
           parent::set_names();
 
-         $sql="select d.numero_venta,d.dni_cliente,d.producto, d.moneda,d.precio_venta,d.cantidad_venta,d.descuento,d.importe,d.fecha_venta,v.numero_venta, v.moneda,v.total,c.id_cliente,c.dni_cliente,c.nombre_cliente,c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta,c.estado
+         $sql="select d.numero_venta,d.dni_cliente,d.producto,d.precio_venta,d.cantidad_venta,d.descuento,d.importe,d.fecha_venta,v.numero_venta,v.total,c.id_cliente,c.dni_cliente,c.nombre_cliente,c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta,c.estado
          from detalle_ventas as d, ventas as v, clientes as c
          where 
          
@@ -116,10 +116,10 @@ require_once("../config/conexion.php");
        {
 
         
- $html.="<tr class='filas'><td>".$row['cantidad_venta']."</td><td>".$row['producto']."</td> <td>".$row["moneda"]." ".$row['precio_venta']."</td> <td>".$row['descuento']."</td> <td>".$row["moneda"]." ".$row['importe']."</td></tr>";
+ $html.="<tr class='filas'><td>".$row['cantidad_venta']."</td><td>".$row['producto']."</td> <td>$ ".$row['precio_venta']."</td> <td>".$row['descuento']."</td> <td>$" .$row['importe']."</td></tr>";
                   
               
-                  $total= $row["moneda"]." ".$row["total"];
+                  $total=  "$".$row["total"];
                   
        }
    
@@ -227,7 +227,6 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
    $cantidad = $v->cantidad;
    $codProd = $v->codProd;
    $producto = $v->producto;
-   $moneda = $v->moneda;
    $precio = $v->precio; 
    $dscto = $v->dscto;
    $importe = $v->importe;
@@ -235,7 +234,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
    $estado = $v->estado;
 
    //echo "***************";
-   //echo "Cant: ".$cantidad." codProd: ".$codProd. " Producto: ". $producto. " moneda: ".$moneda. " precio: ".$precio. " descuento: ".$dscto. " estado: ".$estado;
+   //echo "Cant: ".$cantidad." codProd: ".$codProd. " Producto: ". $producto. precio: ".$precio. " descuento: ".$dscto. " estado: ".$estado;
 
       $numero_venta = $_POST["numero_venta"];
       $dni_cliente = $_POST["dni"];
@@ -267,14 +266,14 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        $sql->bindValue(2,$dni_cliente);
        $sql->bindValue(3,$codProd);
        $sql->bindValue(4,$producto);
-       $sql->bindValue(5,$moneda);
-       $sql->bindValue(6,$precio);
-       $sql->bindValue(7,$cantidad);
-       $sql->bindValue(8,$dscto);
-       $sql->bindValue(9,$importe);
-       $sql->bindValue(10,$id_usuario);
-       $sql->bindValue(11,$id_cliente);
-       $sql->bindValue(12,$estado);
+
+       $sql->bindValue(5,$precio);
+       $sql->bindValue(6,$cantidad);
+       $sql->bindValue(7,$dscto);
+       $sql->bindValue(8,$importe);
+       $sql->bindValue(9,$id_usuario);
+       $sql->bindValue(10,$id_cliente);
+       $sql->bindValue(11,$estado);
       
       
        $sql->execute();
@@ -385,12 +384,12 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           $sql2->bindValue(2,$cliente_nombre);
           $sql2->bindValue(3,$dni_cliente);
           $sql2->bindValue(4,$vendedor);
-          $sql2->bindValue(5,$moneda);    
-          $sql2->bindValue(6,$total);
-          $sql2->bindValue(7,$tipo_pago);
-          $sql2->bindValue(8,$estado);
-          $sql2->bindValue(9,$id_usuario);
-          $sql2->bindValue(10,$id_cliente);
+ 
+          $sql2->bindValue(5,$total);
+          $sql2->bindValue(6,$tipo_pago);
+          $sql2->bindValue(7,$estado);
+          $sql2->bindValue(8,$id_usuario);
+          $sql2->bindValue(9,$id_cliente);
           $sql2->execute();
 
          
@@ -1105,7 +1104,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
       parent::set_names();
 
 
-     $sql="SELECT MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta, moneda
+     $sql="SELECT MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
        FROM ventas where estado='1' GROUP BY YEAR(fecha_venta) desc, month(fecha_venta) desc";
 
      
@@ -1277,7 +1276,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          $fecha=$_POST["year"];
 
-       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta, moneda
+       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
        from ventas where YEAR(fecha_venta)=? and estado='1' group by MONTHname(fecha_venta) desc";
          
 
@@ -1294,7 +1293,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          $fecha_inicial=date("Y");
 
-            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta, moneda
+            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
        from ventas where YEAR(fecha_venta)=? and estado='1' group by MONTHname(fecha_venta) desc";
          
 
@@ -1345,7 +1344,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        $conectar=parent::conexion();
        parent::set_names();
 
-       $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes, moneda FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_venta) desc";
+       $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_venta) desc";
 
        $sql=$conectar->prepare($sql);
        $sql->execute();

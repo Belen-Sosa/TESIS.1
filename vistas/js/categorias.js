@@ -137,7 +137,7 @@ function mostrar(id_categoria)
 						$('#categoria').val(data.categoria);
 
 						//desactiva el campo
-		                $("#categoria").attr('disabled', 'disabled');
+		               // $("#categoria").attr('disabled', 'disabled');
 						
 						$('#estado').val(data.estado);
 						$('.modal-title').text("Editar Categoría");

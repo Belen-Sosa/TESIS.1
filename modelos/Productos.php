@@ -30,15 +30,14 @@
 
            $conectar= parent::conexion();
        
-          $sql= "select p.id_producto,p.id_categoria,p.producto, p.moneda, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
-           
-           from producto p ,
-           (select producto, id_procedente from productos) as proc where 
-           proc.id_procedente= p.id_procedente
-              
-           INNER JOIN categoria c ON p.id_categoria=c.id_categoria
-             
-
+          $sql= "
+          select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+          from producto as p 
+          inner join categoria as c on
+          p.id_categoria=c.id_categoria 
+          LEFT JOIN producto as proc
+          ON p.id_procedente = proc.id_producto
+                      
            ";
 
            $sql=$conectar->prepare($sql);
@@ -98,7 +97,7 @@
 
            $conectar= parent::conexion();
        
-          $sql= "select p.id_producto,p.id_categoria,p.producto, p.moneda, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+          $sql= "select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
            
            from producto p 
               
@@ -138,7 +137,7 @@
 
           //método para insertar registros
 
-        public function registrar_producto($id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
+        public function registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
 
             $conectar=parent::conexion();
@@ -180,7 +179,7 @@
        
               echo Console::log('un_nombre', $procedente);
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?,?,?);";
+            values(null,?,?,?,?,?,?,?,?,?,?);";
 
             
             $sql=$conectar->prepare($sql);
@@ -188,16 +187,15 @@
 
             $sql->bindValue(1, $_POST["categoria"]);
             $sql->bindValue(2, $_POST["producto"]);
-            $sql->bindValue(3, $_POST["moneda"]);
-            $sql->bindValue(4, $_POST["precio_compra"]);
-            $sql->bindValue(5, $_POST["precio_venta"]);
-            $sql->bindValue(6, $stocker);
-            $sql->bindValue(7, $_POST["estado"]);
-            $sql->bindValue(8, $image);
-            $sql->bindValue(9, $fecha);
+            $sql->bindValue(3, $_POST["precio_compra"]);
+            $sql->bindValue(4, $_POST["precio_venta"]);
+            $sql->bindValue(5, $stocker);
+            $sql->bindValue(6, $_POST["estado"]);
+            $sql->bindValue(7, $image);
+            $sql->bindValue(7, $fecha);
          
-            $sql->bindValue(10, $_POST["id_usuario"]);
-            $sql->bindValue(11, $_POST["procedente"]);
+            $sql->bindValue(9, $_POST["id_usuario"]);
+            $sql->bindValue(10, $_POST["procedente"]);
             $sql->execute();
 
            
@@ -211,8 +209,17 @@
           $conectar= parent::conexion();
 
           //$output = array();
-
-            $sql="select * from producto where id_producto=?";
+             $sql="
+             select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+             from producto as p 
+             inner join categoria as c on
+             p.id_categoria=c.id_categoria 
+             LEFT JOIN producto as proc
+             ON p.id_procedente = proc.id_producto
+             WHERE p.id_producto=?  
+                         
+              ";
+        
 
             $sql=$conectar->prepare($sql);
 
@@ -254,7 +261,7 @@
 
          //método para editar registros
 
-    public function editar_producto($id_producto,$id_categoria,$producto,$moneda,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
+    public function editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
       $conectar=parent::conexion();
       parent::set_names();
@@ -321,7 +328,6 @@
                 $sql="update producto set 
                        id_categoria=?,
                        producto=?,
-                       moneda=?,
                        precio_compra=?,
                        precio_venta=?,
                        stock=?,
@@ -338,23 +344,21 @@
 
                 $sql->bindValue(1, $_POST["categoria"]);
                 $sql->bindValue(2, $_POST["producto"]);
-                
-                $sql->bindValue(3, $_POST["moneda"]);
-                $sql->bindValue(4, $_POST["precio_compra"]);
-                $sql->bindValue(5, $_POST["precio_venta"]);
-                $sql->bindValue(6, $stocker);
-                $sql->bindValue(7, $_POST["estado"]);
-                $sql->bindValue(8, $imagen);
-                $sql->bindValue(9, $fecha);
-                $sql->bindValue(10, $_POST["id_usuario"]);
-                $sql->bindValue(11, $_POST["procedente"]);
+                $sql->bindValue(3, $_POST["precio_compra"]);
+                $sql->bindValue(4, $_POST["precio_venta"]);
+                $sql->bindValue(5, $stocker);
+                $sql->bindValue(6, $_POST["estado"]);
+                $sql->bindValue(7, $imagen);
+                $sql->bindValue(8, $fecha);
+                $sql->bindValue(9, $_POST["id_usuario"]);
+                $sql->bindValue(10, $_POST["procedente"]);
                 $sql->bindValue(11, $_POST["id_producto"]);
                 $sql->execute();
 
 
            } else {
 
-                //si el producto tiene registros asociados a detalle_venta y detalle_compras entonces no se edita la categoria,producto, moneda
+                //si el producto tiene registros asociados a detalle_venta y detalle_compras entonces no se edita la categoria,producto, 
 
                   $sql="update producto set 
 

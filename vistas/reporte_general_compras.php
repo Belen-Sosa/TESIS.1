@@ -103,7 +103,7 @@
 					        <td><?php echo $datos[$i]["numero_mes"]?></td>
 					        <td><?php echo $fecha_mes?></td>
 					     
-					        <td><?php echo $datos[$i]["moneda"]." ".$datos[$i]["total_compra"]?></td>
+					        <td><?php echo "$ ".$datos[$i]["total_compra"]?></td>
 					      </tr>
 					      
 				      <?php
@@ -162,9 +162,7 @@
 				      
 				     'ano' => $datos_ano[$i]["ano"],
 
-				     'total_compra_ano' => $datos_ano[$i]["total_compra_ano"],
-
-				     'moneda' => $datos_ano[$i]["moneda"]
+				     'total_compra_ano' => $datos_ano[$i]["total_compra_ano"]
 				               
 				            )
 				        );
@@ -203,7 +201,7 @@
 
 	                 <tr>
 	                 	<td><?php echo $arregloReg[$i]["ano"];?></td>
-	                 	<td><?php echo $arregloReg[$i]["moneda"]." ".$arregloReg[$i]["total_compra_ano"];?></td>
+	                 	<td><?php echo "$ ".$arregloReg[$i]["total_compra_ano"];?></td>
 	                    <td><?php echo $porcentaje_por_ano?></td>
 	                 </tr>
 
@@ -216,7 +214,7 @@
 
 	                <tr>
 	                	<td><strong>Total:</strong>  </td>
-	                	<td><strong> <?php echo $arregloReg[0]["moneda"]." ".$sumaTotal?> </strong></td>
+	                	<td><strong> <?php echo "$ ".$sumaTotal?> </strong></td>
 	                	<td> <strong> <?php echo $porcentaje_total?> </strong></td>
 	                </tr>
 

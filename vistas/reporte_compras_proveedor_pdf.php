@@ -186,9 +186,9 @@ ob_start();
     <tr class="even_row" style="font-size:10pt">
      
       <td style="text-align: center"><span><?php echo $pedidos[$j]["producto"];?></span></td>
-       <td style="text-align: center"><span><?php echo $pedidos[$j]["moneda"]." ".$pedidos[$j]["precio_compra"];?></span></td>
+       <td style="text-align: center"><span><?php echo "$ ".$pedidos[$j]["precio_compra"];?></span></td>
       <td style="text-align: center"><span><?php echo $pedidos[$j]["cantidad_compra"];?></span></td>
-        <td style="text-align: center"><span class=""><?php echo $pedidos[$j]["moneda"]." ".$pedidos[$j]["cantidad_compra"] * $pedidos[$j]["precio_compra"];?></span></td>
+        <td style="text-align: center"><span class=""><?php echo "$ ".$pedidos[$j]["cantidad_compra"] * $pedidos[$j]["precio_compra"];?></span></td>
       <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra"])); ?></span></td>
      
       </tr>
@@ -216,7 +216,7 @@ ob_start();
 
         if($pagoTotal!=0){
 
-        echo $pedidos[0]["moneda"]." ".$pagoTotal;
+        echo "$ ".$pagoTotal;
 
        } else {
 

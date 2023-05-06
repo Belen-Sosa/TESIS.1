@@ -108,7 +108,7 @@
 				 $sub_array[] = $row["cuit_proveedor"];
 				 $sub_array[] = $row["comprador"];
 				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = $row["moneda"]." ".$row["total"];
+				 $sub_array[] = "$".$row["total"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
@@ -181,7 +181,7 @@
 				 $sub_array[] = $row["cuit_proveedor"];
 				 $sub_array[] = $row["comprador"];
 				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = $row["moneda"]." ".$row["total"];
+				 $sub_array[] = "$ ".$row["total"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
@@ -240,7 +240,7 @@
 				 $sub_array[] = $row["cuit_proveedor"];
 				 $sub_array[] = $row["comprador"];
 				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = $row["moneda"]." ".$row["total"];
+				 $sub_array[] = "$ ".$row["total"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/

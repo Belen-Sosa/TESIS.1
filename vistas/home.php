@@ -177,8 +177,8 @@
 
                           "ano" => $datos[$i]["ano"],
                           "mes" => $datos[$i]["mes"],
-                          "total_compra_mes" => $datos[$i]["total_compra_mes"],
-                           "moneda" => $datos[$i]["moneda"]
+                          "total_compra_mes" => $datos[$i]["total_compra_mes"]
+                    
 
                           )
 
@@ -227,7 +227,7 @@
                   <td><?php echo $arregloReg[$i]["ano"]?></td>
                   <td><?php echo $fecha_mes?></td>
                   <td><?php echo $porcentaje?></td>
-                  <td><?php echo $arregloReg[$i]["moneda"]." ".$arregloReg[$i]["total_compra_mes"]?></td>
+                  <td><?php echo "$ ".$arregloReg[$i]["total_compra_mes"]?></td>
 
 
                   <td class="hidden-xs">
@@ -332,8 +332,8 @@
 
                           "ano" => $datos_venta[$i]["ano"],
                           "mes" => $datos_venta[$i]["mes"],
-                          "total_venta_mes" => $datos_venta[$i]["total_venta_mes"],
-                           "moneda" => $datos_venta[$i]["moneda"]
+                          "total_venta_mes" => $datos_venta[$i]["total_venta_mes"]
+                      
 
                           )
 
@@ -382,7 +382,7 @@
                   <td><?php echo $arregloReg[$i]["ano"]?></td>
                   <td><?php echo $fecha_mes?></td>
                   <td><?php echo $porcentaje?></td>
-                  <td><?php echo $arregloReg[$i]["moneda"]." ".$arregloReg[$i]["total_venta_mes"]?></td>
+                  <td><?php echo "$ ".$arregloReg[$i]["total_venta_mes"]?></td>
                   <td class="hidden-xs">
                      <div class="progress progress-xs">
 

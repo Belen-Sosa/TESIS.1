@@ -28,11 +28,11 @@ function init(){
 	$("#add_button").click(function(){
 
 		   
-		    /*habilita los campos categoria, producto, moneda ya que si se 
+		    /*habilita los campos categoria, producto ya que si se 
             editaba uno que tenia registro asociado entonces al crear un nuevo registro aparecian los campos deshabilitados*/
 			 $("#categoria").attr('disabled', false);
 			 $("#producto").attr('disabled', false);
-			 $("#moneda").attr('disabled', false);
+		
 			
 			
 			$(".modal-title").text("Agregar Producto");
@@ -55,7 +55,6 @@ function limpiar()
 	$('#producto').val("");
     $('#presentacion').val("");
     $('#unidad').val("");
-    $('#moneda').val("");
     $('#precio_compra').val("");
 	$('#precio_venta').val("");
 	$('#stock').val("");
@@ -151,24 +150,24 @@ function listar()
  //Mostrar datos del producto en la ventana modal 
 function mostrar(id_producto)
 {
+	
 	$.post("../ajax/producto.php?op=mostrar",{id_producto : id_producto}, function(data, status)
 	{
 		data = JSON.parse(data);
 
-		 //alert(data.dni);
 		
-			
 				
 		  //si existe el id_producto es porque el producto tiene relacion con otras tablas
              if(data.producto_id){
+				
 				
 				$('#productoModal').modal('show');
 				$('#categoria').val(data.categoria);
 
 				//desactiva el campo
                 $("#categoria").attr('disabled', 'disabled');
-
-
+                
+								
                 $('#producto').val(data.producto);
 
                 //desactiva el campo
@@ -176,10 +175,6 @@ function mostrar(id_producto)
 
 				$('#presentacion').val(data.presentacion);
 				$('#unidad').val(data.unidad);
-                $('#moneda').val(data.moneda);
-
-                //desactiva el campo
-                $("#moneda").attr('disabled', 'disabled');
 
 
                 $('#precio_compra').val(data.precio_compra);
@@ -192,7 +187,15 @@ function mostrar(id_producto)
 				$('#producto_uploaded_image').html(data.producto_imagen);
 				$('#resultados_ajax').html(data);
 				$("#producto_data").DataTable().ajax.reload();
-
+				$('#procedente').val(data.procedente);
+				if(data.categoria_nombre=="carnes"){
+					$('#procedente').show();
+					$('#titulo_procedente').show();
+				}else{
+					$('#procedente').hide();
+					$('#titulo_procedente').hide();
+				}
+				
 
 		    } else {
 
@@ -200,8 +203,9 @@ function mostrar(id_producto)
 		    	    $('#productoModal').modal('show');
 					$('#categoria').val(data.categoria);
 
-					$('#categoria').attr('disabled', false);
 
+					$('#categoria').attr('disabled', false);
+                  
 					$('#producto').val(data.producto);
 
 					$("#producto").attr('disabled', false);
@@ -211,10 +215,17 @@ function mostrar(id_producto)
 	
 
 					$('#unidad').val(data.unidad);
-					$('#moneda').val(data.moneda);
-
-				    $("#moneda").attr('disabled', false);
-
+					
+					if(data.categoria_nombre=="carnes"){
+						$('#procedente').show();
+						$('#titulo_procedente').show();
+						console.log(data.categoria);
+					}else{
+						$('#procedente').hide();
+						$('#titulo_procedente').hide();
+					}
+		
+					$('#procedente').val(data.procedente);
 	                $('#precio_compra').val(data.precio_compra);
 					$('#precio_venta').val(data.precio_venta);
 					$('#stock').val(data.stock);
@@ -225,8 +236,7 @@ function mostrar(id_producto)
 					$('#producto_uploaded_image').html(data.producto_imagen);
 					$('#resultados_ajax').html(data);
 					$("#producto_data").DataTable().ajax.reload();
-
-
+					
 
 		    }
 				
@@ -234,6 +244,7 @@ function mostrar(id_producto)
 				
 				
 		});
+		
         
         
 	}
@@ -241,7 +252,8 @@ function mostrar(id_producto)
 
 	//la funcion guardaryeditar(e); se llama cuando se da click al boton submit
 function guardaryeditar(e)
-{
+	{   
+	
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 	var formData = new FormData($("#producto_form")[0]);
 
@@ -271,6 +283,7 @@ function guardaryeditar(e)
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
 				location.reload();
+
                limpiar();
 					
 		    }
@@ -451,7 +464,6 @@ function listar_en_compras(){
 							codProd  : id_producto,
 							codCat   : data.id_categoria,
 							producto : data.producto,
-							moneda   : data.moneda,
 							precio   : data.precio_compra,
 							stock    : data.stock,
 							dscto    : 0,
@@ -523,20 +535,19 @@ function listar_en_compras(){
 	  	var importe = detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
 	  		
 	  		importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
-			var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>"+detalles[i].moneda+" "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>"+detalles[i].moneda+" "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
+			var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
 			subtotal = subtotal + importe;
 
 
-		    //concatenar para poner la moneda con el subtotal
-            subtotalFinal = detalles[i].moneda+" "+subtotal;
+            subtotalFinal = "$ "+subtotal;
 
 			//var su = subtotal*igv;
             //var or=parseFloat(su);
             //var total= Math.round(or+subtotal);
             var total = subtotal;
 
-            //concatenar para poner la moneda con el total
-            totalFinal = detalles[i].moneda+" "+total;
+          
+            totalFinal = "$ "+total;
 
           
 
@@ -595,7 +606,7 @@ Así que solo agregué esa resta a la operación*/
   	var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
   	importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
   	
-  	importeFinal = detalles[idx].moneda+" "+importe;
+  	importeFinal ="$ "+importe;
 
   	$('#importe'+idx).html(importeFinal);
   	calcularTotales();
@@ -620,16 +631,15 @@ Así que solo agregué esa resta a la operación*/
   		if(detalles[i].estado == 1){
 			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
 		    
-		    //concatenar para poner la moneda con el subtotal
-            subtotalFinal = detalles[i].moneda+" "+subtotal;
+            subtotalFinal ="$ "+subtotal;
 
            // var su = subtotal*igv;
             //var or=parseFloat(su);
            //var total = Math.round(or+subtotal);
 
             var total= subtotal;
-            //concatenar para poner la moneda con el total
-            totalFinal = detalles[i].moneda+" "+total;
+        
+            totalFinal = "$ "+total;
 
           
 		}
@@ -927,7 +937,6 @@ function listar_en_ventas(){
 							cantidad : 1,
 							codProd  : id_producto,
 							producto : data.producto,
-							moneda   : data.moneda,
 							precio   : data.precio_venta,
 							stock    : data.stock,
 							dscto    : 0,
@@ -999,21 +1008,19 @@ function listar_en_ventas(){
 	  	    importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
 
 
-		    var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>"+detalles[i].moneda+" "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'> </td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">"+detalles[i].moneda+" "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
+		    var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'> </td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
 		
 
 			subtotal = subtotal + importe;
-
-			 //concatenar para poner la moneda con el subtotal
-            subtotalFinal = detalles[i].moneda+" "+subtotal;
+      subtotalFinal ="$ "+subtotal;
 
 			//var su = subtotal*igv;
             //var or=parseFloat(su);
             //var total= Math.round(or+subtotal);
             var total = subtotal;
 
-              //concatenar para poner la moneda con el total
-            totalFinal = detalles[i].moneda+" "+total;
+
+            totalFinal = "$ "+total;
        
 
 		}//cierre if
@@ -1149,7 +1156,7 @@ Así que solo agregué esa resta a la operación*/
        var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
 	  	importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
 	   
-	   importeFinal = detalles[idx].moneda+" "+importe;
+	   importeFinal = "$ "+importe;
 	    
          $('#importe'+idx).html(importeFinal);
 
@@ -1179,15 +1186,15 @@ Así que solo agregué esa resta a la operación*/
   		if( detalles[i].estado == 1 ){
 			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
 		
-            //concatenar para poner la moneda con el subtotal
-            subtotalFinal = detalles[i].moneda+" "+subtotal;
+
+            subtotalFinal ="$ "+subtotal;
 
             //var su = subtotal*igv;
             //var or=parseFloat(su);
             //var total = Math.round(or+subtotal);
             var total= subtotal;
-            //concatenar para poner la moneda con el total
-            totalFinal = detalles[i].moneda+" "+total;
+
+            totalFinal = "$ "+total;
 		}
 	}
 

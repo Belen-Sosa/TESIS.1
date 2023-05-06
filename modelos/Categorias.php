@@ -248,7 +248,7 @@
                  
            from categoria c 
               
-              INNER JOIN compras comp ON c.id_categoria=comp.id_categoria
+              INNER JOIN detalle_compras comp ON c.id_categoria=comp.id_categoria
 
 
               where c.id_categoria=?

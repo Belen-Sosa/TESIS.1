@@ -98,7 +98,7 @@
 					        <td><?php echo $datos[$i]["numero_mes"]?></td>
 					        <td><?php echo $fecha_mes?></td>
 					     
-					        <td><?php echo $datos[$i]["moneda"]." ".$datos[$i]["total_venta"]?></td>
+					        <td><?php echo "$ ".$datos[$i]["total_venta"]?></td>
 					      </tr>
 					      
 				      <?php

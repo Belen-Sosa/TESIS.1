@@ -173,12 +173,7 @@
                   <div class="col-lg-9 col-lg-offset-1">
 
 
-                    <select class="selectpicker form-control" id="moneda" name="moneda" required>
-                      <option value="">-- Seleccione moneda --</option>
-                      <option value="USD$">USD$</option>
-                      <option value="EUR">EUR€</option>
-
-                    </select>
+                  
 
                     <input type="text" class="form-control" id="precio_compra" name="precio_compra" placeholder="Precio Compra" required pattern="[0-9]{0,15}">
 

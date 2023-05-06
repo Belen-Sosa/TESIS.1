@@ -51,7 +51,7 @@
 				 $sub_array[] = $row["dni_cliente"];
 				 $sub_array[] = $row["vendedor"];
 				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = $row["moneda"]." ".$row["total"];
+				 $sub_array[] = "$ ".$row["total"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
@@ -296,7 +296,7 @@
          $sub_array[] = $row["dni_cliente"];
          $sub_array[] = $row["vendedor"];
          $sub_array[] = $row["tipo_pago"];
-         $sub_array[] = $row["moneda"]." ".$row["total"];
+         $sub_array[] ="$ ".$row["total"];
 
         
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
