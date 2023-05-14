@@ -61,7 +61,7 @@
 
    	   	
 
-              $sql="select c.id_cliente,c.nombre_cliente,c.apellido_cliente,c.dni_cliente,c.direccion_cliente,c.telefono_cliente,cc.saldo from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente";
+              $sql="select c.id_cliente,c.nombre_cliente,c.apellido_cliente,c.dni_cliente,c.direccion_cliente,c.telefono_cliente,cc.saldo,c.estado from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente and c.estado='1'";
 
    	   	  $sql=$conectar->prepare($sql);
    	   	  $sql->execute();
@@ -91,7 +91,7 @@
          }
 
 			}
-      echo $dato;
+     echo $dato;
       }
 
    	     //método para crear cuenta corriente
@@ -462,8 +462,11 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
    public function cambiar_estado($id_detalle_cc,$id_cuenta_corriente,$estado){
 
+
     $conectar=parent::conexion();
     parent::set_names();
+   
+    
           
           //si estado es igual a 0 entonces lo cambia a 1
     $est = "";
@@ -523,7 +526,7 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
       }
       
-          
+      
       $sql3="select saldo from cuentas_corrientes where id_cuentas_corrientes=?";
 
       $sql3=$conectar->prepare($sql3);
@@ -544,10 +547,12 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
       //actualizo el saldo de la cuenta corriente
       $saldo_actual= $saldo - $monto;
 
+    
+      
+      //LE ACTUALIZO EL SALDO
+      
 
-             
-      //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
-
+    
       $sql4="update cuentas_corrientes set 
       saldo=?
       where
@@ -659,14 +664,14 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
 
       
-      //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
+
+
 
       $sql4="update cuentas_corrientes set 
       saldo=?
       where
 
       id_cuentas_corrientes=?
-
       ";
             
       $sql4=$conectar->prepare($sql4);   

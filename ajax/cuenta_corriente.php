@@ -133,7 +133,7 @@
 					$sub_array[] = $row["dni_cliente"];
 					$sub_array[] = $row["direccion_cliente"];
 					$sub_array[] = $row["telefono_cliente"];
-					$sub_array[] = $row["saldo"];
+					$sub_array[] = "$ ".$row["saldo"];
 					$sub_array[] = '<a href="consultar_cuenta_corriente_cliente.php?id_cliente='.$row["id_cliente"].'" class="btn btn-warning detalle" ><i class="fa fa-eye"></i> </a>';
 
 					
@@ -182,7 +182,7 @@
 					$sub_array[] = $row["fecha_venta"];
 					$sub_array[] = $row["numero_venta"];
 					
-					$sub_array[] = $row["total"];
+					$sub_array[] = "$ ".$row["total"];
 					$sub_array[] = $row["estado"];	
 
 					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
@@ -232,20 +232,7 @@
 		  break;
 		
 
-     /* case "activarydesactivar":
-     
-     //los parametros id_cliente y est vienen por via ajax
-     $datos=$clientes->get_cliente_por_id($_POST["id_cliente"]);
-
-          // si existe el id del cliente entonces recorre el array
-	      if(is_array($datos)==true and count($datos)>0){
-
-              //edita el estado del cliente
-		      $clientes->editar_estado($_POST["id_cliente"],$_POST["est"]);
-		     
-	        } 
-
-     break;*/
+    
 
     
 

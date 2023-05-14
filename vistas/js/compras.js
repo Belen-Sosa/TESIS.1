@@ -168,7 +168,7 @@ function listar()
 				
 				success:function(data){
 	              
-	              //alert(data);
+			
                  $('#compras_data').DataTable().ajax.reload();
                  
                  //refresca el datatable de compras por fecha

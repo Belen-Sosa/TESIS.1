@@ -334,13 +334,12 @@
              parent::set_names();
 
 
-           $sql="select p.cuit,d.cuit_proveedor
-           from producto p 
-              
-              INNER JOIN detalle_compras c ON p.cuit=d.cuit_proveedor
-
-
-              where p.cuit=?
+           $sql="use dbproyecto;
+           select p.cuit,d.cuit_proveedor
+                          from proveedor as  p 
+                         
+                         INNER JOIN detalle_compras as d
+                         ON p.cuit=?
 
               ";
 

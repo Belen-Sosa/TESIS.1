@@ -100,7 +100,7 @@ function listar()
 
   //CAMBIAR ESTADO DE LA COMPRA
 
-
+/*
  function cambiarEstado(id_compras, numero_compra, est){
  
 
@@ -142,6 +142,7 @@ function listar()
 
 
    }
+   */
 
 
    //****************************************************************

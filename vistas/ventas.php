@@ -174,7 +174,6 @@
                      <h4 class="text-center"><strong>Tipo de Pago</strong></h4>
                     <select name="tipo_pago" class="col-lg-offset-3 col-xs-offset-2" id="tipo_pago" class="select" maxlength="10" >
                             <option value="">SELECCIONE TIPO DE PAGO</option>
-                            <option value="CHEQUE">PAGAR CON CHEQUE</option>
                             <option value="EFECTIVO">PAGAR CON EFECTIVO</option>
                             <option value="TRANSFERENCIA">PAGAR CON TRANSFERENCIA</option>
                             <option value="CUENTA CORRIENTE">PAGO A CTA CORRIENTE</option>

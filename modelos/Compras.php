@@ -186,7 +186,7 @@
           
 
           $sql="insert into detalle_compras
-          values(null,?,?,?,?,?,?,?,?,?,now(),?,?,?);";
+          values(null,?,?,?,?,?,?,?,?,now(),?,?,?,?);";
 
 
           $sql=$conectar->prepare($sql);
@@ -199,14 +199,14 @@
         $sql->bindValue(2,$cuit_proveedor);
         $sql->bindValue(3,$codProd);
         $sql->bindValue(4,$producto);
-        $sql->bindValue(4,$precio);
-        $sql->bindValue(5,$cantidad);
-        $sql->bindValue(6,$dscto);
-        $sql->bindValue(7,$importe);
-        $sql->bindValue(8,$id_usuario);
-        $sql->bindValue(9,$id_proveedor);
-        $sql->bindValue(10,$estado);
-        $sql->bindValue(11,$codCat);
+        $sql->bindValue(5,$precio);
+        $sql->bindValue(6,$cantidad);
+        $sql->bindValue(7,$dscto);
+        $sql->bindValue(8,$importe);
+        $sql->bindValue(9,$id_usuario);
+        $sql->bindValue(10,$id_proveedor);
+        $sql->bindValue(11,$estado);
+        $sql->bindValue(12,$codCat);
        
         $sql->execute();
 
@@ -449,11 +449,13 @@
          /*cambiar estado de la compra, solo se cambia si se quiere eliminar una compra y se revertería la cantidad de compra al stock*/
 
     public function cambiar_estado($id_compras, $numero_compra, $est){
+    
 
       $conectar=parent::conexion();
       parent::set_names();
             
             //si estado es igual a 0 entonces lo cambia a 1
+            //0= anulado , 1= pagado
       $estado = 0;
       //el parametro est se envia por via ajax, viene del $est:est
       /*si el estado es ==0 cambiaria a PAGADO Y SE EJECUTARIA TODO LO QUE ESTA ABAJO*/
@@ -527,10 +529,9 @@
                 
                  //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
 
-                  if(isset($id_producto)==true and count($id_producto)>0){
-                      
+                  if(isset($id_producto)==true /*and is_countable($id_producto)>0*/){
                       $sql3="select * from producto where id_producto=?";
-
+                     
                       $sql3=$conectar->prepare($sql3);
 
                       $sql3->bindValue(1, $id_producto);
@@ -546,6 +547,10 @@
                            //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la compra
                            //cuando das click a estado pasa a PAGADO Y SUMA la cantidad de stock con la cantidad de compra
                            $cantidad_actual= $stock + $cantidad_compra;
+                           require_once("consolelog.php");
+                           echo Console::log('CANTIDAD ACTUAL', "cantidad acual");
+                           echo Console::log('CANTIDAD ACTUAL', $cantidad_actual);
+                
 
                          }
                   }
@@ -623,7 +628,7 @@
 
             /*una vez se cambie de estado a ACTIVO entonces actualizamos la cantidad de stock en productos*/
 
-
+            
             //INICIO ACTUALIZAR LA CANTIDAD DE PRODUCTOS COMPRADOS EN EL STOCK
 
           $sql2="select * from detalle_compras where numero_compra=?";
@@ -646,9 +651,11 @@
 
                 
                  //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
-
-                  if(isset($id_producto)==true and count($id_producto)>0){
-                      
+                 
+                
+                  if(isset($id_producto)==true /*and is_countable($id_producto)>0*/ ){
+                    
+               
                       $sql3="select * from producto where id_producto=?";
 
                       $sql3=$conectar->prepare($sql3);
@@ -666,6 +673,9 @@
                            //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la compra
                       //cuando le da click al estado pasa de PAGADO A ANULADO y resta la cantidad de stock en productos con la cantidad de compra de detalle_compras, disminuyendo de esta manera la cantidad actual de productos en el stock de productos
                            $cantidad_actual= $stock - $cantidad_compra;
+                           require_once("consolelog.php");
+                           echo Console::log('',"cantidad actual");
+                           echo Console::log('CANTIDAD ACTUAL', $cantidad_actual);
 
                          }
                   }

@@ -38,7 +38,8 @@
                   <div class="box">
                     <div class="box-header with-border">
                           <h1 class="box-title">
-                            <button class="btn btn-primary btn-lg" id="add_button" onclick="limpiar()" data-toggle="modal" data-target="#clienteModal"><i class="fa fa-plus" aria-hidden="true"></i> Nuevo Cliente</button></h1>
+                          <a class="btn btn-primary btn-lg" id="add_button" href="clientes.php"  > Lista de Clientes</a>  
+                          <button class="btn btn-primary btn-lg" id="add_button" onclick="limpiar()" data-toggle="modal" data-target="#clienteModal"><i class="fa fa-plus" aria-hidden="true"></i> Nuevo Cliente</button></h1>
                         <div class="box-tools pull-right">
                         </div>
                     </div>

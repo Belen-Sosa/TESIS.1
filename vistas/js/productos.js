@@ -187,10 +187,14 @@ function mostrar(id_producto)
 				$('#producto_uploaded_image').html(data.producto_imagen);
 				$('#resultados_ajax').html(data);
 				$("#producto_data").DataTable().ajax.reload();
-				$('#procedente').val(data.procedente);
+			
 				if(data.categoria_nombre=="carnes"){
 					$('#procedente').show();
 					$('#titulo_procedente').show();
+					$('#procedente').val(data.id_procedente);
+				
+					console.log(data.id_procedente);
+					
 				}else{
 					$('#procedente').hide();
 					$('#titulo_procedente').hide();
@@ -219,13 +223,15 @@ function mostrar(id_producto)
 					if(data.categoria_nombre=="carnes"){
 						$('#procedente').show();
 						$('#titulo_procedente').show();
-						console.log(data.categoria);
+						$('#procedente').val(data.id_procedente);
+						console.log(data.id_procedente);
+			
 					}else{
 						$('#procedente').hide();
 						$('#titulo_procedente').hide();
 					}
 		
-					$('#procedente').val(data.procedente);
+			
 	                $('#precio_compra').val(data.precio_compra);
 					$('#precio_venta').val(data.precio_venta);
 					$('#stock').val(data.stock);
@@ -316,6 +322,9 @@ function guardaryeditar(e)
 				success: function(data){
                  
                   $('#producto_data').DataTable().ajax.reload();
+				
+				  console.log(data);
+				  console.log("aksdj");
 			    
 			    }
 
@@ -925,6 +934,7 @@ function listar_en_ventas(){
 						      data = $.parseJSON(data);
 						}
 						console.log(data);
+					
 		                
 		        /*IMPORTANTE: var obj: es un objeto con mucha informacion que contiene una fila con muchas columnas
 				Para crear un objeto de ese tipo (con columnas), se utliliza esto :
@@ -1284,17 +1294,17 @@ obj.value es el valor del campo de texto*/
 
 			
 					$.ajax({
-						url:"../ajax/cuenta_corriente.php?op=registrar_detalle_cc",
-						method:"POST",
-						data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente,"estado":"adeuda"},
-						cache: false,
-						dataType:"html",
-						error:function(x,y,z){
-							console.log(x);
-							console.log(y);
-							console.log(z);
-						},  
-				
+							url:"../ajax/cuenta_corriente.php?op=registrar_detalle_cc",
+							method:"POST",
+							data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente,"estado":"adeuda"},
+							cache: false,
+							dataType:"html",
+							error:function(x,y,z){
+								console.log(x);
+								console.log(y);
+								console.log(z);
+							},  
+					
 				
 						
 					success:function(data){
@@ -1316,22 +1326,40 @@ obj.value es el valor del campo de texto*/
 						var nombre = $("#nombre").val("");
 						var apellido = $("#apellido").val("");
 						var direccion = $("#direccion").val("");
-					
+						var total = $("#total").html("");
 						
 						detalles = [];
 						$('#listProdVentas').html('');
 						
 						//muestra un mensaje de exito
 						setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
-					
+					//refresca la pagina, se llama a la funtion explode
+					setTimeout ("explode();", 2000); 
 					
 				
 					}	}); 
 			}
+			console.log(data);
+
+			//IMPORTANTE:limpia los campos despues de enviarse
+			//cuando se imprime el alert(data) estas variables deben comentarse
+			var dni = $("#dni").val("");
+			var nombre = $("#nombre").val("");
+			var apellido = $("#apellido").val("");
+			var direccion = $("#direccion").val("");
+			var total = $("#total").html("");
+		
+			
+			detalles = [];
+			$('#listProdVentas').html('');
+			
+			
+		
               //muestra un mensaje de exito
             setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
           
-          
+          //refresca la pagina, se llama a la funtion explode
+          setTimeout ("explode();", 2000); 
        
 		}
 

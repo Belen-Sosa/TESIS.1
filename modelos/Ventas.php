@@ -253,7 +253,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           
 
        $sql="insert into detalle_ventas
-       values(null,?,?,?,?,?,?,?,?,?,now(),?,?,?);";
+       values(null,?,?,?,?,?,?,?,?,now(),?,?,?);";
 
 
        $sql=$conectar->prepare($sql);
@@ -374,7 +374,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        
 
           $sql2="insert into ventas 
-          values(null,now(),?,?,?,?,?,?,?,?,?,?);";
+          values(null,now(),?,?,?,?,?,?,?,?,?);";
 
 
           $sql2=$conectar->prepare($sql2);
@@ -521,7 +521,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                
                 //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
 
-                 if(isset($id_producto)==true and count($id_producto)>0){
+                 if(isset($id_producto)==true /*and count($id_producto)>0*/){
                      
                      $sql3="select * from producto where id_producto=?";
 
@@ -569,141 +569,249 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          
 
-             /*si el estado es igual a 0, entonces pasaria a ANULADO y reverteria de nuevo la cantidad de productos al stock*/
+          //si el estado es igual a 1(pagado) y tipo de pago es diferente de cc entonces pasa a 0(anulado)
+          if($_POST["est"] == 1 and $tipo_pago!="CUENTA CORRIENTE"){
+               $estado = 0;
 
-             if($_POST["est"] == 1){
-       $estado = 0;
+                  $sql="update ventas set 
+                        
+                        estado=?
+                        where 
+                        id_ventas=?
+                        
+                          ";
 
-     $sql="update ventas set 
-           
-           estado=?
-           where 
-           id_ventas=?
-          
-             ";
+                        // echo $sql; 
 
-           // echo $sql; 
+                        $sql=$conectar->prepare($sql);
 
-           $sql=$conectar->prepare($sql);
+                        $sql->bindValue(1,$estado);
+                        $sql->bindValue(2,$id_ventas);
+                        $sql->execute();
 
-           $sql->bindValue(1,$estado);
-           $sql->bindValue(2,$id_ventas);
-           $sql->execute();
-
-           $resultado= $sql->fetch(PDO::FETCH_ASSOC);
-
-
-        $sql_detalle= "update detalle_ventas set
-
-         estado=?
-         where 
-         numero_venta=?
-         ";
-
-           $sql_detalle=$conectar->prepare($sql_detalle);
-
-           $sql_detalle->bindValue(1,$estado);
-           $sql_detalle->bindValue(2,$numero_venta);
-           $sql_detalle->execute();
-
-           $resultado= $sql_detalle->fetch(PDO::FETCH_ASSOC);
+                        $resultado= $sql->fetch(PDO::FETCH_ASSOC);
 
 
+                      $sql_detalle= "update detalle_ventas set
 
-           /*una vez se cambie de estado a ACTIVO entonces revertimos la cantidad de stock en productos*/
+                      estado=?
+                      where 
+                      numero_venta=?
+                      ";
+
+                        $sql_detalle=$conectar->prepare($sql_detalle);
+
+                        $sql_detalle->bindValue(1,$estado);
+                        $sql_detalle->bindValue(2,$numero_venta);
+                        $sql_detalle->execute();
+
+                        $resultado= $sql_detalle->fetch(PDO::FETCH_ASSOC);
 
 
-           //INICIO REVERTIR LA CANTIDAD DE PRODUCTOS VENDIDOS EN EL STOCK
 
-         $sql2="select * from detalle_ventas where numero_venta=?";
+                        /*una vez se cambie de estado a ACTIVO entonces revertimos la cantidad de stock en productos*/
 
-         $sql2=$conectar->prepare($sql2);
 
-        
-           $sql2->bindValue(1,$numero_venta);
-           $sql2->execute();
+                        //INICIO REVERTIR LA CANTIDAD DE PRODUCTOS VENDIDOS EN EL STOCK
 
-           $resultado=$sql2->fetchAll();
+                      $sql2="select * from detalle_ventas where numero_venta=?";
+
+                      $sql2=$conectar->prepare($sql2);
+
+                      
+                        $sql2->bindValue(1,$numero_venta);
+                        $sql2->execute();
+
+                        $resultado=$sql2->fetchAll();
 
              foreach($resultado as $row){
 
-                $id_producto=$output["id_producto"]=$row["id_producto"];
-               //selecciona la cantidad vendida
-               $cantidad_venta=$output["cantidad_venta"]=$row["cantidad_venta"];
+                              $id_producto=$output["id_producto"]=$row["id_producto"];
+                            //selecciona la cantidad vendida
+                            $cantidad_venta=$output["cantidad_venta"]=$row["cantidad_venta"];
 
 
 
-               
-                //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
+                            
+                              //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
 
-                 if(isset($id_producto)==true and count($id_producto)>0){
-                     
-                     $sql3="select * from producto where id_producto=?";
+                              if(isset($id_producto)==true /*and count($id_producto)>0*/){
+                                  
+                                  $sql3="select * from producto where id_producto=?";
 
-                     $sql3=$conectar->prepare($sql3);
+                                  $sql3=$conectar->prepare($sql3);
 
-                     $sql3->bindValue(1, $id_producto);
-                     $sql3->execute();
+                                  $sql3->bindValue(1, $id_producto);
+                                  $sql3->execute();
 
-                     $resultado=$sql3->fetchAll();
+                                  $resultado=$sql3->fetchAll();
 
-                        foreach($resultado as $row2){
+                                      foreach($resultado as $row2){
+                                        
+                                        //este es la cantidad de stock para cada producto
+                                        $stock=$output2["stock"]=$row2["stock"];
+                                        
+                                        //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
+                                  //cuando le da click al estado pasa de PAGADO A ANULADO y SUMA la cantidad de stock en productos con la cantidad de venta de detalle_ventas, aumentando de esta manera la cantidad actual de productos en el stock de productos
+                                        $cantidad_actual= $stock + $cantidad_venta;
+
+                                      }
+                              }
+
+                            
+                            //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
+
+                            $sql6="update producto set 
+                            stock=?
+                            where
+
+                            id_producto=?
+
+                            ";
+                            
+                            $sql6=$conectar->prepare($sql6);   
+                            
+                            $sql6->bindValue(1,$cantidad_actual);
+                            $sql6->bindValue(2,$id_producto);
+
+                            $sql6->execute();
+
                           
-                          //este es la cantidad de stock para cada producto
-                          $stock=$output2["stock"]=$row2["stock"];
-                          
-                          //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
-                     //cuando le da click al estado pasa de PAGADO A ANULADO y SUMA la cantidad de stock en productos con la cantidad de venta de detalle_ventas, aumentando de esta manera la cantidad actual de productos en el stock de productos
-                          $cantidad_actual= $stock + $cantidad_venta;
-
-                        }
-                 }
-
-              
-               //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
-
-              $sql6="update producto set 
-              stock=?
-              where
-
-              id_producto=?
-
-              ";
-              
-              $sql6=$conectar->prepare($sql6);   
-              
-              $sql6->bindValue(1,$cantidad_actual);
-              $sql6->bindValue(2,$id_producto);
-
-              $sql6->execute();
-
-            
 
              }//cierre del foreach
 
-     if($tipo_pago="CUENTA CORRIENTE"){
-      $sqlcc="update detalle_cuentas_corrientes set 
-          
+            
+         }
+          //si el estado es igual a 1(pagado) y tipo de pago es diferente de cc entonces pasa a 0(anulado)
+          if($_POST["est"] == 1 and $tipo_pago=="CUENTA CORRIENTE"){
+            $estado = 2;
+
+               $sql="update ventas set 
+                     
+                     estado=?
+                     where 
+                     id_ventas=?
+                     
+                       ";
+
+                     // echo $sql; 
+
+                     $sql=$conectar->prepare($sql);
+
+                     $sql->bindValue(1,$estado);
+                     $sql->bindValue(2,$id_ventas);
+                     $sql->execute();
+
+                     $resultado= $sql->fetch(PDO::FETCH_ASSOC);
+
+
+                   $sql_detalle= "update detalle_ventas set
+
+                   estado=?
+                   where 
+                   numero_venta=?
+                   ";
+
+                     $sql_detalle=$conectar->prepare($sql_detalle);
+
+                     $sql_detalle->bindValue(1,$estado);
+                     $sql_detalle->bindValue(2,$numero_venta);
+                     $sql_detalle->execute();
+
+                     $resultado= $sql_detalle->fetch(PDO::FETCH_ASSOC);
+
+
+
+                     /*una vez se cambie de estado a ACTIVO entonces revertimos la cantidad de stock en productos*/
+
+
+                     //INICIO REVERTIR LA CANTIDAD DE PRODUCTOS VENDIDOS EN EL STOCK
+
+                   $sql2="select * from detalle_ventas where numero_venta=?";
+
+                   $sql2=$conectar->prepare($sql2);
+
+                   
+                     $sql2->bindValue(1,$numero_venta);
+                     $sql2->execute();
+
+                     $resultado=$sql2->fetchAll();
+
+          foreach($resultado as $row){
+
+                           $id_producto=$output["id_producto"]=$row["id_producto"];
+                         //selecciona la cantidad vendida
+                         $cantidad_venta=$output["cantidad_venta"]=$row["cantidad_venta"];
+
+
+
+                         
+                           //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
+
+                           if(isset($id_producto)==true /*and count($id_producto)>0*/){
+                               
+                               $sql3="select * from producto where id_producto=?";
+
+                               $sql3=$conectar->prepare($sql3);
+
+                               $sql3->bindValue(1, $id_producto);
+                               $sql3->execute();
+
+                               $resultado=$sql3->fetchAll();
+
+                                   foreach($resultado as $row2){
+                                     
+                                     //este es la cantidad de stock para cada producto
+                                     $stock=$output2["stock"]=$row2["stock"];
+                                     
+                                     //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
+                               //cuando le da click al estado pasa de PAGADO A ANULADO y SUMA la cantidad de stock en productos con la cantidad de venta de detalle_ventas, aumentando de esta manera la cantidad actual de productos en el stock de productos
+                                     $cantidad_actual= $stock + $cantidad_venta;
+
+                                   }
+                           }
+
+                         
+                         //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
+
+                         $sql6="update producto set 
+                         stock=?
+                         where
+
+                         id_producto=?
+
+                         ";
+                         
+                         $sql6=$conectar->prepare($sql6);   
+                         
+                         $sql6->bindValue(1,$cantidad_actual);
+                         $sql6->bindValue(2,$id_producto);
+
+                         $sql6->execute();
+
+                       
+
+          }//cierre del foreach
+
+          //borramos la fecha de pago de la deuda en cc
+
+          $sqlcc="update detalle_cuentas_corrientes set 
+       
           estado=?,fecha_pago=null
           where 
           id_ventas=?";
-
+   
           // echo $sql; 
-
+   
           $sqlcc=$conectar->prepare($sqlcc);
-
+   
           $sqlcc->bindValue(1,"anulado");
           $sqlcc->bindValue(2,$id_ventas);
           $sqlcc->execute();
-     }
+         
+      }
 
-
-       
-
-
-         }
-
-         if($est==2){
+        if($est==2){
           $estado=0;
         
          
@@ -760,8 +868,65 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
          }
 
-         if($est==0 and $tipo_pago="CUENTA CORRIENTE"){
+         if($est==0 and $tipo_pago=="CUENTA CORRIENTE"){
           $estado=2;
+        
+         
+    
+          $sql="update ventas set 
+                
+                estado=?
+                where 
+                id_ventas=?";
+     
+                // echo $sql; 
+     
+                $sql=$conectar->prepare($sql);
+     
+                $sql->bindValue(1,$estado);
+                $sql->bindValue(2,$id_ventas);
+                $sql->execute();
+     
+     
+     
+     
+          $sql_detalle= "update detalle_ventas set
+     
+              estado=?
+              where 
+              numero_venta=?
+              ";
+     
+                $sql_detalle=$conectar->prepare($sql_detalle);
+     
+                $sql_detalle->bindValue(1,$estado);
+                $sql_detalle->bindValue(2,$numero_venta);
+                $sql_detalle->execute();
+     
+             
+            $sqlcc="update detalle_cuentas_corrientes set 
+      
+            estado=?,fecha_pago=null
+            where 
+            id_ventas=?";
+  
+            // echo $sql; 
+  
+            $sqlcc=$conectar->prepare($sqlcc);
+  
+            $sqlcc->bindValue(1,"adeuda");
+            $sqlcc->bindValue(2,$id_ventas);
+            $sqlcc->execute();
+
+           
+      
+            
+     
+     
+             
+         }
+         if($est==0 and $tipo_pago!="CUENTA CORRIENTE"){
+          $estado=1;
         
          
     

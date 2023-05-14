@@ -110,7 +110,7 @@
 	            	/*si ya existe entonces editamos el producto*/
 
 
-	             $productos->editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$id_usuario);
+	             $productos->editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
 
 
 	            $messages[]="El producto se editó correctamente";
@@ -190,6 +190,7 @@
 				$output["stock"] = $row["stock"];
 				$output["estado"] = $row["estado"];
 				$output["procedente"] = $row["procedente"];
+				$output["id_procedente"] = $row["id_procedente"];
 
 				if($row["imagen"] != '')
 					
@@ -222,6 +223,7 @@
 					$output["estado"] = $row["estado"];
 					$output["categoria_nombre"] = $row["categoria"];
 					$output["procedente"] = $row["procedente"];
+					$output["id_procedente"] = $row["id_procedente"]; 
 
 
 
