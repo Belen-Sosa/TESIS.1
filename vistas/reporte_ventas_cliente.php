@@ -72,7 +72,7 @@
 
                <label for="inputPassword" class="col-sm-2 col-form-label">Cliente</label>
                  
-                 <select name="cedula" class="form-control">
+                 <select name="dni" class="form-control">
                           
                 <option value="0">SELECCIONE</option>
 
@@ -83,7 +83,7 @@
 
                        ?>
                          
-                         <option value="<?php echo $clientes[$i]["dni_cliente"]?>"><?php echo $clientes[$i]["nombre_cliente"]?></option>
+                         <option value="<?php echo $clientes[$i]["dni_cliente"]?>"><?php echo $clientes[$i]["nombre_cliente"]." ".$clientes[$i]["apellido_cliente"]?></option>
 
                        <?php
 

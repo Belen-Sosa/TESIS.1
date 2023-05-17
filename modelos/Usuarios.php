@@ -74,6 +74,7 @@
                        $_SESSION["correo"] = $resultado["correo"];
                        $_SESSION["dni_usuario"] = $resultado["dni_usuario"];
                        $_SESSION["nombre"] = $resultado["nombres"];
+                       $_SESSION["apellido"] = $resultado["apellidos"];
 
                   
        //PERMISOS DEL USUARIO PARA ACCEDER A LOS MODULOS

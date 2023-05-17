@@ -1,26 +1,32 @@
 
 <?php
+
 /*IMPORTANTE:ESTE ARCHIVO DE PDF NO ACEPTA LOS ESTILOS DE LIBRERIAS EXTERNAS NI BOOTSTRAP, HAY QUE USAR STYLE COMO ATRIBUTO Y LA ETIQUETA STYLE DEBAJO DE HEAD*/
 
-  require_once("../config/conexion.php"); 
+require_once("../config/conexion.php"); 
 
-   if(isset($_SESSION["nombre"]) and isset($_SESSION["correo"])){
+if(isset($_SESSION["nombre"]) and isset($_SESSION["correo"])){
 
 require_once("../modelos/Clientes.php");
 require_once("../modelos/Ventas.php");
-require_once("../modelos/Empresa.php");
+
 
 $clientes=new Cliente();
 $vent = new Ventas();
-$informacion_empresa=new Empresa();
 
+Require_once("../modelos/consolelog.php");
+        
+        
+
+echo Console::log('', $_POST["dni"]);
+echo Console::log('', $_POST["datepicker"]);
+echo Console::log('', $_POST["datepicker2"]);
 
 $datos=$clientes->get_cliente_por_dni($_POST["dni"]);
-$venta=$vent->get_venta_por_fecha($_POST["cedula"],$_POST["datepicker"],$_POST["datepicker2"]);
+$venta=$vent->get_venta_por_fecha($_POST["dni"],$_POST["datepicker"],$_POST["datepicker2"]);
 
-$total_productos=$vent->get_cant_productos_por_fecha($_POST["cedula"],$_POST["datepicker"],$_POST["datepicker2"]);
+$total_productos=$vent->get_cant_productos_por_fecha($_POST["dni"],$_POST["datepicker"],$_POST["datepicker2"]);
 
-$datos_empresa=$informacion_empresa->get_empresa();
 
 
 
@@ -53,28 +59,28 @@ ob_start();
 <table style="width: 100%; font-size: 10pt;">
 
   <tr>
-    <td><strong>DATOS DE LA EMPRESA</strong></td>
+    <td><strong>LA INDUSTRIA DEL POLLO</strong></td>
   </tr>
 
   <tr>
-    <td><strong>CEDULA EMPRESA: </strong> <?php echo $datos_empresa[0]["cedula_empresa"]; ?></td>
+    <td><strong>cedula: 1238913</strong></td>
   </tr>
   <tr>
-    <td><strong>EMPRESA: </strong> <?php echo $datos_empresa[0]["nombre_empresa"]; ?></td>
+    <td> </td>
   </tr>
   
   <tr>
     <td width="43%"><strong>DATOS DEL VENDEDOR</strong></td>
   </tr>
   <tr>
-    <td><strong>NOMBRE: </strong><?php echo $_SESSION["nombres"]; ?></td>
+    <td><strong>NOMBRE: </strong><?php echo $_SESSION["nombre"];echo" ".$_SESSION["apellido"];?></td>
   </tr>
   <tr>
-    <td><strong>CUIT: </strong><?php echo $_SESSION["cuit"]; ?></td>
+    <td><strong>DNI: </strong><?php echo $_SESSION["dni_usuario"]; ?></td>
   </tr>
   <tr>
     <td><strong>FECHA-HORA IMPRESO: </strong>
-      <?php echo $fecha=date("d-m-Y h:i:s A"); ?></td>
+      <?php date_default_timezone_set("America/Argentina/Buenos_Aires"); echo $fecha=date("d-m-Y h:i:s A"); ?></td>
   </tr>
    <tr></tr>
 </table><!--fin segunda tabla-->
@@ -86,25 +92,26 @@ ob_start();
 
 
 
-  <div align="center" style="color:black; font-weight:bolder; font-size:20px;">CUENTAS DE PRODUCTOS A CLIENTES   </div>
+<div align="center" style="color:black; font-weight:bolder; font-size:20px;">VENTAS DE PRODUCTOS A CLIENTE   </div>
 <table width="101%" class="change_order_items">
 
 <tr>
   <th colspan="5" style="font-size:15pt">DATOS PERSONALES DEL CLIENTE </th>
   </tr>
 <tr>
-<th width="5%" bgcolor="#317eac"><span class="Estilo11">CEDULA</span></th>
+<th width="5%" bgcolor="#317eac"><span class="Estilo11">DNI</span></th>
 <th width="15%" bgcolor="#317eac"><span class="Estilo11">NOMBRES</span></th>
+<th width="15%" bgcolor="#317eac"><span class="Estilo11">APELLIDOS</span></th>
 <th width="12%" bgcolor="#317eac"><span class="Estilo11">TELEFONO</span></th>
-<th width="38%" bgcolor="#317eac"><span class="Estilo11">DIRECCIÓN</span></th>
+<th width="38%" bgcolor="#317eac"><span class="Estilo11">DIRECCION</span></th>
 
 
      
       <?php
 
-         if(empty($_POST["cuit"])){
+         if(empty($_POST["dni"])){
 
-             echo "<span style='font-size:20px; color:red'>SELECCIONA UN PROVEEDOR</span>";
+             echo "<span style='font-size:20px; color:red'>SELECCIONA UN ClIENTE</span>";
          
 
          }
@@ -124,6 +131,7 @@ ob_start();
 <tr style="font-size:10pt" class="even_row">
 <td><div align="center"><span class=""><?php echo $datos[$i]["dni_cliente"];?></span></div></td>
 <td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["nombre_cliente"];?></span></div></td>
+<td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["apellido_cliente"];?></span></div></td>
 <td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["telefono_cliente"];?></span></div></td>
 <td style="text-align: right"><div align="center"><span class=""><?php echo $datos[$i]["direccion_cliente"];?></span></div></td>
 </tr>
@@ -154,7 +162,7 @@ ob_start();
 
          if(is_array($venta)==true and count($venta)==0){
 
-             echo "<span style='font-size:20px; color:red'>EL CLIENTE NO TIENE PRODUCTOS ASOCIADOS EN LA FECHA INDICADA</span>";
+             echo "<span style='font-size:20px; color:red'>EL CLIENTE NO TIENE VENTAS ASOCIADAS EN EL RANGO DE FECHA INDICADO.</span>";
          
 
          }
@@ -199,24 +207,18 @@ ob_start();
   
   <tr>
     <td width="84%" class="even_row" style="font-size:10pt; text-align: center">
-      <div align="right"><strong><span style="text-align: right;">TOTAL VENTA:</span></strong></div>
+      <div align="right"><strong><span style="text-align: right;">TOTAL:</span></strong></div>
     </td>
     <td width="16%" class="odd_row" style="font-size:12pt" text-align: right; border-right-style: none;">
       <div align="center">
       <strong>
       <?php
 
-       if($pagoTotal!=0){
+      
 
         echo "$ ".$pagoTotal;
 
-       } else {
-
-            //echo "US$ ".$pagoTotal;
-
-            echo "US$ ".$pagoTotal; 
-       }
- 
+       
 
 
       ?>
@@ -262,7 +264,7 @@ ob_start();
     <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
   </tr>
   <tr>
-    <td style="padding-top: 0em"><span class="Estilo3"><span id="result_box" lang="es" xml:lang="es">ESTE REPORTE  NO TENDRÁ FUERZA O EFECTO HASTA QUE SEA REVISADO Y FIRMADO POR UN FUNCIONARIO DE LA EMPRESA </span></span></td>
+    <td style="padding-top: 0em"><span class="Estilo3"><span id="result_box" lang="es" xml:lang="es">ESTE REPORTE  NO TENDRA FUERZA O EFECTO HASTA QUE SEA REVISADO Y FIRMADO POR UN FUNCIONARIO DE LA EMPRESA </span></span></td>
     <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
   </tr>
   <tr>
@@ -281,19 +283,22 @@ ob_start();
 
   <?php
   
-  $salida_html = ob_get_contents();
-  ob_end_clean(); 
 
-    require_once("dompdf/dompdf_config.inc.php");       
+
+  require_once("dompdf/dompdf_config.inc.php");    
+    
     $dompdf = new DOMPDF();
-    $dompdf->load_html($salida_html);
+    $dompdf->load_html(ob_get_clean());
     $dompdf->render();
-    $dompdf->stream("Listado de Productos.pdf", array('Attachment'=>'0'));
+    $pdf= $dompdf->output();
+    $filename="informe.pdf";
+    file_put_contents($filename,$pdf);
+    $dompdf->stream($filename, array('Attachment'=>'0'));
 
 
   } else{
 
      header("Location:".Conectar::ruta()."index.php");
   }
-    
+ 
 ?>

@@ -91,11 +91,11 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="home.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>LT</span>
+      <span class="logo-mini"><b>IdP</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Compra - Venta</b></span>
+      <span class="logo-lg"><b>Industria del Pollo</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -123,8 +123,9 @@
                  <i class="fa fa-user" aria-hidden="true"></i>
 
                 <p>
-                   <?php echo $_SESSION["nombre"]?> - Web Developer
-                  <small>Administrador desde Noviembre 2017</small>
+                <small>Usuario logueado:</small>
+                   <?php echo $_SESSION["nombre"]." ".$_SESSION["apellido"]?> 
+                  
                 </p>
               </li>
               <!-- Menu Body -->
@@ -182,9 +183,7 @@
 
               <a href="categorias.php">
                 <i class="fa fa-list" aria-hidden="true"></i> <span>Categoría</span>
-                <span class="pull-right-container badge bg-blue">
-                  <i class="fa fa-bell pull-right">'.$categoria->get_filas_categoria().'</i>
-                </span>
+                
               </a>
          
           </li>';
@@ -203,9 +202,7 @@
          <li class="">
           <a href="productos.php">
             <i class="fa fa-tasks" aria-hidden="true"></i> <span>Productos</span>
-            <span class="pull-right-container badge bg-blue">
-              <i class="fa fa-bell pull-right">'.$producto->get_filas_producto().'</i>
-            </span>
+           
           </a>
          
         </li>';
@@ -223,9 +220,7 @@
              <li class="">
                   <a href="proveedores.php">
                     <i class="fa fa-users"></i> <span>Proveedores</span>
-                    <span class="pull-right-container badge bg-blue">
-                      <i class="fa fa-bell pull-right">'.$proveedor->get_filas_proveedor().'</i>
-                    </span>
+                  
                   </a>
 
               </li>';
@@ -244,7 +239,7 @@
             <a href="compras.php">
               <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Compras</span>
               <span class="pull-right-container badge bg-blue">
-                <i class="fa fa-bell pull-right">'.$compra->get_filas_compra().'</i>
+               
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
@@ -303,7 +298,7 @@
           <a href="ventas.php">
             <i class="fa fa-suitcase" aria-hidden="true"></i> <span>Ventas</span>
             <span class="pull-right-container badge bg-blue">
-              <i class="fa fa-bell pull-right">'.$venta->get_filas_venta().'</i>
+             
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
@@ -390,9 +385,7 @@
         <li class="">
           <a href="usuarios.php">
             <i class="fa fa-user" aria-hidden="true"></i> <span>Usuarios</span>
-            <span class="pull-right-container badge bg-blue">
-              <i class="fa fa-bell pull-right">'.$usuario->get_filas_usuario().'</i>
-            </span>
+           
           </a>
          
         </li>';
@@ -411,22 +404,7 @@
          
         </li>-->
 
-         <?php if($_SESSION["empresa"]==1)
-          {
-
-          echo '
-
-        <li class="">
-          <a href="" onclick="mostrar_empresa('.$_SESSION["id_usuario"].')" data-toggle="modal" data-target="#empresaModal">
-            <i class="fa fa-building" aria-hidden="true"></i> <span>Empresa</span>
-            
-          </a>
-         
-        </li>';
-
-        }
-
-     ?>
+       
 
        
       </ul>
@@ -552,14 +530,7 @@
 
  <!--FIN FORMULARIO PERFIL USUARIO MODAL-->
 
- <!--VISTA MODAL PARA EDITAR EMPRESA-->
 
-   <?php 
-
-     require_once("modal/empresa_modal.php");
-
-    ?>
-  <!--VISTA MODAL PARA EDITAR EMPRESA-->
 
 
  <script src="../public/bower_components/jquery/dist/jquery.min.js"></script>
@@ -567,7 +538,7 @@
  
 <script type="text/javascript" src="js/perfil.js"></script> 
 
-<script type="text/javascript" src="js/empresa.js"></script>
+
 
 
 

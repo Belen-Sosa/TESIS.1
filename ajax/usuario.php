@@ -5,11 +5,11 @@
   require_once("../config/conexion.php");
 
 
-  /*llamo a los modelos categoria, cliente, compra, empresa, producto, proveedor y venta para verificar si el usuario tiene registros asociados a las tablas de la base de datos*/
+  /*llamo a los modelos categoria, cliente, compra, producto, proveedor y venta para verificar si el usuario tiene registros asociados a las tablas de la base de datos*/
   require_once("../modelos/Categorias.php");
   require_once("../modelos/Clientes.php");
   require_once("../modelos/Compras.php");
-  require_once("../modelos/Empresa.php");
+
   require_once("../modelos/Productos.php");
   require_once("../modelos/Proveedores.php");
   require_once("../modelos/Ventas.php");
@@ -303,7 +303,7 @@
             $categoria = new Categoria();
             $cliente = new Cliente();
             $compra =  new Compras();
-            $empresa = new Empresa();
+          
             $proveedor = new Proveedor();
             $venta = new Ventas();
 
@@ -317,7 +317,6 @@
 
         $detalle_comp= $compra->get_detalle_compras_por_id_usuario($_POST["id_usuario"]);
 
-        $emp= $empresa->get_empresa_por_id_usuario($_POST["id_usuario"]);    
     
         $prov= $proveedor->get_proveedor_por_id_usuario($_POST["id_usuario"]); 
 

@@ -426,7 +426,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            //si estado es igual a 0 entonces lo cambia a 1
      $estado = 0;
      //el parametro est se envia por via ajax, viene del $est:est
-     /*si el estado es ==0 cambiaria a PAGADO Y SE EJECUTARIA TODO LO QUE ESTA ABAJO*/
+   
      $numero_venta=$_POST["numero_venta"];
      $id_ventas=$_POST["id_ventas"];
      $est=$_POST["est"];
@@ -444,11 +444,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
         $tipo_pago= $row;
      } 
 
-     require_once("consolelog.php");
-     echo Console::log('un_nombre',"numero venta");
-     echo Console::log('un_nombre', $numero_venta);
-     echo Console::log('un_nombre',"id_ventas");
-     echo Console::log('un_nombre', $id_ventas);
+     
     
      if($_POST["est"] == 0 and $tipo_pago!="CUENTA CORRIENTE"){
        $estado = 1;
@@ -682,7 +678,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
             
          }
-          //si el estado es igual a 1(pagado) y tipo de pago es diferente de cc entonces pasa a 0(anulado)
+          //si el estado es igual a 1(pagado) y tipo de pago es  cc entonces pasa a 2(pendiente)
           if($_POST["est"] == 1 and $tipo_pago=="CUENTA CORRIENTE"){
             $estado = 2;
 
@@ -805,9 +801,51 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
    
           $sqlcc=$conectar->prepare($sqlcc);
    
-          $sqlcc->bindValue(1,"anulado");
+          $sqlcc->bindValue(1,"adeuda");
           $sqlcc->bindValue(2,$id_ventas);
           $sqlcc->execute();
+
+
+
+          //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
+          $sql="select id_cuenta_corriente,monto 
+          from detalle_cuentas_corrientes
+          where id_ventas=?
+          ";
+   
+          //tomo el valor de la id de la cuenta corriente y el monto
+   
+          $sql=$conectar->prepare($sql);
+   
+          $sql->bindValue(1,$id_ventas);
+          $sql->execute();
+          $resultado=$sql->fetchAll();
+
+          foreach($resultado as $row){
+            
+            //este es la cantidad de stock para cada producto
+            $saldo_venta=$row["monto"];
+            $id_cuenta_corriente=$row["id_cuenta_corriente"];
+
+          }
+
+
+           
+            $sql="update cuentas_corrientes 
+            set saldo = saldo + ?
+            where id_cuentas_corrientes = ?";
+            
+     
+          
+     
+            $sql=$conectar->prepare($sql);
+     
+            $sql->bindValue(1,$saldo_venta);
+            $sql->bindValue(2,$id_cuenta_corriente);
+            $sql->execute();
+            $resultado=$sql->fetchAll();
+  
+
          
       }
 
@@ -862,7 +900,43 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
      
      
-     
+           //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
+           $sql="select id_cuenta_corriente,monto 
+           from detalle_cuentas_corrientes
+           where id_ventas=?
+           ";
+    
+           //tomo el valor de la id de la cuenta corriente y el monto
+    
+           $sql=$conectar->prepare($sql);
+    
+           $sql->bindValue(1,$id_ventas);
+           $sql->execute();
+           $resultado=$sql->fetchAll();
+ 
+           foreach($resultado as $row){
+             
+             //este es la cantidad de stock para cada producto
+             $saldo_venta=$row["monto"];
+             $id_cuenta_corriente=$row["id_cuenta_corriente"];
+ 
+           }
+ 
+ 
+            
+             $sql="update cuentas_corrientes 
+             set saldo = saldo - ?
+             where id_cuentas_corrientes = ?";
+             
+      
+           
+      
+             $sql=$conectar->prepare($sql);
+      
+             $sql->bindValue(1,$saldo_venta);
+             $sql->bindValue(2,$id_cuenta_corriente);
+             $sql->execute();
+             $resultado=$sql->fetchAll();
      
                 /*una vez se cambie de estado a PAGADO entonces revertimos la cantidad de stock en productos*/
      
@@ -919,7 +993,43 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
             $sqlcc->execute();
 
            
-      
+            //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
+          $sql="select id_cuenta_corriente,monto 
+          from detalle_cuentas_corrientes
+          where id_ventas=?
+          ";
+   
+          //tomo el valor de la id de la cuenta corriente y el monto
+   
+          $sql=$conectar->prepare($sql);
+   
+          $sql->bindValue(1,$id_ventas);
+          $sql->execute();
+          $resultado=$sql->fetchAll();
+
+          foreach($resultado as $row){
+            
+            //este es la cantidad de stock para cada producto
+            $saldo_venta=$row["monto"];
+            $id_cuenta_corriente=$row["id_cuenta_corriente"];
+
+          }
+
+
+           
+            $sql="update cuentas_corrientes 
+            set saldo = saldo + ?
+            where id_cuentas_corrientes = ?";
+            
+     
+          
+     
+            $sql=$conectar->prepare($sql);
+     
+            $sql->bindValue(1,$saldo_venta);
+            $sql->bindValue(2,$id_cuenta_corriente);
+            $sql->execute();
+            $resultado=$sql->fetchAll();
             
      
      
@@ -1490,7 +1600,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            $fecha_final = date("Y-m-d", strtotime($date));
 
 
-       $sql="select * from detalle_ventas where dni_cliente=? and fecha_venta>=? and fecha_venta<=? and estado='1';";
+       $sql="select * from detalle_ventas where dni_cliente=? and fecha_venta>=? and fecha_venta<=? and estado='1' or estado='2';";
 
    
        $sql=$conectar->prepare($sql);
@@ -1559,7 +1669,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
              $fecha_final = date("Y-m-d", strtotime($date));
 
 
-         $sql="select sum(cantidad_venta) as total from detalle_ventas where dni_cliente=? and fecha_venta >=? and fecha_venta <=? and estado='1';";
+         $sql="select sum(cantidad_venta) as total from detalle_ventas where dni_cliente=? and fecha_venta >=? and fecha_venta <=? and estado='1' or estado='2';";
 
      
          $sql=$conectar->prepare($sql);

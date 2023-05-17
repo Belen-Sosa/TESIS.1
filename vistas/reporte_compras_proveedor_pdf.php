@@ -8,11 +8,11 @@
 
 require_once("../modelos/Proveedores.php");
 require_once("../modelos/Compras.php");
-require_once("../modelos/Empresa.php");
+
 
 $proveedores=new Proveedor();
 $compra = new Compras();
-$informacion_empresa=new Empresa();
+
 
 
 $datos=$proveedores->get_proveedor_por_cuit($_POST["cuit"]);
@@ -20,7 +20,7 @@ $pedidos=$compra->get_pedido_por_fecha($_POST["cuit"],$_POST["datepicker"],$_POS
 
 $total_productos=$compra->get_cant_productos_por_fecha($_POST["cuit"],$_POST["datepicker"],$_POST["datepicker2"]);
 
-$datos_empresa=$informacion_empresa->get_empresa();
+
 
 
 
@@ -53,29 +53,29 @@ ob_start();
 <td width="46%" height="111">
 <table style="width: 100%; font-size: 10pt;">
 
-  <tr>
-    <td><strong>DATOS DE LA EMPRESA</strong></td>
+<tr>
+    <td><strong>LA INDUSTRIA DEL POLLO</strong></td>
   </tr>
 
   <tr>
-    <td><strong>CEDULA EMPRESA: </strong> <?php echo $datos_empresa[0]["cedula_empresa"]; ?></td>
+    <td><strong>cedula: 1238913</strong></td>
   </tr>
   <tr>
-    <td><strong>EMPRESA: </strong> <?php echo $datos_empresa[0]["nombre_empresa"]; ?></td>
+    <td> </td>
   </tr>
   
   <tr>
     <td width="43%"><strong>DATOS DEL VENDEDOR</strong></td>
   </tr>
   <tr>
-    <td><strong>NOMBRE: </strong><?php echo $_SESSION["nombre"]; ?></td>
+    <td><strong>NOMBRE: </strong><?php echo $_SESSION["nombre"];echo" ".$_SESSION["apellido"];?></td>
   </tr>
   <tr>
-    <td><strong>CUIT: </strong><?php echo $_SESSION["cuit"]; ?></td>
+    <td><strong>DNI: </strong><?php echo $_SESSION["dni_usuario"]; ?></td>
   </tr>
   <tr>
     <td><strong>FECHA-HORA IMPRESO: </strong>
-      <?php echo $fecha=date("d-m-Y h:i:s A"); ?></td>
+      <?php date_default_timezone_set("America/Argentina/Buenos_Aires");  echo $fecha=date("d-m-Y h:i:s A"); ?></td>
   </tr>
    <tr></tr>
 </table><!--fin segunda tabla-->
@@ -87,7 +87,7 @@ ob_start();
 
 
 
-  <div align="center" style="color:black; font-weight:bolder; font-size:20px;">COMPRAS DE PRODUCTOS A PROVEEDORES   </div>
+  <div align="center" style="color:black; font-weight:bolder; font-size:20px;">COMPRAS DE PRODUCTOS A PROVEEDOR   </div>
 <table width="101%" class="change_order_items">
 
 <tr>
@@ -95,9 +95,9 @@ ob_start();
   </tr>
 <tr>
 <th width="5%" bgcolor="#317eac"><span class="Estilo11">CUIT</span></th>
-<th width="15%" bgcolor="#317eac"><span class="Estilo11">NOMBRES</span></th>
+<th width="15%" bgcolor="#317eac"><span class="Estilo11">RAZON SOCIAL</span></th>
 <th width="12%" bgcolor="#317eac"><span class="Estilo11">TELEFONO</span></th>
-<th width="38%" bgcolor="#317eac"><span class="Estilo11">DIRECCIÓN</span></th>
+<th width="38%" bgcolor="#317eac"><span class="Estilo11">DIRECCION</span></th>
 <th width="30%" bgcolor="#317eac"><span class="Estilo11">CORREO</span></th>
 
      
@@ -159,7 +159,7 @@ ob_start();
 
          if(is_array($pedidos)==true and count($pedidos)==0){
 
-             echo "<span style='font-size:20px; color:red'>EL PROVEEDOR NO TIENE PRODUCTOS ASOCIADOS EN LA FECHA INDICADA</span>";
+             echo "<span style='font-size:20px; color:red'>EL PROVEEDOR NO TIENE COMPRAS ASOCIADAS EN EL RANGO DE FECHA INDICADO</span>";
          
 
          }
@@ -207,23 +207,19 @@ ob_start();
   
   <tr>
     <td width="84%" class="even_row" style="font-size:10pt; text-align: center">
-      <div align="right"><strong><span style="text-align: right;">TOTAL COMPRA:</span></strong></div>
+      <div align="right"><strong><span style="text-align: right;">TOTAL :</span></strong></div>
     </td>
     <td width="16%" class="odd_row" style="font-size:12pt" text-align: right; border-right-style: none;">
       <div align="center">
       <strong>
       <?php 
 
-        if($pagoTotal!=0){
+       
 
         echo "$ ".$pagoTotal;
 
-       } else {
 
-            //echo "US$ ".$pagoTotal;
-
-            echo "US$ ".$pagoTotal; 
-       }
+        
 
       //echo $pagoTotal;
 
@@ -271,7 +267,7 @@ ob_start();
     <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
   </tr>
   <tr>
-    <td style="padding-top: 0em"><span class="Estilo3"><span id="result_box" lang="es" xml:lang="es">ESTE REPORTE  NO TENDRÁ FUERZA O EFECTO HASTA QUE SEA REVISADO Y FIRMADO POR UN FUNCIONARIO DE LA EMPRESA </span></span></td>
+    <td style="padding-top: 0em"><span class="Estilo3"><span id="result_box" lang="es" xml:lang="es">ESTE REPORTE  NO TENDRA FUERZA O EFECTO HASTA QUE SEA REVISADO Y FIRMADO POR UN FUNCIONARIO DE LA EMPRESA </span></span></td>
     <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
   </tr>
   <tr>
@@ -290,15 +286,16 @@ ob_start();
 
   <?php
   
-  $salida_html = ob_get_contents();
-  ob_end_clean();
 
-    require_once("dompdf/dompdf_config.inc.php");  
-
+  require_once("dompdf/dompdf_config.inc.php");    
+    
     $dompdf = new DOMPDF();
-    $dompdf->load_html($salida_html);
+    $dompdf->load_html(ob_get_clean());
     $dompdf->render();
-    $dompdf->stream("Listado de Productos.pdf", array('Attachment'=>'0'));
+    $pdf= $dompdf->output();
+    $filename="informe.pdf";
+    file_put_contents($filename,$pdf);
+    $dompdf->stream($filename, array('Attachment'=>'0'));
 
 
   } else{
