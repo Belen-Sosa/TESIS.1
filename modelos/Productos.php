@@ -240,7 +240,7 @@
             $estado=1;
 
 
-            $sql="select * from producto where id_producto=? and estado=?";
+            $sql="select p.*, c.categoria from producto as p,categoria as c where p.id_producto=? and p.estado=? and c.id_categoria= p.id_categoria";
 
             $sql=$conectar->prepare($sql);
 

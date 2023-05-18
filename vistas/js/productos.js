@@ -432,7 +432,7 @@ function listar_en_compras(){
 	
 	 function agregarDetalle(id_producto,producto, estado){
 
-	 	//alert(estado);
+
 
 		        $.ajax({
 					url:"../ajax/producto.php?op=buscar_producto",
@@ -468,7 +468,8 @@ function listar_en_compras(){
 							stock    : data.stock,
 							dscto    : 0,
 							importe  : 0,
-							estado   : data.estado
+							estado   : data.estado,
+							nombre_categoria: data.nombre_categoria
 						};
 		                
 		 /*IMPORTANTE: detalles.push(obj);: Para agregar elementos a un arreglo en javascript, se utiliza el metodo push()
@@ -517,37 +518,47 @@ function listar_en_compras(){
   	
   	var subtotal = 0;
 
-  	var total = 0;
-
-    var subtotalFinal = 0;
 
   	var totalFinal = 0;
 
-
-  	 //var iva = 20;
-     //var igv = (iva/100);
 
       
 
   	 for(var i=0; i<detalles.length; i++){
 		if( detalles[i].estado == 1 ){
-
-	  	var importe = detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
-	  		
-	  		importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
-			var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
-			subtotal = subtotal + importe;
+			if(detalles[i].nombre_categoria == "carnes" ||  detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
+			
+			
 
 
-            subtotalFinal = "$ "+subtotal;
+				var importe = detalles[i].importe = (detalles[i].precio/1000)*detalles[i].cantidad ;		
+				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'>  grs.</td> <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
+			
+				
+			}
+			else{
+		
+			
+		
+				var importe =detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
+				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
+		
+		
+			}
+		
+			
+			
+			
 
-			//var su = subtotal*igv;
-            //var or=parseFloat(su);
-            //var total= Math.round(or+subtotal);
-            var total = subtotal;
+				
+				subtotal = subtotal + importe;
 
+
+        
           
-            totalFinal = "$ "+total;
+                totalFinal = "$ "+subtotal.toFixed(2);
 
           
 
@@ -591,22 +602,29 @@ obj.value es el valor del campo de texto*/
   }
   	
   function recalcular(idx){
-  	//alert('holaaa:::' + obj.value);
-  	//var asd = document.getElementById('cantidad');
-  	//console.log(detalles[idx].cantidad);
-  	//detalles[idx].cantidad = parseInt(obj.value);
-  	console.log(detalles[idx].cantidad);
-  	console.log((detalles[idx].cantidad * detalles[idx].precio));
-  	//var objImp = 'importe'+idx;
-  	//console.log(objImp);
-  	
-  	/*IMPORTANTE:porque cuando agregaba una segunda fila el importe se alteraba? El importe se modificaba por que olvidé restarle el descuento
-Así que solo agregué esa resta a la operación*/
 
-  	var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
-  	importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
+	if(detalles[idx].nombre_categoria == "carnes" ||  detalles[idx].nombre_categoria=="quesos" || detalles[idx].nombre_categoria== "fiambres" ){
+		console.log("hola");
+		var importe =detalles[idx].importe = (detalles[idx].precio/1000)*detalles[idx].cantidad ;
+		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
+		
+		
+	}
+	else{
+
+	
+
+		var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
+		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
+		
+
+
+	}
+
   	
-  	importeFinal ="$ "+importe;
+
+
+  	importeFinal ="$ "+importe.toFixed(2);
 
   	$('#importe'+idx).html(importeFinal);
   	calcularTotales();
@@ -1000,27 +1018,38 @@ function listar_en_ventas(){
 
   	for(var i=0; i<detalles.length; i++){
 		if(detalles[i].estado == 1){
+			if(detalles[i].nombre_categoria == "carnes" ||  detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
+			
+			
+
+
+				var importe = detalles[i].importe = (detalles[i].precio/1000)*detalles[i].cantidad ;		
+				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
+			
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'>  grs.</td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
+			}
+			else{
+		
+			
+		
+				var importe =detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
+				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'> </td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
+		
+		
+			}
        
             
-            var importe = detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
-	    
-
-	  	    importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
-
-
-		    var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'> </td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
+        
+		   
 		
 
 			subtotal = subtotal + importe;
-      subtotalFinal ="$ "+subtotal;
-
-			//var su = subtotal*igv;
-            //var or=parseFloat(su);
-            //var total= Math.round(or+subtotal);
-            var total = subtotal;
+            
 
 
-            totalFinal = "$ "+total;
+
+            totalFinal = "$ "+subtotal.toFixed(2);
        
 
 		}//cierre if
@@ -1138,31 +1167,38 @@ obj.value es el valor del campo de texto*/
   }
   	
   function recalcular(idx){
-  	//alert('holaaa:::' + obj.value);
-  	//var asd = document.getElementById('cantidad');
-  	//console.log(detalles[idx].cantidad);
-  	//detalles[idx].cantidad = parseInt(obj.value);
-  	console.log(detalles[idx].cantidad);
-  	console.log((detalles[idx].cantidad * detalles[idx].precio));
-  	//var objImp = 'importe'+idx;
-  	//console.log(objImp);
+	console.log(detalles);
+	console.log(idx);
+	if(detalles[idx].nombre_categoria == "carnes" ||  detalles[idx].nombre_categoria=="quesos" || detalles[idx].nombre_categoria== "fiambres" ){
+		console.log("hola");
+		var importe =detalles[idx].importe = (detalles[idx].precio/1000)*detalles[idx].cantidad ;
+		console.log("el importe " + importe );
+
+		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
+		
+		
+	}
+	else{
+
+	    
+
+		var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
+		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
+		
+
+
+	}
 
   	
-  	/*IMPORTANTE:porque cuando agregaba una segunda fila el importe se alteraba? El importe se modificaba por que olvidé restarle el descuento
-Así que solo agregué esa resta a la operación*/
 
 
+  	importeFinal ="$ "+importe.toFixed(2);
 
-       var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
-	  	importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
-	   
-	   importeFinal = "$ "+importe;
-	    
-         $('#importe'+idx).html(importeFinal);
+  	$('#importe'+idx).html(importeFinal);
+  	calcularTotales();
+  	
 
 
-	  	//$("#cantidad_"+idx).val(cantidad_venta);
-	  	calcularTotales();
 
 	  
   }
@@ -1178,21 +1214,35 @@ Así que solo agregué esa resta a la operación*/
 
   	var totalFinal = 0;
 
-    //var iva = 20;
-
-    //var igv = (iva/100);
+ 
 
 	for(var i=0; i<detalles.length; i++){
   		if( detalles[i].estado == 1 ){
-			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+
+
+
+			if(detalles[i].nombre_categoria == "carnes" || detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
+				
+			
+				
+				subtotal = subtotal + ( (detalles[i].precio/1000)*detalles[i].cantidad ) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+				
+			}
+			else{
+		
+				
+				subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+		
+				
+		
+		
+			}
 		
 
-            subtotalFinal ="$ "+subtotal;
+            subtotalFinal ="$ "+subtotal.toFixed(2);
 
-            //var su = subtotal*igv;
-            //var or=parseFloat(su);
-            //var total = Math.round(or+subtotal);
-            var total= subtotal;
+          
+            var total= subtotal.toFixed(2);
 
             totalFinal = "$ "+total;
 		}
@@ -1418,11 +1468,14 @@ function habilitar_stock(id_procedente){
 	console.log(d);
 	if(d != "0"){
 		$('#stock').attr('disabled', false);
+			
+		$('#contenedor_precio_compra').hide();
      	//muestra un mensaje de exito
 
 	}else{
 		$('#stock').attr('disabled', true);
 
+		$('#contenedor_precio_compra').show();
 	}
 	
 }
@@ -1434,17 +1487,17 @@ function habilitar_stock(id_procedente){
     if(categoria=="carnes"){
 		$('#procedente').show();
 		$('#titulo_procedente').show();
-	
-		$('#contenedor_precio_compra').hide();
+
 	}else{
 		$('#procedente').hide();
 		
 		$('#titulo_procedente').hide();
-		$('#contenedor_precio_compra').show();
+		
 		$('#stock').attr('disabled', true);
 		
 	}
   });
+ 
 
 
  init();
