@@ -105,10 +105,10 @@
               </div>
 
                <div class="form-group">
-                  <label for="inputText3" class="col-lg-1 control-label">Cédula</label>
+                  <label for="inputText3" class="col-lg-1 control-label">Cuit</label>
 
                   <div class="col-lg-9 col-lg-offset-1">
-                    <input type="text" class="form-control" id="cuit" name="cuit" placeholder="Cédula" required pattern="[0-9]{0,15}">
+                    <input type="text" class="form-control" id="cuit" name="cuit" placeholder="Cuit" required pattern="[0-9]{0,15}">
                   </div>
               </div>
 

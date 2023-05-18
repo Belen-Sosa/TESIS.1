@@ -31,7 +31,7 @@
            $conectar= parent::conexion();
        
           $sql= "
-          select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+          select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado,p.imagen,c.id_categoria, c.categoria as categoria
           from producto as p 
           inner join categoria as c on
           p.id_categoria=c.id_categoria 
@@ -97,7 +97,7 @@
 
            $conectar= parent::conexion();
        
-          $sql= "select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+          $sql= "select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen,c.id_categoria, c.categoria as categoria
            
            from producto p 
               
@@ -119,22 +119,20 @@
          }
 
 
-           /*poner la ruta vistas/upload*/
-         public function upload_image() {
+   /*poner la ruta vistas/upload*/
+   public function upload_image() {
 
-            if(isset($_FILES["producto_imagen"]))
-            {
-              $extension = explode('.', $_FILES['producto_imagen']['name']);
-              $new_name = rand() . '.' . $extension[1];
-              $destination = '../vistas/upload/' . $new_name;
-              move_uploaded_file($_FILES['producto_imagen']['tmp_name'], $destination);
-              return $new_name;
-            }
-
-
-          }
+    if(isset($_FILES["producto_imagen"]))
+    {
+      $extension = explode('.', $_FILES['producto_imagen']['name']);
+      $new_name = rand() . '.' . $extension[1];
+      $destination = '../vistas/upload/' . $new_name;
+      move_uploaded_file($_FILES['producto_imagen']['tmp_name'], $destination);
+      return $new_name;
+    }
 
 
+  }
           //método para insertar registros
 
         public function registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
@@ -160,15 +158,20 @@
             require_once("Productos.php");
 
 
-            $imagen_producto = new Producto();
+
+  $imagen_producto = new Producto();
+
+        
+  $image = '';
+  if($_FILES["producto_imagen"]["name"] != '')
+  {
+    $image = $imagen_producto->upload_image();
+  }
+
+       
 
                   
-            $image = '';
-            if($_FILES["producto_imagen"]["name"] != '')
-            {
-              $image = $imagen_producto->upload_image();
-            }
-
+           
             //fecha 
 
               $date = $_POST["datepicker"];
@@ -179,7 +182,7 @@
        
               echo Console::log('un_nombre', $procedente);
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?,?);";
+            values(null,?,?,?,?,?,?,?,?);";
 
             
             $sql=$conectar->prepare($sql);
@@ -190,12 +193,9 @@
             $sql->bindValue(3, $_POST["precio_compra"]);
             $sql->bindValue(4, $_POST["precio_venta"]);
             $sql->bindValue(5, $stocker);
-            $sql->bindValue(6, $_POST["estado"]);
-            $sql->bindValue(7, $image);
-            $sql->bindValue(7, $fecha);
-         
-            $sql->bindValue(9, $_POST["id_usuario"]);
-            $sql->bindValue(10, $_POST["procedente"]);
+            $sql->bindValue(6, $_POST["estado"]);       
+            $sql->bindValue(7, $_POST["id_usuario"]);
+            $sql->bindValue(8, $_POST["procedente"]);
             $sql->execute();
 
            
@@ -210,7 +210,7 @@
 
           //$output = array();
              $sql="
-             select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen, p.fecha_vencimiento as fecha_vencimiento,c.id_categoria, c.categoria as categoria
+             select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen,c.id_categoria, c.categoria as categoria
              from producto as p 
              inner join categoria as c on
              p.id_categoria=c.id_categoria 
@@ -300,7 +300,8 @@
           $imagen = $_POST["hidden_producto_imagen"];
         }
 
-      //fecha 
+
+
 
       $fecha = $_POST["datepicker"];
 
@@ -333,7 +334,6 @@
                        stock=?,
                        estado=?,
                        imagen=?,
-                       fecha_vencimiento=?,
                        id_usuario=?,
                        procedente=?
                        where 
@@ -349,10 +349,9 @@
                 $sql->bindValue(5, $stocker);
                 $sql->bindValue(6, $_POST["estado"]);
                 $sql->bindValue(7, $imagen);
-                $sql->bindValue(8, $fecha);
-                $sql->bindValue(9, $_POST["id_usuario"]);
-                $sql->bindValue(10, $_POST["procedente"]);
-                $sql->bindValue(11, $_POST["id_producto"]);
+                $sql->bindValue(8, $_POST["id_usuario"]);
+                $sql->bindValue(9, $_POST["procedente"]);
+                $sql->bindValue(10, $_POST["id_producto"]);
                 $sql->execute();
 
 
@@ -367,7 +366,6 @@
                      precio_venta=?,
                      estado=?,
                      imagen=?,
-                     fecha_vencimiento=?,
                      id_usuario=?
                      where 
                      id_producto=?
@@ -380,9 +378,8 @@
                       $sql->bindValue(2, $_POST["precio_venta"]);
                       $sql->bindValue(3, $_POST["estado"]);
                       $sql->bindValue(4, $imagen);
-                      $sql->bindValue(5, $fecha);
-                      $sql->bindValue(6, $_POST["id_usuario"]);
-                      $sql->bindValue(7, $_POST["id_producto"]);
+                      $sql->bindValue(5, $_POST["id_usuario"]);
+                      $sql->bindValue(6, $_POST["id_producto"]);
                       $sql->execute();
 
 

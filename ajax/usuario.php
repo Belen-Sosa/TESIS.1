@@ -31,7 +31,6 @@
    $telefono=isset($_POST["telefono"]);
    $email=isset($_POST["email"]);
    $direccion=isset($_POST["direccion"]); 
-   $cargo=isset($_POST["cargo"]);
    $usuario=isset($_POST["usuario"]);
    $password1=isset($_POST["password1"]);
    $password2=isset($_POST["password2"]);
@@ -62,7 +61,7 @@
                                 
                                  //no existe el usuario por lo tanto hacemos el registros
 
-                                $usuarios->registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$cargo,$usuario,$password1,$password2,$estado,$permisos);
+                                $usuarios->registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos);
 
                                  $messages[]="El usuario se registró correctamente";
 
@@ -80,7 +79,7 @@
 
                              /*si ya existe entonces editamos el usuario*/
 
-                            $usuarios->editar_usuario($id_usuario,$nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$cargo,$usuario,$password1,$password2,$estado,$permisos);
+                            $usuarios->editar_usuario($id_usuario,$nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos);
 
                              $messages[]="El usuario se editó correctamente";
 	                     }
@@ -158,7 +157,6 @@
                     $output["dni_usuario"] = $row["dni_usuario"];
                     $output["nombre"] = $row["nombres"];
             				$output["apellido"] = $row["apellidos"];
-            				$output["cargo"] = $row["cargo"];
             				$output["usuario"] = $row["usuario"];
             				$output["password1"] = $row["password"];
             				$output["password2"] = $row["password2"];
@@ -182,7 +180,6 @@
                     $output["dni_usuario_relacion"] = $row["dni_usuario"];
                     $output["nombre"] = $row["nombres"];
                     $output["apellido"] = $row["apellidos"];
-                    $output["cargo"] = $row["cargo"];
                     $output["usuario"] = $row["usuario"];
                     $output["password1"] = $row["password"];
                     $output["password2"] = $row["password2"];
@@ -244,26 +241,13 @@
 	        }
 
 
-            //cargo
-
-            if($row["cargo"]==1){
-
-              $cargo="ADMINISTRADOR";
-
-            } else{
-
-            	if($row["cargo"]==0){
-                   
-                   $cargo="EMPLEADO";
-            	}
-            }
+            
 
 
 	     $sub_array[]= $row["dni_usuario"];
 	     $sub_array[] = $row["nombres"];
          $sub_array[] = $row["apellidos"];
          $sub_array[] = $row["usuario"];
-         $sub_array[] = $cargo;
          $sub_array[] = $row["telefono"];
          $sub_array[] = $row["correo"];
          $sub_array[] = $row["direccion"];

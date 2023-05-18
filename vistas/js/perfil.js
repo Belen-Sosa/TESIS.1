@@ -19,10 +19,9 @@ function mostrar_perfil(id_usuario_perfil)
                 //console.log(data.cedula);
 			
 				$('#perfilModal').modal('show');
-				$('#cedula_perfil').val(data.cedula);
+				$('#dni_usuario').val(data.dni);
 				$('#nombre_perfil').val(data.nombre);
 				$('#apellido_perfil').val(data.apellido);
-				//$('#cargo').val(data.cargo);
 				$('#usuario_perfil').val(data.usuario_perfil);
 				$('#password1_perfil').val(data.password1);
 				$('#password2_perfil').val(data.password2);

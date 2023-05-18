@@ -18,11 +18,10 @@
    $id_usuario_perfil=isset($_POST["id_usuario_perfil"]);
    $nombre_perfil=isset($_POST["nombre_perfil"]);
    $apellido_perfil=isset($_POST["apellido_perfil"]);
-   $cedula_perfil=isset($_POST["cedula_perfil"]);
+   $cedula_perfil=isset($_POST["dni_perfil"]);
    $telefono_perfil=isset($_POST["telefono_perfil"]);
    $email_perfil=isset($_POST["email_perfil"]);
    $direccion_perfil=isset($_POST["direccion_perfil"]); 
- 
    $usuario_perfil=isset($_POST["usuario_perfil"]);
    $password1_perfil=isset($_POST["password1_perfil"]);
    $password2_perfil=isset($_POST["password2_perfil"]);
@@ -43,10 +42,9 @@
 
         foreach($datos as $row)
         {
-          $output["cedula"] = $row["cedula"];
+          $output["dni_usuario"] = $row["dni_usuario"];
           $output["nombre"] = $row["nombres"];
           $output["apellido"] = $row["apellidos"];
-          
           $output["usuario_perfil"] = $row["usuario"];
           $output["password1"] = $row["password"];
           $output["password2"] = $row["password2"];
@@ -97,7 +95,7 @@
 
     //verificamos si el usuario existe en la base de datos, si ya existe un registro con la cedula, nombre o correo entonces no lo registra
 
-    $datos= $perfil->get_usuario_nombre($_POST["cedula_perfil"], $_POST["email_perfil"]);
+    $datos= $perfil->get_usuario_nombre($_POST["dni_perfil"], $_POST["email_perfil"]);
 
     //verificamos si el password1 coincide con el password2, si se cumple entonces verificamos si existe un registro con los datos enviados y en caso que no existe entonces se registra el usuario
 

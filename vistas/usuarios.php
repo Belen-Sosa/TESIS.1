@@ -56,7 +56,6 @@
                                 <th>Nombres</th>
                                 <th>Apellidos</th>
                                 <th>Usuario</th>
-                                <th>Cargo</th>
                                 <th>Teléfono</th>
                                 <th>Correo</th>
                                 <th>Dirección</th>
@@ -111,8 +110,8 @@
 
                <div class="modal-body">
 
-                 <label>Cédula</label>
-                 <input type="text" name="dni_usuario" id="dni_usuario" class="form-control" placeholder="Cédula" required pattern="[0-9]{0,15}"/>
+                 <label>DNI</label>
+                 <input type="text" name="dni_usuario" id="dni_usuario" class="form-control" placeholder="dni" required pattern="[0-9]{0,15}"/>
                 
                 <br />
 
@@ -123,24 +122,17 @@
           <label>Apellidos</label>
           <input type="text" name="apellido" id="apellido" class="form-control" placeholder="Apellidos" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$"/>
           <br />
-          
-          <label>Cargo</label>
-           <select class="form-control" id="cargo" name="cargo" required>
-              <option value="">-- Selecciona cargo --</option>
-              <option value="1" selected>Administrador</option>
-              <option value="0">Empleado</option>
-           </select>
-           <br />
+
           
           <label>Usuario</label>
           <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Usuario" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$"/>
           <br />
           
-          <label>Password</label>
+          <label>Contraseña</label>
           <input type="password" name="password1" id="password1" class="form-control" placeholder="Password" required/>
           <br />
          
-          <label>Repita Password</label>
+          <label>Repita Contraseña</label>
           <input type="password" name="password2" id="password2" class="form-control" placeholder="Repita Password" required/>
           <br />
           

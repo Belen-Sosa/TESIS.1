@@ -203,7 +203,7 @@
 					}
 
 
-				$output["fecha_vencimiento"] = date("d-m-Y",strtotime($row["fecha_vencimiento"]));
+				
 
 				}
 
@@ -238,7 +238,7 @@
 						}
 
 
-					$output["fecha_vencimiento"] = date("d-m-Y",strtotime($row["fecha_vencimiento"]));
+			
 
 			    }
 			    
@@ -338,8 +338,7 @@
 				$sub_array[] = '<button type="button" onClick="mostrar('.$row["id_producto"].');" id="'.$row["id_producto"].'" class="btn btn-warning btn-md"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
 
 
-               
-                $fecha= date("d-m-Y", strtotime($row["fecha_vencimiento"]));				
+               		
 
 				
 				if($row["imagen"] != '')
@@ -348,7 +347,7 @@
 
 		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="200" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
 
-         <span><i class="fa fa-calendar" aria-hidden="true"></i>  '.$fecha.' <br/><strong>(vencimiento)</strong></span> 
+        
 
 
 
@@ -437,9 +436,7 @@
 				$sub_array[] = '<button type="button"  name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
 
 
-			   /*declaro la variable fecha*/
-               $fecha= date("d-m-Y", strtotime($row["fecha_vencimiento"]));				
-
+			  
 
 				if($row["imagen"] != '')
 					{
@@ -447,7 +444,7 @@
 
 		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
 
-         <span><i class="fa fa-calendar" aria-hidden="true"></i>  '.$fecha.' <br/><strong>(vencimiento)</strong></span> 
+         
 
 
 
@@ -599,9 +596,7 @@
 
                
 
-               /*declaro la variable fecha*/
-               $fecha= date("d-m-Y", strtotime($row["fecha_vencimiento"]));				
-
+              
 
 				if($row["imagen"] != '')
 					{
@@ -609,7 +604,6 @@
 
 		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
 
-         <span><i class="fa fa-calendar" aria-hidden="true"></i>  '.$fecha.' <br/><strong>(vencimiento)</strong></span> 
 
 
 

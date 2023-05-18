@@ -30,12 +30,10 @@
                   <tr>
                     <th class="all">Categoría</th>
                     <th class="all">Producto</th>
-                  
                     <th class="min-desktop">Precio Compra</th>
                     <th class="min-desktop">Precio Venta</th>
                     <th class="min-desktop">Stock</th>
                     <th class="min-desktop">Estado</th>
-                    <th class="min-desktop">Foto</th>
                     <th class="min-desktop">Agregar</th>
                    
                     <!--<th>Acciones</th>-->

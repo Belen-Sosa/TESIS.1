@@ -44,7 +44,6 @@ var tabla;
    	$("#dni_usuario").val("");
    	$('#nombre').val("");
 	$('#apellido').val("");
-	$('#cargo').val("");
 	$('#usuario').val("");
 	$('#password1').val("");
 	$('#password2').val("");
@@ -67,9 +66,8 @@ var tabla;
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
 	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
 	    buttons: [		          
-		            'copyHtml5',
+
 		            'excelHtml5',
-		            'csvHtml5',
 		            'pdf'
 		        ],
 
@@ -173,8 +171,6 @@ var tabla;
 
 						//desactiva el campo
 		                $("#apellido").attr('disabled', 'disabled');
-
-						$('#cargo').val(data.cargo);
 						$('#usuario').val(data.usuario);
 						$('#password1').val(data.password1);
 						$('#password2').val(data.password2);
@@ -194,7 +190,6 @@ var tabla;
 						$("#nombre").attr('disabled', false);
 						$('#apellido').val(data.apellido);
                         $("#apellido").attr('disabled', false);
-                        $('#cargo').val(data.cargo);
 						$('#usuario').val(data.usuario);
 						$('#password1').val(data.password1);
 						$('#password2').val(data.password2);
@@ -244,7 +239,6 @@ var tabla;
 
 				    	$('#usuario_form')[0].reset();
 						$('#usuarioModal').modal('hide');
-
 						$('#resultados_ajax').html(datos);
 						$('#usuario_data').DataTable().ajax.reload();
 				

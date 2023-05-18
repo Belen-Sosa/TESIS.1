@@ -89,7 +89,7 @@
 
 
                <div class="form-group">
-                  <label for="" class="col-lg-3 control-label">Cédula</label>
+                  <label for="" class="col-lg-3 control-label">Cuit</label>
 
                   <div class="col-lg-9">
                     <input type="text" class="form-control" id="cuit" name="cuit" placeholder="Cuit" required pattern="[0-9]{0,15}" readonly>

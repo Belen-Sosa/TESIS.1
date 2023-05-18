@@ -93,10 +93,10 @@
 
 
                <div class="form-group">
-                  <label for="" class="col-lg-3 control-label">Cédula</label>
+                  <label for="" class="col-lg-3 control-label">Dni</label>
 
                   <div class="col-lg-9">
-                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Cedula" required pattern="[0-9]{0,15}" readonly>
+                    <input type="text" class="form-control" id="dni" name="dni" placeholder="Dni" required pattern="[0-9]{0,15}" readonly>
                   </div>
               </div>
 
@@ -176,6 +176,7 @@
                             <option value="">SELECCIONE TIPO DE PAGO</option>
                             <option value="EFECTIVO">PAGAR CON EFECTIVO</option>
                             <option value="TRANSFERENCIA">PAGAR CON TRANSFERENCIA</option>
+                            <option value="TRANSFERENCIA">PAGAR CON TARJETA</option>
                             <option value="CUENTA CORRIENTE">PAGO A CTA CORRIENTE</option>
                           </select>
                     </div>

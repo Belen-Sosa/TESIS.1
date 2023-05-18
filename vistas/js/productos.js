@@ -59,10 +59,8 @@ function limpiar()
 	$('#precio_venta').val("");
 	$('#stock').val("");
 	$('#estado').val("");
-	$('#datepicker').val("");
-	$('#producto_imagen').val("");
-
 	$('#procedente').hide();
+	$('#producto_imagen').val("");
 	$('#titulo_procedente').hide();
 	
 }
@@ -76,9 +74,8 @@ function listar()
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
 	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
 	    buttons: [		          
-		            'copyHtml5',
+
 		            'excelHtml5',
-		            'csvHtml5',
 		            'pdf'
 		        ],
 		"ajax":
@@ -175,13 +172,10 @@ function mostrar(id_producto)
 
 				$('#presentacion').val(data.presentacion);
 				$('#unidad').val(data.unidad);
-
-
                 $('#precio_compra').val(data.precio_compra);
 				$('#precio_venta').val(data.precio_venta);
 				$('#stock').val(data.stock);
 				$('#estado').val(data.estado);
-				$('#datepicker').val(data.fecha_vencimiento);
 				$('.modal-title').text("Editar Producto");
 				$('#id_producto').val(id_producto);
 				$('#producto_uploaded_image').html(data.producto_imagen);
@@ -236,7 +230,6 @@ function mostrar(id_producto)
 					$('#precio_venta').val(data.precio_venta);
 					$('#stock').val(data.stock);
 					$('#estado').val(data.estado);
-					$('#datepicker').val(data.fecha_vencimiento);
 					$('.modal-title').text("Editar Producto");
 					$('#id_producto').val(id_producto);
 					$('#producto_uploaded_image').html(data.producto_imagen);
@@ -349,9 +342,8 @@ function listar_en_compras(){
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
 	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
 	    buttons: [		          
-		            'copyHtml5',
+
 		            'excelHtml5',
-		            'csvHtml5',
 		            'pdf'
 		        ],
 		"ajax":
@@ -818,9 +810,8 @@ function listar_en_ventas(){
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
 	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
 	    buttons: [		          
-		            'copyHtml5',
+	
 		            'excelHtml5',
-		            'csvHtml5',
 		            'pdf'
 		        ],
 		"ajax":

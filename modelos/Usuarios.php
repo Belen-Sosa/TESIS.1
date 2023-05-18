@@ -154,13 +154,13 @@
    	    }
 
         //metodo para registrar usuario
-   	    public function registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$cargo,$usuario,$password1,$password2,$estado,$permisos){
+   	    public function registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos){
 
              $conectar=parent::conexion();
              parent::set_names();
 
              $sql="insert into usuarios 
-             values(null,?,?,?,?,?,?,?,?,?,?,now(),?);";
+             values(null,?,?,?,?,?,?,?,?,?,now(),?);";
 
              $sql=$conectar->prepare($sql);
 
@@ -170,11 +170,10 @@
              $sql->bindValue(4, $_POST["telefono"]);
              $sql->bindValue(5, $_POST["email"]);
              $sql->bindValue(6, $_POST["direccion"]);
-             $sql->bindValue(7, $_POST["cargo"]);
-             $sql->bindValue(8, $_POST["usuario"]);
-             $sql->bindValue(9, $_POST["password1"]);
-             $sql->bindValue(10, $_POST["password2"]);
-             $sql->bindValue(11, $_POST["estado"]);
+             $sql->bindValue(7, $_POST["usuario"]);
+             $sql->bindValue(8, $_POST["password1"]);
+             $sql->bindValue(9, $_POST["password2"]);
+             $sql->bindValue(10, $_POST["estado"]);
              $sql->execute();
 
               
@@ -213,7 +212,7 @@
    	    }
 
         //metodo para editar usuario
-   	    public function editar_usuario($id_usuario,$nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$cargo,$usuario,$password1,$password2,$estado,$permisos){
+   	    public function editar_usuario($id_usuario,$nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos){
 
              $conectar=parent::conexion();
              parent::set_names();
@@ -241,7 +240,6 @@
                   telefono=?,
                   correo=?,
                   direccion=?,
-                  cargo=?,
                   usuario=?,
                   password=?,
                   password2=?,
@@ -260,12 +258,11 @@
                     $sql->bindValue(4,$_POST["telefono"]);
                     $sql->bindValue(5,$_POST["email"]);
                     $sql->bindValue(6,$_POST["direccion"]);
-                    $sql->bindValue(7,$_POST["cargo"]);
-                    $sql->bindValue(8,$_POST["usuario"]);
-                    $sql->bindValue(9,$_POST["password1"]);
-                    $sql->bindValue(10,$_POST["password2"]);
-                    $sql->bindValue(11,$_POST["estado"]);
-                    $sql->bindValue(12,$_POST["id_usuario"]);
+                    $sql->bindValue(7,$_POST["usuario"]);
+                    $sql->bindValue(8,$_POST["password1"]);
+                    $sql->bindValue(9,$_POST["password2"]);
+                    $sql->bindValue(10,$_POST["estado"]);
+                    $sql->bindValue(11,$_POST["id_usuario"]);
                     $sql->execute();
 
                        
@@ -318,7 +315,6 @@
                   telefono=?,
                   correo=?,
                   direccion=?,
-                  cargo=?,
                   usuario=?,
                   password=?,
                   password2=?,
@@ -336,12 +332,11 @@
                     $sql->bindValue(1,$_POST["telefono"]);
                     $sql->bindValue(2,$_POST["email"]);
                     $sql->bindValue(3,$_POST["direccion"]);
-                    $sql->bindValue(4,$_POST["cargo"]);
-                    $sql->bindValue(5,$_POST["usuario"]);
-                    $sql->bindValue(6,$_POST["password1"]);
-                    $sql->bindValue(7,$_POST["password2"]);
-                    $sql->bindValue(8,$_POST["estado"]);
-                    $sql->bindValue(9,$_POST["id_usuario"]);
+                    $sql->bindValue(4,$_POST["usuario"]);
+                    $sql->bindValue(5,$_POST["password1"]);
+                    $sql->bindValue(6,$_POST["password2"]);
+                    $sql->bindValue(7,$_POST["estado"]);
+                    $sql->bindValue(8,$_POST["id_usuario"]);
                     $sql->execute();
 
 
