@@ -12,7 +12,7 @@
 
  		try {
 
- 			$conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=dbproyecto","root","");
+ 			$conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=dbproyecto_1","root","");
 		    
               $conectar->query("SET NAMES 'utf8'");
             

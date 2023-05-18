@@ -281,8 +281,7 @@ function guardaryeditar(e)
 
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
-				location.reload();
-
+				setTimeout('document.location.reload()',5000);
                limpiar();
 					
 		    }
@@ -1435,9 +1434,15 @@ function habilitar_stock(id_procedente){
     if(categoria=="carnes"){
 		$('#procedente').show();
 		$('#titulo_procedente').show();
+	
+		$('#contenedor_precio_compra').hide();
 	}else{
 		$('#procedente').hide();
+		
 		$('#titulo_procedente').hide();
+		$('#contenedor_precio_compra').show();
+		$('#stock').attr('disabled', true);
+		
 	}
   });
 

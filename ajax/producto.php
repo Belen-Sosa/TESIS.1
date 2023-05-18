@@ -53,7 +53,7 @@
 				}
 				
                 // verificamos que el stock_procedente sea mayor al stock del producto 
-				if($stock_procedente>$_POST["stock"]){
+				if($stock_procedente>=$_POST["stock"]){
 					    $datos = $productos->get_producto_nombre($_POST["producto"]);
 
 
@@ -64,7 +64,7 @@
 
 					    $productos->registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
 
-
+                        $productos->editar_stock_procedente($_POST["procedente"],$_POST["stock"]);
 
 						$messages[]="El producto se registró correctamente";
 					

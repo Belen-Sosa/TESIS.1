@@ -159,17 +159,39 @@
 
                   </div>
               </div>
+              <div class="form-group" id="contenedor_procedente">
+                  <label  for="" id="titulo_procedente" class="col-lg-1 control-label">Procedente</label>
+
+                  <div class="col-lg-9 col-lg-offset-1">
+                    
+                    <select  class="form-control" onclick="habilitar_stock(this)" name="procedente" id="procedente">
+
+                      <option value="0">Seleccione</option>
+
+                        <?php
+
+                           for($i=0; $i<sizeof($listaProdCarn);$i++){
+                            
+                             ?>
+                              <option  value="<?php echo $listaProdCarn[$i]["id_producto"]?>"><?php echo $listaProdCarn[$i]["producto"];?></option>
+                             <?php
+                           }
+                        ?>
+                      
+                    </select>
+                  </div>
+              </div>
 
 
-              <div class="form-group">
-                  <label for="" class="col-lg-1 control-label">Precio Compra</label>
+              <div id="contenedor_precio_compra" class="form-group">
+                  <label for="" id="titulo_precio_compra" class="col-lg-1 control-label">Precio Compra</label>
 
                   <div class="col-lg-9 col-lg-offset-1">
 
 
                   
 
-                    <input type="text" class="form-control" id="precio_compra" name="precio_compra" placeholder="Precio Compra" required pattern="[0-9]{0,15}">
+                    <input type="text" class="form-control" id="precio_compra" name="precio_compra" placeholder="Precio Compra"  pattern="[0-9]{0,15}">
 
                   </div>
               </div>
@@ -204,28 +226,7 @@
                     </select>
                   </div>
               </div>
-              <div class="form-group">
-                  <label  for="" id="titulo_procedente" class="col-lg-1 control-label">Procedente</label>
-
-                  <div class="col-lg-9 col-lg-offset-1">
-                    
-                    <select  class="form-control" onclick="habilitar_stock(this)" name="procedente" id="procedente">
-
-                      <option value="0">Seleccione</option>
-
-                        <?php
-
-                           for($i=0; $i<sizeof($listaProdCarn);$i++){
-                            
-                             ?>
-                              <option  value="<?php echo $listaProdCarn[$i]["id_producto"]?>"><?php echo $listaProdCarn[$i]["producto"];?></option>
-                             <?php
-                           }
-                        ?>
-                      
-                    </select>
-                  </div>
-              </div>
+              
              
                
              </div>

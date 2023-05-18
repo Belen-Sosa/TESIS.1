@@ -172,17 +172,14 @@
 
                   
            
-            //fecha 
+            
 
-              $date = $_POST["datepicker"];
-              $date_inicial = str_replace('/', '-', $date);
-              $fecha = date("Y-m-d",strtotime($date_inicial));
 
               require_once("consolelog.php");
        
               echo Console::log('un_nombre', $procedente);
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?);";
+            values(null,?,?,?,?,?,?,?,?,?);";
 
             
             $sql=$conectar->prepare($sql);
@@ -193,9 +190,10 @@
             $sql->bindValue(3, $_POST["precio_compra"]);
             $sql->bindValue(4, $_POST["precio_venta"]);
             $sql->bindValue(5, $stocker);
-            $sql->bindValue(6, $_POST["estado"]);       
-            $sql->bindValue(7, $_POST["id_usuario"]);
-            $sql->bindValue(8, $_POST["procedente"]);
+            $sql->bindValue(6, $_POST["estado"]);    
+            $sql->bindValue(7, $image);    
+            $sql->bindValue(8, $_POST["id_usuario"]);
+            $sql->bindValue(9, $_POST["procedente"]);
             $sql->execute();
 
            
@@ -303,10 +301,7 @@
 
 
 
-      $fecha = $_POST["datepicker"];
-
-      $date_inicial = str_replace('/', '-', $fecha);
-      $fecha = date("Y-m-d",strtotime($date_inicial));
+      
 
        
        /*****************************************************************/
@@ -572,6 +567,47 @@
              $sql->execute();
 
              return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+
+      }
+      public function editar_stock_procedente($id_producto,$stock_nuevo_prod){
+    
+       
+        $conectar=parent::conexion();
+              parent::set_names();
+        $sql="select * 
+           from producto
+           where id_producto=?
+          ";
+
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1, $id_producto);
+        $sql->execute();
+        $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($resultado as $row)
+				{
+					$stock_procedente = $row["stock"];
+				}
+        
+        
+      
+        
+        $stock_actual= $stock_procedente-$stock_nuevo_prod;
+        
+            
+
+              $sql="update producto set 
+                    
+                    stock=?
+                    where 
+                    id_producto=?
+                      ";
+
+                    $sql=$conectar->prepare($sql);
+
+                    $sql->bindValue(1, $stock_actual);
+                    $sql->bindValue(2, $id_producto);
+                    $sql->execute();
 
       }
 
