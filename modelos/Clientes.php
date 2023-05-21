@@ -157,11 +157,10 @@
                       $sql->bindValue(2, $_POST["nombre"]);
                       $sql->bindValue(3, $_POST["apellido"]);
                       $sql->bindValue(4, $_POST["telefono"]);
-                      $sql->bindValue(5, $_POST["email"]);
-                      $sql->bindValue(6, $_POST["direccion"]);
-                      $sql->bindValue(7, $_POST["estado"]);
-                      $sql->bindValue(8, $_POST["id_usuario"]);
-                      $sql->bindValue(9, $_POST["dni_cliente"]);
+                      $sql->bindValue(5, $_POST["direccion"]);
+                      $sql->bindValue(6, $_POST["estado"]);
+                      $sql->bindValue(7, $_POST["id_usuario"]);
+                      $sql->bindValue(8, $_POST["dni_cliente"]);
                       $sql->execute();
 
             } else{
@@ -234,7 +233,8 @@
 
         	   $estado=1;
 
-        	 } else {
+        	 } 
+            if($_POST["est"]=="1"){
 
         	 	 $estado=0;
         	 }

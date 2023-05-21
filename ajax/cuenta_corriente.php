@@ -111,21 +111,21 @@
 			   {
 				   $sub_array = array();
    
-				  /* $est = '';
-				   
-					$atrib = "btn btn-danger btn-md estado";
-				   if($row["estado"] == 1){
-					   $est = 'PAGADO';
-					   $atrib = "btn btn-success btn-md estado";
-				   }
-				   else{
-					   if($row["estado"] == 0){
-						   $est = 'ANULADO';
-						   
-					   }	
-				   }
-                   */
-				   
+						
+					$est = '';
+					
+					$atrib = "btn btn-success btn-md estado";
+					if($row["estado"] == 0){
+						$est = 'DESACTIVADA';
+						$atrib = "btn btn-warning btn-md estado";
+					}
+					else{
+						if($row["estado"] == 1){
+							$est = 'ACTIVADA';
+							
+						}	
+					}
+					
    
 
 					$sub_array[] = $row["nombre_cliente"];
@@ -134,6 +134,7 @@
 					$sub_array[] = $row["direccion_cliente"];
 					$sub_array[] = $row["telefono_cliente"];
 					$sub_array[] = "$ ".$row["saldo"];
+					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_cuentas_corrientes"].','.$row["estado"].');" name="estado" id="'.$row["id_cuentas_corrientes"].'" class="'.$atrib.'">'.$est.'</button>';
 					$sub_array[] = '<a href="consultar_cuenta_corriente_cliente.php?id_cliente='.$row["id_cliente"].'" class="btn btn-warning detalle" ><i class="fa fa-eye"></i> </a>';
 
 					
@@ -237,7 +238,31 @@
     
 
 
+		  case "activarydesactivar":
+			
+			
+			$cuentaCorriente->editar_cuenta_corriente($_POST["id_cuentas_corrientes"],$_POST["est"]);
+					
+				
+	   
+		break;
 
+		case "ver_estado":
+			
+			
+		$datos=$cuentaCorriente->ver_estado($_GET["id_cliente"]);
+		$output= array();
+	    foreach($datos as $row)
+			{
+				$output["estado"] = $row["estado"];
+				
+
+				
+
+				}
+		echo json_encode($output);
+		break;
+	 	
 	 	
 	 
   

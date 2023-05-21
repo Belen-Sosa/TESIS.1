@@ -141,6 +141,7 @@
                  </div>
                  
               </div>
+             
 
                
                
@@ -158,6 +159,24 @@
 
                   </div>
                 </div>
+
+                <div class="form-group">
+                  <label for="" class="col-lg-1 control-label">habilitar cuenta corriente</label>
+
+                    <div class="col-lg-6">
+
+                   
+                    <select class="form-control" id="habilitar_cc" name="habilitar_cc" required>
+                      <option value="" selected>-- Selecciona --</option>
+                      <option value="1" >Si</option>
+                      <option value="0" >No</option>
+                    </select>
+                      
+                      
+                      
+                    </div>
+
+               </div>
 
           
           </div>

@@ -214,16 +214,13 @@ function guardaryeditar(e)
 
 		    success: function(datos)
 		    {                    
-		          /*bootbox.alert(datos);	          
-		          mostrarform(false);
-		          tabla.ajax.reload();*/
-
+		        
 		         
                  
                  /*imprimir consulta en la consola debes hacer un print_r($_POST) al final del metodo 
                     y si se muestran los valores es que esta bien, y se puede imprimir la consulta desde el metodo
                     y se puede ver en la consola o desde el mensaje de alerta luego pegar la consulta en phpmyadmin*/
-		         
+		         console.log(datos);
 
 	            $('#cliente_form')[0].reset();
 				$('#clienteModal').modal('hide');
@@ -254,11 +251,10 @@ function guardaryeditar(e)
 			$.ajax({
 				url:"../ajax/cliente.php?op=activarydesactivar",
 				 method:"POST",
-				//data:dataString,
+				
 				//toma el valor del id y del estado
 				data:{id_cliente:id_cliente, est:est},
-				//cache: false,
-				//dataType:"html",
+		
 				success: function(data){
                  
                   $('#cliente_data').DataTable().ajax.reload();

@@ -384,7 +384,6 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           $sql2->bindValue(2,$cliente_nombre);
           $sql2->bindValue(3,$dni_cliente);
           $sql2->bindValue(4,$vendedor);
- 
           $sql2->bindValue(5,$total);
           $sql2->bindValue(6,$tipo_pago);
           $sql2->bindValue(7,$estado);

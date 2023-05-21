@@ -323,7 +323,7 @@
 				$sub_array[] = $row["producto"];
 				$sub_array[] = "$ ".$row["precio_compra"];
 				$sub_array[] = "$ ".$row["precio_venta"];
-                if($row["categoria"]=="carnes" || ($row["categoria"]=="fiambres" || ($row["categoria"]=="quesos"){
+                if($row["categoria"]=="carnes" || $row["categoria"]=="fiambres" || $row["categoria"]=="quesos"){
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
                   grs.</span>';}
 				  else{

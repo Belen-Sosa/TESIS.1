@@ -99,37 +99,34 @@ function listar()
 
   //CAMBIAR ESTADO DE LA COMPRA
 
-/*
- function cambiarEstado(id_compras, numero_compra, est){
+
+ function cambiarEstado(id_cuentas_corrientes, est){
  
 
  //alert(numero_compra);
      
 
- bootbox.confirm("¿Estas seguro que quieres anular esta compra?", function(result){
+ bootbox.confirm("¿Estas seguro que quieres cambiar de estado?", function(result){
      if(result)
      {
-
+        console.log(id_cuentas_corrientes+" el id de la cc");
 
          $.ajax({
-             url:"../ajax/compras.php?op=cambiar_estado_compra",
+             url:"../ajax/cuenta_corriente.php?op=activarydesactivar",
               method:"POST",
-             //data:dataString,
+
              //toma el valor del id y del estado
-             data:{id_compras:id_compras,numero_compra:numero_compra, est:est},
-             cache: false,
+            
+
+             data:{id_cuentas_corrientes:id_cuentas_corrientes, est:est},
+      
              
              success:function(data){
-               
-               //alert(data);
-              $('#compras_data').DataTable().ajax.reload();
+                console.log(data);
+      
+              $('#cuenta_corriente_data').DataTable().ajax.reload();
               
-              //refresca el datatable de compras por fecha
-              $('#compras_fecha_data').DataTable().ajax.reload();
-              
-
-               //refresca el datatable de compras por fecha - mes
-              $('#compras_fecha_mes_data').DataTable().ajax.reload();
+             
 
              }
 
@@ -141,7 +138,7 @@ function listar()
 
 
    }
-   */
+   
 
 
    //****************************************************************

@@ -29,6 +29,9 @@
    $direccion=isset($_POST["direccion"]);
    $estado=isset($_POST["estado"]);
 
+
+
+
    
 
       switch($_GET["op"]){
@@ -39,11 +42,11 @@
 	           importante: se debe poner el $_POST sino no funciona*/
 	          if(empty($_POST["dni_cliente"])){
 
-	       	  /*verificamos si la dni del cliente en la base de datos, si ya existe un registro con el cliente entonces no se registra*/
+						/*verificamos si la dni del cliente en la base de datos, si ya existe un registro con el cliente entonces no se registra*/
 
 
-               //importante: se debe poner el $_POST sino no funciona
-               $datos = $clientes->get_datos_cliente($_POST["dni"],$_POST["nombre"],$_POST["telefono"]);
+						//importante: se debe poner el $_POST sino no funciona
+						$datos = $clientes->get_datos_cliente($_POST["dni"],$_POST["nombre"],$_POST["telefono"]);
 
 
 			       	   if(is_array($datos)==true and count($datos)==0){
@@ -64,10 +67,23 @@
 						  
 							}
 
-							//se crea la cuenta corriente del usuario
-							$cuentas_corrientes->crear_cuenta_corriente($id_cliente);
-							//edita el estado del cliente
+							if($_POST["habilitar_cc"]=="1"){
+								//se crea la cuenta corriente del usuario
+								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
+								//edita el estado del cliente
+								$messages[]="cc creada";
+							  
+							}
+						
+								
+								
+							}
 							$messages[]="El Cliente se registró correctamente.";
+						
+                        
+						} else {
+
+							$errors[]="El Cliente ya existe";
 						}
 						
 								
@@ -75,19 +91,16 @@
 			
 						 
 
-			       	   } //cierre de validacion de $datos 
+			   } 	/*si ya existes el cliente entonces aparece el mensaje*/
+			  
+				   
+					   //cierre de validacion de $datos 
              
 
-			       	      /*si ya existes el cliente entonces aparece el mensaje*/
-				              else {
-
-				              	  $errors[]="El Cliente ya existe";
-				              }
-					
-							
+			
 
 
-			    }//cierre de empty
+			  
 
 	            else {
 
@@ -96,8 +109,30 @@
 
 
 	             $clientes->editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario);
+				 $datos=$clientes->get_cliente_por_dni($_POST["dni"]);
 
+						// si existe el id del cliente entonces recorre el array
+						if(is_array($datos)==true and count($datos)>0){
+							foreach($datos as $row)
+							{
+								$id_cliente=$row["id_cliente"];
+							
+						  
+							}
 
+							if($_POST["habilitar_cc"]=="1"){
+								//se crea la cuenta corriente del usuario
+								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
+								//edita el estado del cliente
+								
+							}if($_POST["habilitar_cc"]=="0"){
+								$cuentas_corrientes->editar_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
+								
+								
+							}
+						
+
+						}
 	            	  $messages[]="El cliente se editó correctamente";
                 
 	            	 

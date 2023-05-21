@@ -59,6 +59,9 @@
                                 <th>Direccion</th>
                                 <th>Telefono</th>
                                 <th>Saldo</th>
+                                <th>Estado</th>
+
+                          
                                 <th>Ver mas</th>
                                 
                         

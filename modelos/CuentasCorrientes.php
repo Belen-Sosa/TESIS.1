@@ -61,7 +61,7 @@
 
    	   	
 
-              $sql="select c.id_cliente,c.nombre_cliente,c.apellido_cliente,c.dni_cliente,c.direccion_cliente,c.telefono_cliente,cc.saldo,c.estado from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente and c.estado='1'";
+          $sql="select cc.id_cuentas_corrientes,cc.estado,c.id_cliente,c.nombre_cliente,c.apellido_cliente,c.dni_cliente,c.direccion_cliente,c.telefono_cliente,cc.saldo,c.estado as estado_cliente from cuentas_corrientes cc, clientes c where c.id_cliente=cc.id_cliente and c.estado='1'";
 
    	   	  $sql=$conectar->prepare($sql);
    	   	  $sql->execute();
@@ -96,7 +96,7 @@
 
    	     //método para crear cuenta corriente
 
-        public function crear_cuenta_corriente($dni_cliente){
+        public function crear_cuenta_corriente($dni_cliente,$estado){
 
  
          $conectar=parent::conexion();
@@ -113,10 +113,49 @@
 
             $sql->bindValue(1, $dni_cliente);
             $sql->bindValue(2, $saldo);
+            $sql->bindValue(3, $estado);
             $sql->execute();
       
          
         }
+        public function editar_cuenta_corriente($id_cuenta_corriente,$estado){
+
+ 
+          $conectar=parent::conexion();
+          parent::set_names();
+        
+ 
+          
+
+        	 //si el estado es igual a 0 entonces el estado cambia a 1
+        	 //el parametro est se envia por via ajax
+        	 if($_POST["est"]=="0"){
+
+        	   $estado=1;
+
+        	 } 
+            if($_POST["est"]=="1"){
+
+        	 	 $estado=0;
+        	 }
+
+        	 $sql="update cuentas_corrientes set 
+              
+              estado=?
+              where 
+              id_cuentas_corrientes=?
+
+        	 ";
+
+        	 $sql=$conectar->prepare($sql);
+
+        	 $sql->bindValue(1,$estado);
+        	 $sql->bindValue(2,$id_cuenta_corriente);
+        	 $sql->execute();
+
+       
+          
+         }
          //método para crear detalle de cuenta corriente
 
          public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente,$estado){
@@ -126,7 +165,7 @@
             parent::set_names();
  
             $sql="insert into detalle_cuentas_corrientes
-            values(null,?,?,now(),?,?,?,?)";
+            values(null,?,?,now(),?,?,?,?,null)";
  
            
              $sql=$conectar->prepare($sql);
@@ -276,125 +315,21 @@
 
 
 
-        /*metodo que valida si hay registros activos*/
-     /*   public function get_cliente_por_id_estado($id_cliente,$estado){
+     public function ver_estado($id_cliente){
 
-         $conectar= parent::conexion();
+      $conectar=parent::conexion();
 
-         //declaramos que el estado esté activo, igual a 1
+      $sql= "select * from cuentas_corrientes
+       where id_cliente=?";
 
-         $estado=1;
+      $sql=$conectar->prepare($sql);
 
-          
-        $sql="select * from clientes where id_cliente=? and estado=?";
-
-              $sql=$conectar->prepare($sql);
-
-              $sql->bindValue(1, $id_cliente);
-               $sql->bindValue(2, $estado);
-              $sql->execute();
-
-              return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+      $sql->bindValue(1, $id_cliente);
+      $sql->execute();
+      return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
 
-         }
-      */
-
-
-          //método para activar Y/0 desactivar el estado del cliente
-
-      /*  public function editar_estado($id_cliente,$estado){
-
-        	 $conectar=parent::conexion();
-
-        	 //si el estado es igual a 0 entonces el estado cambia a 1
-        	 //el parametro est se envia por via ajax
-        	 if($_POST["est"]=="0"){
-
-        	   $estado=1;
-
-        	 } else {
-
-        	 	 $estado=0;
-        	 }
-
-        	 $sql="update clientes set 
-              
-              estado=?
-              where 
-              id_cliente=?
-
-        	 ";
-
-        	 $sql=$conectar->prepare($sql);
-
-        	 $sql->bindValue(1,$estado);
-        	 $sql->bindValue(2,$id_cliente);
-        	 $sql->execute();
-        }
-*/
-        
-       
-        
-       /*     public function eliminar_cliente($id_cliente){
-
-                $conectar=parent::conexion();
-
-                $sql="delete from clientes where id_cliente=?";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $id_cliente);
-                $sql->execute();
-
-                return $resultado=$sql->fetch(PDO::FETCH_ASSOC);
-        }
-
-*/
-     /*    public function get_cliente_por_id_usuario($id_usuario){
-
-           $conectar= parent::conexion();
-
- 
-           $sql="select * from clientes where id_usuario=?";
-
-            $sql=$conectar->prepare($sql);
-
-            $sql->bindValue(1, $id_usuario);
-            $sql->execute();
-
-            return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-
-
-      }*/
-
-
-         //consulta si la dni del cliente con tiene un detalle_venta asociado
-    /* public function get_cliente_por_dni_ventas($dni_cliente){
-
-             
-             $conectar=parent::conexion();
-             parent::set_names();
-
-
-             $sql="select c.dni_cliente,v.dni_cliente
-                 
-              from clientes c 
-              
-              INNER JOIN ventas v ON c.dni_cliente=v.dni_cliente
-
-
-              where c.dni_cliente=?
-
-              ";
-
-             $sql=$conectar->prepare($sql);
-             $sql->bindValue(1,$dni_cliente);
-             $sql->execute();
-
-             return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-
-        }*/
+   }
 
 
 

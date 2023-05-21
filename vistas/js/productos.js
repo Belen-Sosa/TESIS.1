@@ -759,9 +759,7 @@ obj.value es el valor del campo de texto*/
 			
 		success:function(data){
 			//IMPORTANTE: esta se descomenta cuando imprimo el console.log
-			/*if (typeof data == "string"){
-			      data = $.parseJSON(data);
-			}*/
+		
 			console.log(data);
              
 			//alert(data);
@@ -780,8 +778,6 @@ obj.value es el valor del campo de texto*/
             $('#listProdCompras').html('');
 
 
-
-            //1000-3000
 
           
           //muestra un mensaje de exito
@@ -900,11 +896,6 @@ function listar_en_ventas(){
 
  //CARGAR PRODUCTO, PRECIO, CANTIDAD, IGV, IMPORTE EN VENTAS
 
-	//Declaración de variables necesarias para trabajar con las ventas y
-	//sus detalles
-	//var impuesto=18;
-	//var cont=0;
-	//var detalles=0;
 
 	/*IMPORTANTE function agregarDetalleVenta y function listarDetalles:
 	Asi que detalles pertenece al arreglo detalles[]
@@ -1302,12 +1293,40 @@ obj.value es el valor del campo de texto*/
     var tipo_pago = $("#tipo_pago").val();
     var id_usuario = $("#id_usuario").val();
     var id_cliente = $("#id_cliente").val();
+	console.log("id_cliente:"+id_cliente)
+    
+	var cuenta_corriente_habilitada=""; 	
+
+	//buscamos el estado de su cuenta corriente 
+	//0=DESCATIVADA ,1 =ACTIVADA 
+	
+	$.ajax({
+		url:"../ajax/cuenta_corriente.php?op=ver_estado",
+		method:"GET",
+		data:{id_cliente:id_cliente},
+		async:false,
+		success:function(data){
+		data = JSON.parse(data);
+	
+		cuenta_corriente_habilitada=data.estado;
+	
+
+	}});
+
+	
 
 
-    //validamos, si los campos(cliente) estan vacios entonces no se envia el formulario
+
 
     if(dni!="" && nombre!="" && apellido!="" && direccion!="" && tipo_pago!="" && detalles!=""){
-    
+		
+		if(tipo_pago=="CUENTA CORRIENTE" &&   cuenta_corriente_habilitada==0){
+			bootbox.alert("El Cliente no tiene Cuenta Corriente habilitada");
+			return false;
+		}
+		else{
+			
+			
 	
 
 		/*IMPORTANTE: el array detalles de la data viene de var detalles = []; esta vacio pero como ya se usó en la function agregarDetalle(id_producto,producto)
@@ -1372,10 +1391,10 @@ obj.value es el valor del campo de texto*/
 						$('#listProdVentas').html('');
 						
 						//muestra un mensaje de exito
-						setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
-					//refresca la pagina, se llama a la funtion explode
-					setTimeout ("explode();", 2000); 
-					
+						//setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
+						//refresca la pagina, se llama a la funtion explode
+						//setTimeout ("explode();", 2000); 
+						
 				
 					}	}); 
 			}
@@ -1396,10 +1415,10 @@ obj.value es el valor del campo de texto*/
 			
 		
               //muestra un mensaje de exito
-            setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
+           // setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
           
           //refresca la pagina, se llama a la funtion explode
-          setTimeout ("explode();", 2000); 
+         // setTimeout ("explode();", 2000); 
        
 		}
 
@@ -1409,8 +1428,8 @@ obj.value es el valor del campo de texto*/
 
 	
 
-	 //cierre del condicional de validacion de los campos del cliente
-
+	
+      } 
 	 } else{
 
 	 	 bootbox.alert("Debe agregar un producto, los campos del cliente y el tipo de pago");
