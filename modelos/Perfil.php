@@ -28,7 +28,7 @@
 
             $conectar=parent::conexion();
 
-            $sql= "select * from usuarios where dni_usuario=? or correo=?";
+            $sql= "select * from usuarios where dni_usuario=? or correo_usuario=?";
 
           $sql=$conectar->prepare($sql);
           
@@ -49,25 +49,21 @@
 
           $sql="update usuarios set 
                
-                 nombres=?,
-                 apellidos=?,
+                 nombre_usuario=?,
+                 apellido_usuario=?,
                  dni_usuario=?,
-                 telefono=?,
-                 correo=?,
-                 direccion=?,
-                
+                 telefono_usuario=?,
+                 correo_usuario=?,
+                 direccion_usuario=?,
                  usuario=?,
-                 password=?,
-                 password2=?
-                
+                 password_usuario=?,
+                 password2_usuario=?
                  where 
                  id_usuario=?
           ";
 
-          //echo $sql;
-
+          
           $sql=$conectar->prepare($sql);
-
           $sql->bindValue(1,$_POST["nombre_perfil"]);
           $sql->bindValue(2,$_POST["apellido_perfil"]);
           $sql->bindValue(3,$_POST["dni_usuario_perfil"]);
@@ -77,7 +73,6 @@
           $sql->bindValue(7,$_POST["usuario_perfil"]);
           $sql->bindValue(8,$_POST["password1_perfil"]);
           $sql->bindValue(9,$_POST["password2_perfil"]);
-          
           $sql->bindValue(10,$_POST["id_usuario_perfil"]);
           $sql->execute();
        

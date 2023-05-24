@@ -28,23 +28,18 @@
 
    	  public function get_productos(){
 
-           $conectar= parent::conexion();
-       
+          $conectar= parent::conexion();
           $sql= "
-          select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado,p.imagen,c.id_categoria, c.categoria as categoria
+          select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto,p.imagen_producto,c.id_categoria, c.nombre_categoria as categoria
           from producto as p 
           inner join categoria as c on
           p.id_categoria=c.id_categoria 
           LEFT JOIN producto as proc
-          ON p.id_procedente = proc.id_producto
-                      
-           ";
+          ON p.id_procedente = proc.id_producto ";
 
-           $sql=$conectar->prepare($sql);
-
-           $sql->execute();
-
-           return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+          $sql=$conectar->prepare($sql);
+          $sql->execute();
+          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
          
          }
@@ -57,17 +52,14 @@
           //declaramos que el estado esté activo, igual a 1
     
            $estado=1;
-    
-    
-           $sql="select p.estado,c.categoria,p.id_producto,p.id_categoria,p.producto,c.id_categoria 
+ 
+           $sql="select p.estado_producto,c.nombre_categoria,p.id_producto,p.id_categoria,p.nombre_producto,c.id_categoria 
            from producto as p,categoria as c 
-           where c.id_categoria=p.id_categoria and c.categoria='carnes' and p.estado=?";
+           where c.id_categoria=p.id_categoria and c.nombre_categoria='carnes' and p.estado_producto=?";
     
            $sql=$conectar->prepare($sql);
-
            $sql->bindValue(1, $estado);
            $sql->execute();
-    
            return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
     
     
@@ -76,13 +68,9 @@
      //metodo para ver el stock de un producto procedente para otro 
      public function get_producto_procente($id_procedente){
 
-      $conectar= parent::conexion();
-
-
+       $conectar= parent::conexion();
        $sql="select * from producto where id_producto=?";
-
        $sql=$conectar->prepare($sql);
-
        $sql->bindValue(1, $id_procedente);
        $sql->execute();
 
@@ -95,25 +83,14 @@
 
       public function get_productos_en_ventas(){
 
-           $conectar= parent::conexion();
-       
-          $sql= "select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock, p.estado, p.imagen,c.id_categoria, c.categoria as categoria
-           
-           from producto p 
-              
-              INNER JOIN categoria c ON p.id_categoria=c.id_categoria
-
-
-              where p.stock > 0 and p.estado='1'
-             
-
-           ";
-
-           $sql=$conectar->prepare($sql);
-
-           $sql->execute();
-
-           return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+          $conectar= parent::conexion();
+          $sql= "select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria as categoria 
+          from producto p 
+          INNER JOIN categoria c ON p.id_categoria=c.id_categoria
+          where p.stock_producto > 0 and p.estado_producto='1'";
+          $sql=$conectar->prepare($sql);
+          $sql->execute();
+          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
          
          }
@@ -167,24 +144,10 @@
   {
     $image = $imagen_producto->upload_image();
   }
-
-       
-
-                  
-           
-            
-
-
-              require_once("consolelog.php");
-       
-              echo Console::log('un_nombre', $procedente);
+      
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?);";
-
-            
+            values(null,?,?,?,?,?,?,?,?,?);";        
             $sql=$conectar->prepare($sql);
-          
-
             $sql->bindValue(1, $_POST["categoria"]);
             $sql->bindValue(2, $_POST["producto"]);
             $sql->bindValue(3, $_POST["precio_compra"]);
@@ -208,22 +171,18 @@
 
           //$output = array();
              $sql="
-             select p.id_producto,p.id_categoria,p.producto, p.precio_compra, p.precio_venta, p.stock,p.id_procedente,proc.producto as procedente, p.estado, p.imagen,c.id_categoria, c.categoria as categoria
+             select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria as categoria
              from producto as p 
              inner join categoria as c on
              p.id_categoria=c.id_categoria 
              LEFT JOIN producto as proc
              ON p.id_procedente = proc.id_producto
-             WHERE p.id_producto=?  
-                         
-              ";
+             WHERE p.id_producto=?";
         
 
             $sql=$conectar->prepare($sql);
-
             $sql->bindValue(1, $id_producto);
             $sql->execute();
-
             return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -238,12 +197,9 @@
            //declaramos que el estado esté activo, igual a 1
 
             $estado=1;
-
-
-            $sql="select p.*, c.categoria from producto as p,categoria as c where p.id_producto=? and p.estado=? and c.id_categoria= p.id_categoria";
+            $sql="select p.*, c.nombre_categoria from producto as p,categoria as c where p.id_producto=? and p.estado_producto=? and c.id_categoria= p.id_categoria";
 
             $sql=$conectar->prepare($sql);
-
             $sql->bindValue(1, $id_producto);
             $sql->bindValue(2, $estado);
             $sql->execute();
@@ -263,8 +219,6 @@
 
       $conectar=parent::conexion();
       parent::set_names();
-
-
        //declaro que si el campo stock es vacio entonces seria un 0 en caso contrario se pondria el valor que se envia 
 
          $stock = "";
@@ -282,8 +236,6 @@
       //llamo a la funcion upload_image()
 
       require_once("Productos.php");
-
-
       $imagen_producto = new Producto();
 
       $imagen = '';
@@ -323,14 +275,13 @@
                 
                 $sql="update producto set 
                        id_categoria=?,
-                       producto=?,
-                       precio_compra=?,
-                       precio_venta=?,
-                       stock=?,
-                       estado=?,
-                       imagen=?,
+                      nombre_producto=?,
+                       precio_venta_producto=?,
+                       stock_producto=?,
+                       estado_producto=?,
+                       imagen_producto=?,
                        id_usuario=?,
-                       procedente=?
+                       id_procedente=?
                        where 
                        id_producto=?
                 ";
@@ -357,10 +308,10 @@
                   $sql="update producto set 
 
                  
-                     precio_compra=?,
-                     precio_venta=?,
-                     estado=?,
-                     imagen=?,
+                  
+                     precio_venta_producto=?,
+                     estado_producto=?,
+                     imagen_producto=?,
                      id_usuario=?
                      where 
                      id_producto=?
@@ -400,7 +351,7 @@
 
               $sql="update producto set 
                     
-                    estado=?
+                    estado_producto=?
                     where 
                     id_producto=?
                       ";
@@ -419,7 +370,7 @@
 
               $conectar=parent::conexion();
 
-              $sql= "select * from producto where producto=?";
+              $sql= "select * from producto where nombre_producto=?";
 
               $sql=$conectar->prepare($sql);
 
@@ -446,7 +397,7 @@
 
       $sql="update producto set 
             
-            estado=?
+            estado_producto=?
             where 
             id_categoria=?
               ";
@@ -476,7 +427,7 @@
 
             $sql="update categoria set 
                 
-                estado=?
+                estado_categoria=?
                 where 
                 id_categoria=?
                   ";
@@ -523,16 +474,10 @@
              parent::set_names();
 
 
-      $sql="select p.id_producto,p.producto,c.id_producto, c.producto as producto_compras
-                 
+      $sql="select p.id_producto,p.nombre_producto,c.id_producto, c.nombre_producto as producto_compras
            from producto p 
-              
               INNER JOIN detalle_compras c ON p.id_producto=c.id_producto
-
-
-              where p.id_producto=?
-
-              ";
+              where p.id_producto=?";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$id_producto);
@@ -552,9 +497,9 @@
 
 
 
-              $sql="select p.id_producto,p.producto, v.id_producto, v.producto as producto_ventas
+              $sql="select p.id_producto,p.nombre_producto, v.id_producto, v.nombre_producto as producto_ventas
                  
-           from producto p 
+              from producto p 
               
               INNER JOIN detalle_ventas v ON p.id_producto=v.id_producto
 
@@ -586,7 +531,7 @@
 
         foreach($resultado as $row)
 				{
-					$stock_procedente = $row["stock"];
+					$stock_procedente = $row["stock_producto"];
 				}
         
         
@@ -598,7 +543,7 @@
 
               $sql="update producto set 
                     
-                    stock=?
+                    stock_producto=?
                     where 
                     id_producto=?
                       ";

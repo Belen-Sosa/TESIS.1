@@ -306,11 +306,8 @@ function guardaryeditar(e)
 			$.ajax({
 				url:"../ajax/producto.php?op=activarydesactivar",
 				 method:"POST",
-				//data:dataString,
 				//toma el valor del id y del estado
 				data:{id_categoria:id_categoria,id_producto:id_producto, est:est},
-				//cache: false,
-				//dataType:"html",
 				success: function(data){
                  
                   $('#producto_data').DataTable().ajax.reload();
@@ -533,7 +530,7 @@ function listar_en_compras(){
 
 				var importe = detalles[i].importe = (detalles[i].precio/1000)*detalles[i].cantidad ;		
 				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
-				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'>  grs.</td> <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td><input name='precio[]' id='precio[]' onClick='setPrecioCompra(event, this, "+(i)+");'  onKeyUp='setPrecioCompra(event, this, "+(i)+");'></td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'>  grs.</td> <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
 			
 				
 			}
@@ -543,21 +540,13 @@ function listar_en_compras(){
 		
 				var importe =detalles[i].importe = detalles[i].cantidad * detalles[i].precio;
 				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
-				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
+				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td><input name='precio[]' id='precio[]'  onClick='setPrecioCompra(event, this, "+(i)+");'  onKeyUp='setPrecioCompra(event, this, "+(i)+");'></td> <td>"+detalles[i].stock+"</td> <td><input type='number' class='cantidad input-group-sm' name='cantidad[]' id='cantidad[]' onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidad(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'></td>  <td><input type='number' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id='importe"+i+"'>$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProdCompras(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td> </tr>";
 		
 		
 			}
 		
-			
-			
-			
-
-				
-				subtotal = subtotal + importe;
-
-
-        
-          
+	
+				subtotal = subtotal + importe;  
                 totalFinal = "$ "+subtotal.toFixed(2);
 
           
@@ -571,11 +560,6 @@ function listar_en_compras(){
 	
 	$('#listProdCompras').html(filas);
 
-	
-
-	//subtotal
-	/*$('#subtotal').html(subtotalFinal);
-	$('#subtotal_compra').html(subtotalFinal);*/
 
 	//total
 	$('#total').html(totalFinal);
@@ -621,10 +605,12 @@ obj.value es el valor del campo de texto*/
 
 	}
 
+	
   	
 
 
   	importeFinal ="$ "+importe.toFixed(2);
+	  
 
   	$('#importe'+idx).html(importeFinal);
   	calcularTotales();
@@ -640,20 +626,14 @@ obj.value es el valor del campo de texto*/
 
   	var totalFinal = 0;
 
-    //var iva = 20;
-
-    //var igv = (iva/100);
-      
    
 	for(var i=0; i<detalles.length; i++){
   		if(detalles[i].estado == 1){
 			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
-		    
+			if(isNaN(subtotal)){
+				subtotal=0;
+			   }
             subtotalFinal ="$ "+subtotal;
-
-           // var su = subtotal*igv;
-            //var or=parseFloat(su);
-           //var total = Math.round(or+subtotal);
 
             var total= subtotal;
         
@@ -711,21 +691,11 @@ obj.value es el valor del campo de texto*/
     var id_proveedor = $("#id_proveedor").val();
 
 
-     //alert(usuario_id);
-
     //validamos, si los campos(proveedor) estan vacios entonces no se envia el formulario
 
     if(cuit!="" && razon!="" && direccion!="" && tipo_pago!="" && detalles!=""){
-    
-    
-     /*console.log(numero_compra);
-     console.log(cuit);
-     console.log(razon);
-     console.log(direccion);
-     console.log(datepicker);*/
 
-     console.log('Hola Eyter');
-    
+
     /*IMPORTANTE: el array detalles de la data viene de var detalles = []; esta vacio pero como ya se usó en la function agregarDetalle(id_producto,producto)
     se reusa, pero ya viene cargado con la informacion que se va a enviar con ajax*/
     $.ajax({
@@ -761,8 +731,7 @@ obj.value es el valor del campo de texto*/
 			//IMPORTANTE: esta se descomenta cuando imprimo el console.log
 		
 			console.log(data);
-             
-			//alert(data);
+    
 
             //IMPORTANTE:limpia los campos despues de enviarse
             //cuando se imprime el alert(data) estas variables deben comentarse
@@ -1003,9 +972,6 @@ function listar_en_ventas(){
 
   	var totalFinal = 0;
 
-  	// var iva = 20;
-     //var igv = (iva/100);
-
 
   	for(var i=0; i<detalles.length; i++){
 		if(detalles[i].estado == 1){
@@ -1058,35 +1024,26 @@ function listar_en_ventas(){
 	$('#total').html(totalFinal);
 	$('#total_venta').html(totalFinal);
 
-	//actualizar_importe();
-
   }
 
   /*IMPORTANTE:Event es el objeto del evento que los manejadores de eventos utilizan
 parseInt es una función para convertir un valor string a entero
 obj.value es el valor del campo de texto*/
-  function setCantidad(event, obj, idx){
+function setCantidad(event, obj, idx){
+	console.log("set cantidad =  idx"+idx+" event"+event+" obj"+obj)
   	event.preventDefault();
+	
   	detalles[idx].cantidad = parseInt(obj.value);
   	recalcular(idx);
   }
-
+ 
   function setCantidadAjax(event, obj, idx){
   	event.preventDefault();
-  	//detalles[idx].cantidad = parseInt(obj.value);
 
-  	//var idx = idx;
 
   	var id_producto = detalles[idx].codProd;
-
   	var cantidad_vender = detalles[idx].cantidad = parseInt(obj.value);
-
-    var stock = detalles[idx].stock;
-
-      //alert(idx);
-      //alert(cantidad_vender);
-      //alert(id_producto);
-      //alert(stock);
+    var stock = detalles[idx].stock;   
   	
        $.ajax({
          
@@ -1098,7 +1055,7 @@ obj.value es el valor del campo de texto*/
          success:function(data){
 
          	
-             //$("#cantidad_"+idx).val(data);
+       
 
 
              //console.log(data);
@@ -1180,11 +1137,14 @@ obj.value es el valor del campo de texto*/
 
 	}
 
+	if(isNaN(importe)){
+		importe=0;
+	   }
   	
 
 
   	importeFinal ="$ "+importe.toFixed(2);
-
+   
   	$('#importe'+idx).html(importeFinal);
   	calcularTotales();
   	
@@ -1193,6 +1153,17 @@ obj.value es el valor del campo de texto*/
 
 	  
   }
+function setPrecioCompra(event, obj, idx){
+	
+	event.preventDefault();
+  console.log("detalles[idx].precio"+detalles[idx].precio);
+	detalles[idx].precio = parseInt(obj.value);
+	console.log("detalles[idx].precio"+detalles[idx].precio);
+	recalcular(idx);
+}
+
+
+ 
 
 
   function calcularTotales(){
@@ -1371,10 +1342,7 @@ obj.value es el valor del campo de texto*/
 							
 			
 				
-						//IMPORTANTE: esta se descomenta cuando imprimo el console.log
-						/*if (typeof data == "string"){
-							data = $.parseJSON(data);
-						}*/
+						
 						console.log(data);
 						
 						//alert(data);
@@ -1391,9 +1359,9 @@ obj.value es el valor del campo de texto*/
 						$('#listProdVentas').html('');
 						
 						//muestra un mensaje de exito
-						//setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
+						setTimeout ("bootbox.alert('Se ha registrado a cuenta corriente');", 100); 
 						//refresca la pagina, se llama a la funtion explode
-						//setTimeout ("explode();", 2000); 
+						setTimeout ("explode();", 2000); 
 						
 				
 					}	}); 

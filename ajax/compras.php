@@ -24,10 +24,10 @@
 				foreach($datos as $row)
 				{
 					
-					$output["proveedor"] = $row["proveedor"];
+					$output["proveedor"] = $row["nombre_proveedor"];
 					$output["numero_compra"] = $row["numero_compra"];
 					$output["cuit_proveedor"] = $row["cuit_proveedor"];
-					$output["direccion"] = $row["direccion"];
+					$output["direccion"] = $row["direccion_proveedor"];
 					$output["fecha_compra"] = date("d-m-Y", strtotime($row["fecha_compra"]));
 									
 				}
@@ -88,12 +88,12 @@
 				$est = '';
 				
 				 $atrib = "btn btn-danger btn-md estado";
-				if($row["estado"] == 1){
+				if($row["estado_compra"] == 1){
 					$est = 'PAGADO';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
-					if($row["estado"] == 0){
+					if($row["estado_compra"] == 0){
 						$est = 'ANULADO';
 						
 					}	
@@ -104,15 +104,15 @@
 				 $sub_array[] = '<button class="btn btn-warning detalle"  id="'.$row["numero_compra"].'"  data-toggle="modal" data-target="#detalle_compra"><i class="fa fa-eye"></i></button>';
 	             $sub_array[] = date("d-m-Y", strtotime($row["fecha_compra"]));
 				 $sub_array[] = $row["numero_compra"];
-				 $sub_array[] = $row["proveedor"];
+				 $sub_array[] = $row["nombre_proveedor"];
 				 $sub_array[] = $row["cuit_proveedor"];
-				 $sub_array[] = $row["comprador"];
-				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = "$".$row["total"];
+				 $sub_array[] = $row["usuario"];
+				 $sub_array[] = $row["tipo_pago_compra"];
+				 $sub_array[] = "$".$row["total_compra"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado_compra"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
                 
 				$data[] = $sub_array;
 			}
@@ -158,12 +158,12 @@
 				$est = '';
 			
 				 $atrib = "btn btn-danger btn-md estado";
-				if($row["estado"] == 1){
+				if($row["estado_compra"] == 1){
 					$est = 'PAGADO';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
-					if($row["estado"] == 0){
+					if($row["estado_compra"] == 0){
 						$est = 'ANULADO';
 						
 					}	
@@ -177,15 +177,15 @@
 
 	       $sub_array[] = date("d-m-Y", strtotime($row["fecha_compra"]));
 				 $sub_array[] = $row["numero_compra"];
-				 $sub_array[] = $row["proveedor"];
+				 $sub_array[] = $row["nombre_proveedor"];
 				 $sub_array[] = $row["cuit_proveedor"];
-				 $sub_array[] = $row["comprador"];
-				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = "$ ".$row["total"];
+				 $sub_array[] = $row["usuario"];
+				 $sub_array[] = $row["tipo_pago_compra"];
+				 $sub_array[] = "$ ".$row["total_compra"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado_compra"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
                 
 				$data[] = $sub_array;
 			}
@@ -216,16 +216,15 @@
 				$sub_array = array();
 
 				$est = '';
-				//$atrib = 'activo';
-				 $atrib = "btn btn-danger btn-md estado";
-				if($row["estado"] == 1){
+		    	 $atrib = "btn btn-danger btn-md estado";
+				if($row["estado_compra"] == 1){
 					$est = 'PAGADO';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
-					if($row["estado"] == 0){
+					if($row["estado_compra"] == 0){
 						$est = 'ANULADO';
-						//$atrib = '';
+						
 					}	
 				}
 
@@ -236,15 +235,15 @@
          $sub_array[] = date("d-m-Y", strtotime($row["fecha_compra"]));
 
 				 $sub_array[] = $row["numero_compra"];
-				 $sub_array[] = $row["proveedor"];
+				 $sub_array[] = $row["nombre_proveedor"];
 				 $sub_array[] = $row["cuit_proveedor"];
-				 $sub_array[] = $row["comprador"];
-				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = "$ ".$row["total"];
+				 $sub_array[] = $row["usuario"];
+				 $sub_array[] = $row["tipo_pago_compra"];
+				 $sub_array[] = "$ ".$row["total_compra"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_compras"].',\''.$row["numero_compra"].'\','.$row["estado_compra"].');" name="estado" id="'.$row["id_compras"].'" class="'.$atrib.'">'.$est.'</button>';
                 
 				$data[] = $sub_array;
 			}

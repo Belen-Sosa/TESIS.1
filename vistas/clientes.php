@@ -163,7 +163,7 @@
                 <div class="form-group">
                   <label for="" class="col-lg-1 control-label">habilitar cuenta corriente</label>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-9 col-lg-offset-1">
 
                    
                     <select class="form-control" id="habilitar_cc" name="habilitar_cc" required>

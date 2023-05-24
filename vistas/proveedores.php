@@ -52,7 +52,7 @@
                                 <tr>
                                   
                                 <th width="10%">Cuit</th>
-                                <th width="10%">Razón Social</th>
+                                <th width="10%">Nombre</th>
                                 <th width="10%">Teléfono</th>
                                 <th width="10%">Correo</th>
                                 <th width="20%">Dirección</th>
@@ -97,10 +97,10 @@
         <div class="modal-body">
 
            <div class="form-group">
-                  <label for="inputText1" class="col-lg-1 control-label">Razón Social</label>
+                  <label for="inputText1" class="col-lg-1 control-label">Nombre</label>
 
                   <div class="col-lg-9 col-lg-offset-1">
-                    <input type="text" class="form-control" id="razon" name="razon" placeholder="Razón Social" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$">
+                    <input type="text" class="form-control" id="razon" name="razon" placeholder="Nombre del Proveedor" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$">
                   </div>
               </div>
 

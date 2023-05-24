@@ -259,18 +259,9 @@ ob_start();
 
 
 <table style="border-top: 1px solid black; padding-top: 2em; margin-top: 2em;">
-  <tr>
-    <td style="padding-top: 0em"><span class="Estilo2"><strong>REVISADO POR :</strong></span></td>
-    <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="padding-top: 0em"><span class="Estilo3"><span id="result_box" lang="es" xml:lang="es">ESTE REPORTE  NO TENDRA FUERZA O EFECTO HASTA QUE SEA REVISADO Y FIRMADO POR UN FUNCIONARIO DE LA EMPRESA </span></span></td>
-    <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
-  </tr>
-  <tr>
-    <td style="padding-top: 0em">&nbsp;</td>
-    <td style="text-align: center; padding-top: 0em;">&nbsp;</td>
-  </tr>
+ 
+ 
+
   <tr>
     <td style="padding-top: 0em"><span class="Estilo1">REALIZADO EL DIA <?php echo date("d")?> DE <?php echo Conectar::convertir(date('m'))?> DEL <?php echo date("Y")?></span></td>
     <td style="text-align: center; padding-top: 0em;">&nbsp;</td>

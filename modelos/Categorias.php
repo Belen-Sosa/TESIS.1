@@ -100,8 +100,8 @@
 
                 $sql="update categoria set 
 
-                  categoria=?,
-                  estado=?,
+                  nombre_categoria=?,
+                  estado_categoria=?,
                   id_usuario=?
                   where 
                   id_categoria=?
@@ -125,7 +125,7 @@
 
                  $sql="update categoria set 
 
-                  estado=?,
+                  estado_categoria=?,
                   id_usuario=?
                   where 
                   id_categoria=?
@@ -168,7 +168,7 @@
 
         	 $sql="update categoria set 
               
-              estado=?
+              estado_categoria=?
               where 
               id_categoria=?
 
@@ -188,7 +188,7 @@
 
            $conectar=parent::conexion();
 
-          $sql="select * from categoria where categoria=?";
+          $sql="select * from categoria where nombre_categoria=?";
 
            //echo $sql; exit();
 

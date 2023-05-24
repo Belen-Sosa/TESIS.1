@@ -134,7 +134,7 @@ function listar_detalle_cc()
 			   $("#detalles").html(data);
 				
 				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-			   //alert(data);
+			   
 			   
 		   }
 	   })
@@ -178,8 +178,6 @@ function listar_detalle_cc()
 			$.ajax({
 				url:"../ajax/cuenta_corriente.php?op=cambiar_estado_venta_dc",
 				 method:"POST",
-				//data:dataString,
-				//toma el valor del id y del estado
 				data:{id_detalle_cc:id_detalle_cc,id_cuenta_corriente:id_cuenta_corriente,est:est},
 				cache: false,
 				
@@ -194,14 +192,12 @@ function listar_detalle_cc()
 			$.ajax({
 				url:"../ajax/ventas.php?op=cambiar_estado_venta_cc",
 				 method:"POST",
-				//data:dataString,
 				//toma el valor del id y del estado
 				data:{id_detalle_cc:id_detalle_cc,est:est},
 				cache: false,
 				
 				success:function(data){
-				
-	              //alert(data);
+	
                  $('#ventas_data').DataTable().ajax.reload();
 
                   //refresca el datatable de ventas por fecha

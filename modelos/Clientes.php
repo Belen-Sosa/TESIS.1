@@ -143,7 +143,7 @@
                    apellido_cliente=?,
                    telefono_cliente=?,
                    direccion_cliente=?,
-                   estado=?,
+                   estado_cliente=?,
                    id_usuario=?
                    where 
                    dni_cliente=?
@@ -172,7 +172,7 @@
                              
                          telefono_cliente=?,
                          direccion_cliente=?,
-                         estado=?,
+                         estado_cliente=?,
                          id_usuario=?
                          where 
                          dni_cliente=?
@@ -182,11 +182,10 @@
 
                       
                       $sql->bindValue(1, $_POST["telefono"]);
-                      $sql->bindValue(2, $_POST["email"]);
-                      $sql->bindValue(3, $_POST["direccion"]);
-                      $sql->bindValue(4, $_POST["estado"]);
-                      $sql->bindValue(5, $_POST["id_usuario"]);
-                      $sql->bindValue(6, $_POST["dni_cliente"]);
+                      $sql->bindValue(2, $_POST["direccion"]);
+                      $sql->bindValue(3, $_POST["estado"]);
+                      $sql->bindValue(4, $_POST["id_usuario"]);
+                      $sql->bindValue(5, $_POST["dni_cliente"]);
                       $sql->execute();
 
             }
@@ -207,7 +206,7 @@
          $estado=1;
 
           
-        $sql="select * from clientes where id_cliente=? and estado=?";
+        $sql="select * from clientes where id_cliente=? and estado_cliente=?";
 
               $sql=$conectar->prepare($sql);
 
@@ -241,7 +240,7 @@
 
         	 $sql="update clientes set 
               
-              estado=?
+              estado_cliente=?
               where 
               id_cliente=?
 

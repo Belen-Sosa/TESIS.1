@@ -74,7 +74,7 @@
             $conectar= parent::conexion();
             parent::set_names();
 
-            $sql="select * from proveedor where cuit=?";
+            $sql="select * from proveedor where cuit_proveedor=?";
 
             $sql=$conectar->prepare($sql);
 
@@ -88,17 +88,11 @@
         public function get_proveedor_por_id($id_proveedor){
 
           $conectar= parent::conexion();
-
-          //$output = array();
-
           $sql="select * from proveedor where id_proveedor=?";
-
-                $sql=$conectar->prepare($sql);
-
-                $sql->bindValue(1, $id_proveedor);
-                $sql->execute();
-
-                return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+          $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $id_proveedor);
+          $sql->execute();
+          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
         } 
@@ -112,18 +106,14 @@
 
          //declaramos que el estado esté activo, igual a 1
 
-         $estado=1;
+          $estado=1;
+          $sql="select * from proveedor where id_proveedor=? and estado_proveedor=?";
+          $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $id_proveedor);
+          $sql->bindValue(2, $estado);
+          $sql->execute();
 
-          
-        $sql="select * from proveedor where id_proveedor=? and estado=?";
-
-              $sql=$conectar->prepare($sql);
-
-              $sql->bindValue(1, $id_proveedor);
-               $sql->bindValue(2, $estado);
-              $sql->execute();
-
-              return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
          }
@@ -151,22 +141,17 @@
 
               $sql="update proveedor set 
 
-                 cuit=?,
-                 razon_social=?,
-                 telefono=?,
-                 correo=?,
-                 direccion=?,
-                 estado=?,
+                 cuit_proveedor=?,
+                 nombre=?,
+                 telefono_proveedor=?,
+                 correo_proveedor=?,
+                 direccion_proveedor=?,
+                 estado_proveedor=?,
                  id_usuario=?
                  where 
-                 cuit=?
-
-              ";
+                 cuit_proveedor=? ";
                 
-               //echo $sql; exit();
-
                   $sql=$conectar->prepare($sql);
-
                   $sql->bindValue(1, $_POST["cuit"]);
                   $sql->bindValue(2, $_POST["razon"]);
                   $sql->bindValue(3, $_POST["telefono"]);
@@ -185,18 +170,15 @@
 
            $sql="update proveedor set 
               
-               telefono=?,
-               correo=?,
-               direccion=?,  
-               estado=?,
+               telefono_proveedor=?,
+               correo_proveedor=?,
+               direccion_proveedor=?,  
+               estado_proveedor=?,
                id_usuario=?
                where 
-               cuit=?
-                  ";
+               cuit_proveedor=?";
 
-                $sql=$conectar->prepare($sql);
-
-                
+                $sql=$conectar->prepare($sql);     
                 $sql->bindValue(1, $_POST["telefono"]);
                 $sql->bindValue(2, $_POST["email"]);
                 $sql->bindValue(3, $_POST["direccion"]);
@@ -216,10 +198,7 @@
 
            $conectar=parent::conexion();
 
-          $sql="select * from proveedor where cuit=? or razon_social=? or correo=?";
-
-           //echo $sql; exit();
-
+          $sql="select * from proveedor where cuit_proveedor=? or nombre_proveedor=? or correo_proveedor=?";
            $sql=$conectar->prepare($sql);
 
             $sql->bindValue(1, $cuit);
@@ -227,8 +206,7 @@
             $sql->bindValue(3, $correo);
             $sql->execute();
 
-           //print_r($email); exit();
-
+         
            return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
         }
 
@@ -252,14 +230,11 @@
 
         	 $sql="update proveedor set 
               
-              estado=?
+              estado_proveedor=?
               where 
-              id_proveedor=?
-
-        	 ";
+              id_proveedor=?";
 
         	 $sql=$conectar->prepare($sql);
-
         	 $sql->bindValue(1,$estado);
         	 $sql->bindValue(2,$id_proveedor);
         	 $sql->execute();
@@ -269,14 +244,10 @@
          public function eliminar_proveedor($id_proveedor){
 
               $conectar=parent::conexion();
-
               $sql="delete from proveedor where id_proveedor=?";
-
               $sql=$conectar->prepare($sql);
-
               $sql->bindValue(1, $id_proveedor);
               $sql->execute();
-
               return $resultado=$sql->fetch(PDO::FETCH_ASSOC);
       }
 
@@ -284,15 +255,10 @@
         public function get_proveedor_por_id_usuario($id_usuario){
 
            $conectar= parent::conexion();
-
-     
            $sql="select * from proveedor where id_usuario=?";
-
             $sql=$conectar->prepare($sql);
-
             $sql->bindValue(1, $id_usuario);
             $sql->execute();
-
             return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -307,16 +273,10 @@
              parent::set_names();
 
 
-          $sql="select p.cuit,c.cuit_proveedor
-                 
+          $sql="select p.cuit_proveedor,c.cuit_proveedor
            from proveedor p 
-              
-              INNER JOIN compras c ON p.cuit=c.cuit_proveedor
-
-
-              where p.cuit=?
-
-              ";
+              INNER JOIN compras c ON p.cuit_proveedor=c.cuit_proveedor
+              where p.cuit_proveedor=?";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$cuit_proveedor);
@@ -335,14 +295,10 @@
 
 
            $sql="use dbproyecto;
-           select p.cuit,d.cuit_proveedor
-                          from proveedor as  p 
-                         
-                         INNER JOIN detalle_compras as d
-                         ON p.cuit=?
-
-              ";
-
+           select p.cuit_proveedor,d.cuit_proveedor
+           from proveedor as  p 
+            INNER JOIN detalle_compras as d
+            ON p.cuit_proveedor=?";
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$cuit_proveedor);
              $sql->execute();

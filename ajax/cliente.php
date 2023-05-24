@@ -208,8 +208,8 @@
 						$output["apellido"] = $row["apellido_cliente"];
 						$output["telefono"] = $row["telefono_cliente"];
 						$output["direccion"] = $row["direccion_cliente"];
-						$output["fecha"] = $row["fecha_alta"];
-						$output["estado"] = $row["estado"];
+						$output["fecha"] = $row["fecha_alta_cliente"];
+						$output["estado"] = $row["estado_cliente"];
 
     				}
 
@@ -226,8 +226,8 @@
 						$output["apellido"] = $row["apellido_cliente"];
 						$output["telefono"] = $row["telefono_cliente"];
 						$output["direccion"] = $row["direccion_cliente"];
-						$output["fecha"] = $row["fecha_alta"];
-						$output["estado"] = $row["estado"];
+						$output["fecha"] = $row["fecha_alta_cliente"];
+						$output["estado"] = $row["estado_cliente"];
 					}
 
 	        }
@@ -269,12 +269,12 @@
 				$est = '';
 				
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_cliente"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_cliente"] == 1){
 						$est = 'ACTIVO';
 						
 					}	
@@ -286,10 +286,10 @@
 				 $sub_array[] = $row["apellido_cliente"];
 				 $sub_array[] = $row["telefono_cliente"];
 				 $sub_array[] = $row["direccion_cliente"];
-				 $sub_array[] = date("d-m-Y",strtotime($row["fecha_alta"]));
+				 $sub_array[] = date("d-m-Y",strtotime($row["fecha_alta_cliente"]));
 				
 
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_cliente"].','.$row["estado"].');" name="estado" id="'.$row["id_cliente"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_cliente"].','.$row["estado_cliente"].');" name="estado" id="'.$row["id_cliente"].'" class="'.$atrib.'">'.$est.'</button>';
                 
                 
 
@@ -326,12 +326,12 @@
 				$est = '';
 				
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_cliente"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_cliente"] == 1){
 						$est = 'ACTIVO';
 						
 					}	
@@ -346,7 +346,7 @@
                  $sub_array[] = '<button type="button"  name="estado" id="'.$row["id_cliente"].'" class="'.$atrib.'">'.$est.'</button>';
 
 
-                 $sub_array[] = '<button type="button" onClick="agregar_registro('.$row["id_cliente"].','.$row["estado"].');" id="'.$row["id_cliente"].'" class="btn btn-primary btn-md"><i class="fa fa-plus" aria-hidden="true"></i> Agregar</button>';
+                 $sub_array[] = '<button type="button" onClick="agregar_registro('.$row["id_cliente"].','.$row["estado_cliente"].');" id="'.$row["id_cliente"].'" class="btn btn-primary btn-md"><i class="fa fa-plus" aria-hidden="true"></i> Agregar</button>';
                 
 				$data[] = $sub_array;
 			}
@@ -378,7 +378,7 @@
 					$output["nombre"] = $row["nombre_cliente"];
 					$output["apellido"] = $row["apellido_cliente"];
 					$output["direccion"] = $row["direccion_cliente"];
-					$output["estado"] = $row["estado"];
+					$output["estado"] = $row["estado_cliente"];
 					
 				}
 

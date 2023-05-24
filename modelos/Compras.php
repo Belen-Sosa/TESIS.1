@@ -162,36 +162,13 @@
         $id_usuario = $_POST["id_usuario"];
         $id_proveedor = $_POST["id_proveedor"];
 
-        /*IMPORTANTE: no me imprimia porque tenia estas variables que no usaba*/
-
-        //$subtotal_compra = $_POST["subtotal_compra"];
-        //$total_compra = $_POST["total_compra"];
-
-          
-        
-
-          /*$sql="insert into detalle_compra
-          values(null,'".$numero_compra."','".$producto."','".$precio."','".$cantidad."','".$dscto."','".$cuit_proveedor."','".$fecha_compra."','".$estado."');";
-
-          echo $sql;*/
-
-          //fecha 
-
-            //$fecha_compra= date("d/m/Y");
-
-          //estado 
-            //si estado es igual a 1 entonces la compra esta pagada
-          //$estado = 1;
-
           
 
-          $sql="insert into detalle_compras
-          values(null,?,?,?,?,?,?,?,?,now(),?,?,?,?);";
+        $sql="insert into detalle_compras
+        values(null,?,?,?,?,?,?,?,?,now(),?,?,?,?);";
 
 
-          $sql=$conectar->prepare($sql);
-
-        //echo $sql;
+        $sql=$conectar->prepare($sql);
 
         /*importante:se ingresó el id_producto=$codProd ya que se necesita para relacionar las tablas compras con detalle_compras para cuando se vaya a hacer la consulta de la existencia del producto y del stock para cuando se elimine un detalle compra y se reintegre la cantidad de producto*/
 
@@ -210,19 +187,7 @@
        
         $sql->execute();
 
-        //print_r($_POST);
-         
-         /*IMPORTANTE:esta linea $resultado=$sql->fetch(PDO::ASSOC); debe comentarse sino se insertaria una sola fila
-
-         Esta linea "$resultado=$sql->fetch(PDO::ASSOC);" se utliza cuando la consulta devuelva algún valor(osea si quieres imprimir un campo de la tabla de la bd) Pero la sentencia insert no deuelve nada
-         Y esperar que devuelva despues del insert es un error en el codigo por eso es que solo ejecuta 1 producto y no el resto, por lo tanto se comenta dicha linea  */
-
-        //$resultado=$sql->fetch(PDO::ASSOC);
-
-
-          /*$sql2="insert into compras 
-           values(null,'".$fecha_compra."','".$numero_compra."','".$proveedor."','".$cuit_proveedor."','".$total."');";*/
-      
+     
 
           //si existe el producto entonces actualiza la cantidad, en caso contrario no lo inserta
 
@@ -240,12 +205,12 @@
 
                   foreach($resultado as $b=>$row){
 
-                  	$re["existencia"] = $row["stock"];
+                  	$re["existencia"] = $row["stock_producto"];
 
                   }
 
                 //la cantidad total es la suma de la cantidad más la cantidad actual
-                $cantidad_total = $cantidad + $row["stock"];
+                $cantidad_total = $cantidad + $row["stock_producto"];
 
              
                //si existe el producto entonces actualiza el stock en producto
@@ -256,7 +221,7 @@
 
              	   $sql4 = "update producto set 
                       
-                      stock=?
+                      stock_producto=?
                       where 
                       id_producto=?
              	   ";
@@ -277,7 +242,7 @@
 
 	     //SUMO EL TOTAL DE IMPORTE SEGUN EL CODIGO DE DETALLES DE COMPRA
 
-         $sql5="select sum(importe) as total from detalle_compras where numero_compra=?";
+         $sql5="select sum(importe_dc) as total from detalle_compras where numero_compra=?";
       
          $sql5=$conectar->prepare($sql5);
 
@@ -294,23 +259,9 @@
              }
           $total=$d["total"];
 
-            // $subtotal=$d["total"];
-
-         /*     //REALIZO EL CALCULO A REGISTRAR
-		      $iva= 20/100;
-		      $total_iv=$subtotal*$iva;
-		      $total_iva=round($total_iv);
-		      $tot=$subtotal+$total_iva;*/
-		      //$total=$subtotal;
+           
 
         //IMPORTANTE: hay que sacar la consulta INSERT INTO COMPRAS fuera del foreach sino se repetiria el registro en la tabla compras
-
-	      //fecha 
-
-       
-          //estado 
-           //si estado es igual a 1 entonces la compra esta pagada
-			//$estado = 1;
 
 	    
 		   //la fecha no se puede formatear por es un objeto date, solo se formatea en el select, cuando se va a obtener una fecha, por lo tanto la fecha queda en el formato y/m/d en la tabla de la bd	
@@ -344,27 +295,18 @@
           $conectar=parent::conexion();
            parent::set_names();
 
-          $sql="select c.fecha_compra,c.numero_compra, c.proveedor, c.cuit_proveedor,c.total,p.id_proveedor,p.cuit,p.razon_social,p.telefono,p.correo,p.direccion,p.fecha_alta,p.estado
+          $sql="select c.fecha_compra,c.numero_compra, c.nombre_proveedor, c.cuit_proveedor,c.total_compra,p.id_proveedor,p.cuit_proveedor,p.nombre_proveedor,p.telefono_proveedor,p.correo_proveedor,p.direccion_proveedor,p.fecha_alta_proveedor,p.estado_proveedor
           from compras as c, proveedor as p
           where 
           
-          c.cuit_proveedor=p.cuit
+          c.cuit_proveedor_compra=p.cuit_proveedor
           and
-          c.numero_compra=?
-          
-          ;";
+          c.numero_compra=?;";
 
-          //echo $sql; exit();
-
-          $sql=$conectar->prepare($sql);
-              
-
+          $sql=$conectar->prepare($sql);          
           $sql->bindValue(1,$numero_compra);
           $sql->execute();
-          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-
-       
-            
+          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC); 
        }
 
 
@@ -373,28 +315,18 @@
            $conectar=parent::conexion();
            parent::set_names();
 
-          $sql="select d.numero_compra,d.cuit_proveedor,d.producto, d.precio_compra,d.cantidad_compra,d.descuento,d.importe, d.fecha_compra,c.numero_compra, c.total,p.id_proveedor,p.cuit,p.razon_social,p.telefono,p.correo,p.direccion,p.fecha_alta,p.estado
+          $sql="select d.numero_compra,d.cuit_proveedor,d.nombre_producto, d.precio_compra_dc,d.cantidad_compra_dc,d.descuento_dc,d.importe_dc, d.fecha_compra_dc,c.numero_compra, c.total_compra,p.id_proveedor,p.cuit_proveedor,p.nombre_proveedor,p.telefono_proveedor,p.correo_proveedor,p.direccion_proveedor,p.fecha_alta_proveedor,p.estado_proveedor
           from detalle_compras as d, compras as c, proveedor as p
-          where 
-          
-          d.numero_compra=c.numero_compra
-          and 
-          d.cuit_proveedor=p.cuit
-          and
-          d.numero_compra=?
-          
-          ;";
-          
-
-          //echo $sql; exit();
+          where  d.numero_compra=c.numero_compra
+          and d.cuit_proveedor=p.cuit_proveedor
+          and d.numero_compra=?;";
+   
 
           $sql=$conectar->prepare($sql);
-              
+          $sql->bindValue(1,$numero_compra);
+          $sql->execute();
+          $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
-              $sql->bindValue(1,$numero_compra);
-             $sql->execute();
-             $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-   
        
               $html= "
 
@@ -417,11 +349,11 @@
         {
 
          
-        $html.="<tr class='filas'><td>".$row['cantidad_compra']."</td><td>".$row['producto']."</td> <td>$  ".$row['precio_compra']."</td> <td>".$row['descuento']."</td> <td>$" .$row['importe']."</td></tr>";
+        $html.="<tr class='filas'><td>".$row['cantidad_compra_dc']."</td><td>".$row['nombre_producto']."</td> <td>$  ".$row['precio_compra_dc']."</td> <td>".$row['descuento_dc']."</td> <td>$" .$row['importe_dc']."</td></tr>";
                    
                 
                  
-                   $total="$ ".$row["total"];
+                   $total="$ ".$row["total_compra"];
         }
 
          $html .= "<tfoot>
@@ -470,7 +402,7 @@
 
       $sql="update compras set 
             
-            estado=?
+            estado_compra=?
             where 
             id_compras=?
            
@@ -489,7 +421,7 @@
 
       $sql_detalle= "update detalle_compras set
 
-          estado=?
+          estado_dc=?
           where 
           numero_compra=?
           ";
@@ -522,7 +454,7 @@
 
                  $id_producto=$output["id_producto"]=$row["id_producto"];
                 //selecciona la cantidad comprada
-                $cantidad_compra=$output["cantidad_compra"]=$row["cantidad_compra"];
+                $cantidad_compra=$output["cantidad_compra_dc"]=$row["cantidad_compra_dc"];
 
 
 
@@ -542,14 +474,12 @@
                          foreach($resultado as $row2){
                            
                            //este es la cantidad de stock para cada producto
-                           $stock=$output2["stock"]=$row2["stock"];
+                           $stock=$output2["stock"]=$row2["stock_producto"];
                            
                            //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la compra
                            //cuando das click a estado pasa a PAGADO Y SUMA la cantidad de stock con la cantidad de compra
                            $cantidad_actual= $stock + $cantidad_compra;
-                           require_once("consolelog.php");
-                           echo Console::log('CANTIDAD ACTUAL', "cantidad acual");
-                           echo Console::log('CANTIDAD ACTUAL', $cantidad_actual);
+                    
                 
 
                          }
@@ -559,7 +489,7 @@
                 //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
 
                $sql6="update producto set 
-               stock=?
+               stock_producto=?
                where
 
                id_producto=?
@@ -592,7 +522,7 @@
 
       $sql="update compras set 
             
-            estado=?
+            estado_compra=?
             where 
             id_compras=?
            
@@ -611,7 +541,7 @@
 
       $sql_detalle= "update detalle_compras set
 
-          estado=?
+          estado_dc=?
           where 
           numero_compra=?
           ";
@@ -645,7 +575,7 @@
 
                  $id_producto=$output["id_producto"]=$row["id_producto"];
                 //selecciona la cantidad comprada
-                $cantidad_compra=$output["cantidad_compra"]=$row["cantidad_compra"];
+                $cantidad_compra=$output["cantidad_compra_dc"]=$row["cantidad_compra_dc"];
 
 
 
@@ -653,7 +583,7 @@
                  //si el id_producto existe entonces que consulte si la cantidad de productos existe en la tabla producto
                  
                 
-                  if(isset($id_producto)==true /*and is_countable($id_producto)>0*/ ){
+                  if(isset($id_producto)==true ){
                     
                
                       $sql3="select * from producto where id_producto=?";
@@ -668,14 +598,12 @@
                          foreach($resultado as $row2){
                            
                            //este es la cantidad de stock para cada producto
-                           $stock=$output2["stock"]=$row2["stock"];
+                           $stock=$output2["stock_producto"]=$row2["stock_producto"];
                            
                            //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la compra
                       //cuando le da click al estado pasa de PAGADO A ANULADO y resta la cantidad de stock en productos con la cantidad de compra de detalle_compras, disminuyendo de esta manera la cantidad actual de productos en el stock de productos
                            $cantidad_actual= $stock - $cantidad_compra;
-                           require_once("consolelog.php");
-                           echo Console::log('',"cantidad actual");
-                           echo Console::log('CANTIDAD ACTUAL', $cantidad_actual);
+                       
 
                          }
                   }
@@ -684,21 +612,14 @@
                 //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
 
                $sql6="update producto set 
-               stock=?
+               stock_producto=?
                where
-
-               id_producto=?
-
-               ";
+               id_producto=?";
                
-               $sql6=$conectar->prepare($sql6);   
-               
+               $sql6=$conectar->prepare($sql6);                
                $sql6->bindValue(1,$cantidad_actual);
                $sql6->bindValue(2,$id_producto);
-
                $sql6->execute();
-
-             
 
               }//cierre del foreach
 
@@ -876,7 +797,7 @@
       $conectar=parent::conexion();
 
 
-       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total) as total_compra_ano FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc";
+       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total_compra) as total_compra_ano FROM compras where estado_compra='1' GROUP BY YEAR(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->execute();
@@ -893,7 +814,7 @@
       $conectar=parent::conexion();
 
 
-       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total) as total_compra_ano FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc";
+       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total_compra) as total_compra_ano FROM compras where estado_compra='1' GROUP BY YEAR(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->execute();
@@ -918,7 +839,7 @@
       $conectar=parent::conexion();
 
 
-       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total) as total_compra_ano FROM compras where estado='0' GROUP BY YEAR(fecha_compra) desc";
+       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total_compra) as total_compra_ano FROM compras where estado_compra='0' GROUP BY YEAR(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->execute();
@@ -957,7 +878,7 @@
 
           $fecha=$_POST["year"];
 
-       $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado='1' GROUP BY MONTHname(fecha_compra) desc";
+       $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->bindValue(1,$fecha);
@@ -985,7 +906,7 @@
           $fecha_inicial=date("Y");
 
 
-   $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado='1' GROUP BY MONTHname(fecha_compra) desc";
+   $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
            
            $sql=$conectar->prepare($sql);
            $sql->bindValue(1,$fecha_inicial);
@@ -1035,8 +956,8 @@
 
           $fecha=$_POST["year"];
 
-        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra
-        from compras where YEAR(fecha_compra)=? and estado='1' group by MONTHname(fecha_compra) asc";
+        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra
+        from compras where YEAR(fecha_compra)=? and estado_compra='1' group by MONTHname(fecha_compra) asc";
           
 
             $sql=$conectar->prepare($sql);
@@ -1052,8 +973,8 @@
 
               $fecha_inicial=date("Y");
 
-                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra
-            from compras where YEAR(fecha_compra)=? and estado='1' group by MONTHname(fecha_compra) asc";
+                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra
+            from compras where YEAR(fecha_compra)=? and estado_compra='1' group by MONTHname(fecha_compra) asc";
               
 
                 $sql=$conectar->prepare($sql);
@@ -1088,7 +1009,7 @@
             $fecha_final = date("Y-m-d", strtotime($date));
 
 
-            $sql="select * from detalle_compras where cuit_proveedor=? and fecha_compra>=? and fecha_compra<=? and estado='1';";
+            $sql="select * from detalle_compras where cuit_proveedor=? and fecha_compra>=? and fecha_compra<=? and estado_dc='1';";
 
     
               $sql=$conectar->prepare($sql);
@@ -1120,7 +1041,7 @@
             $fecha_final = date("Y-m-d", strtotime($date));
 
 
-           $sql="select sum(cantidad_compra) as total from detalle_compras where cuit_proveedor=? and fecha_compra >=? and fecha_compra <=? and estado = '1';";
+           $sql="select sum(cantidad_compra_dc) as total from detalle_compras where cuit_proveedor=? and fecha_compra >=? and fecha_compra <=? and estado_dc = '1';";
 
         
             $sql=$conectar->prepare($sql);
@@ -1141,7 +1062,7 @@
             $conectar=parent::conexion();
             parent::set_names();
 
-            $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_compra) desc";
+            $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
 
             $sql=$conectar->prepare($sql);
             $sql->execute();
@@ -1157,7 +1078,7 @@
 
             $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
            
-           $sql="SELECT  MONTHname(fecha_compra) as mes, SUM(total) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_compra) desc";
+           $sql="SELECT  MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=YEAR(CURDATE()) and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
                
                $sql=$conectar->prepare($sql);
                $sql->execute();

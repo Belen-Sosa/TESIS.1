@@ -62,7 +62,7 @@
 			foreach($datos as $row)
 			{
 				$id_ventas=$row["id_ventas"];
-			    $total= $row["total"];
+			    $total= $row["total_venta"];
 		  
 			}
 
@@ -115,12 +115,12 @@
 					$est = '';
 					
 					$atrib = "btn btn-success btn-md estado";
-					if($row["estado"] == 0){
+					if($row["estado_cc"] == 0){
 						$est = 'DESACTIVADA';
 						$atrib = "btn btn-warning btn-md estado";
 					}
 					else{
-						if($row["estado"] == 1){
+						if($row["estado_cc"] == 1){
 							$est = 'ACTIVADA';
 							
 						}	
@@ -133,8 +133,8 @@
 					$sub_array[] = $row["dni_cliente"];
 					$sub_array[] = $row["direccion_cliente"];
 					$sub_array[] = $row["telefono_cliente"];
-					$sub_array[] = "$ ".$row["saldo"];
-					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_cuentas_corrientes"].','.$row["estado"].');" name="estado" id="'.$row["id_cuentas_corrientes"].'" class="'.$atrib.'">'.$est.'</button>';
+					$sub_array[] = "$ ".$row["saldo_cc"];
+					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_cuentas_corrientes"].','.$row["estado_cc"].');" name="estado" id="'.$row["id_cuentas_corrientes"].'" class="'.$atrib.'">'.$est.'</button>';
 					$sub_array[] = '<a href="consultar_cuenta_corriente_cliente.php?id_cliente='.$row["id_cliente"].'" class="btn btn-warning detalle" ><i class="fa fa-eye"></i> </a>';
 
 					
@@ -172,31 +172,23 @@
 		foreach($datos as $row)
 			   {
 				   $sub_array = array();
-   
-				 
-				   
-					
-				  
-				   
-   
-
 					$sub_array[] = $row["fecha_venta"];
 					$sub_array[] = $row["numero_venta"];
 					
 					$sub_array[] = "$ ".$row["total"];
-					$sub_array[] = $row["estado"];	
+					$sub_array[] = $row["estado_dc"];	
 
 					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                  
 				   $est = '';
 				   
 				   $atrib = "btn btn-danger btn-md estado";
-				   if($row["estado"] == "adeuda"){
+				   if($row["estado_detalle_cc"] == "adeuda"){
 					$est = 'PAGAR';
 					  
 				   }
 				   else{
-					   if($row["estado"] == "pagado"){
+					   if($row["estado_detalle_cc"] == "pagado"){
 						   $est = 'ANULAR PAGO';
 						   $atrib = "btn btn-success btn-md estado";
 						   
@@ -206,8 +198,8 @@
 					
 					
 			   
-					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["estado"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
-					$sub_array[] = $row["fecha_pago"];
+					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["estado_detalle_cc"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
+					$sub_array[] = $row["fecha_pago_detalle_cc"];
 					$data[] = $sub_array;
 			   }
    
@@ -254,7 +246,7 @@
 		$output= array();
 	    foreach($datos as $row)
 			{
-				$output["estado"] = $row["estado"];
+				$output["estado_cc"] = $row["estado_cc"];
 				
 
 				

@@ -140,7 +140,7 @@
     				foreach($datos as $row)
     				{
     					$output["categoria"] = $row["categoria"];
-    					$output["estado"] = $row["estado"];
+    					$output["estado_categoria"] = $row["estado_categoria"];
                         $output["id_usuario"] = $row["id_usuario"];
 
     				} 
@@ -155,8 +155,8 @@
 				{
 					    
                         $output["categoria_id"] = $row["id_categoria"];
-					    $output["categoria"] = $row["categoria"];
-    					$output["estado"] = $row["estado"];
+					    $output["categoria"] = $row["nombre_categoria"];
+    					$output["estado"] = $row["estado_categoria"];
                         $output["id_usuario"] = $row["id_usuario"];
 				}
 		        
@@ -205,23 +205,23 @@
         $est = '';
        
          $atrib = "btn btn-success btn-md estado";
-        if($row["estado"] == 0){
+        if($row["estado_categoria"] == 0){
           $est = 'INACTIVO';
           $atrib = "btn btn-warning btn-md estado";
         }
         else{
-          if($row["estado"] == 1){
+          if($row["estado_categoria"] == 1){
             $est = 'ACTIVO';
             
           } 
         }
         
         
-         $sub_array[] = $row["categoria"];
+         $sub_array[] = $row["nombre_categoria"];
         
         
 
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_categoria"].','.$row["estado"].');" name="estado" id="'.$row["id_categoria"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_categoria"].','.$row["estado_categoria"].');" name="estado" id="'.$row["id_categoria"].'" class="'.$atrib.'">'.$est.'</button>';
                 
                  
 

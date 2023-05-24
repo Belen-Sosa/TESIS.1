@@ -47,16 +47,11 @@
 
                 }
 
-                 else if(!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){12,15}$/", $password)) {
-
-              header("Location:".Conectar::ruta()."index.php?m=1");
-              exit();
-
-            }
+                
 
              else {
 
-                  $sql= "select * from usuarios where correo=? and password=? and estado=?";
+                  $sql= "select * from usuarios where correo_usuario=? and password_usuario=? and estado_usuario=?";
 
                   $sql=$conectar->prepare($sql);
 
@@ -71,10 +66,10 @@
 
                          /*IMPORTANTE: la session guarda los valores de los campos de la tabla de la bd*/
                        $_SESSION["id_usuario"] = $resultado["id_usuario"];
-                       $_SESSION["correo"] = $resultado["correo"];
+                       $_SESSION["correo"] = $resultado["correo_usuario"];
                        $_SESSION["dni_usuario"] = $resultado["dni_usuario"];
-                       $_SESSION["nombre"] = $resultado["nombres"];
-                       $_SESSION["apellido"] = $resultado["apellidos"];
+                       $_SESSION["nombre"] = $resultado["nombre_usuario"];
+                       $_SESSION["apellido"] = $resultado["apellido_usuario"];
 
                   
        //PERMISOS DEL USUARIO PARA ACCEDER A LOS MODULOS
@@ -234,16 +229,16 @@
                 
                 $sql="update usuarios set 
 
-                  nombres=?,
-                  apellidos=?,
+                  nombre_usuario=?,
+                  apellido_usuario=?,
                   dni_usuario=?,
-                  telefono=?,
-                  correo=?,
-                  direccion=?,
+                  telefono_usuario=?,
+                  correo_usuario=?,
+                  direccion_usuario=?,
                   usuario=?,
-                  password=?,
-                  password2=?,
-                  estado=?
+                  password_usuario=?,
+                  password2_usuario=?,
+                  estado_usuario=?
                   where 
                   id_usuario=?
 
@@ -312,13 +307,13 @@
 
                   $sql="update usuarios set 
 
-                  telefono=?,
-                  correo=?,
-                  direccion=?,
-                  usuario=?,
-                  password=?,
-                  password2=?,
-                  estado=?
+                  telefono_usuario=?,
+                  correo_usuario=?,
+                  direccion_usuario=?,
+                  usuario_usuario=?,
+                  password_usuario=?,
+                  password2_usuario=?,
+                  estado_usuario=?
                   where 
                   id_usuario=?
 
@@ -428,18 +423,11 @@
    	    	}
 
    	    	$sql="update usuarios set 
-            
-            estado=?
-
+            estado_usuario=?
             where 
-            id_usuario=?
-
-
-   	    	";
+            id_usuario=?";
 
    	    	$sql=$conectar->prepare($sql);
-
-
    	    	$sql->bindValue(1,$estado);
    	    	$sql->bindValue(2,$id_usuario);
    	    	$sql->execute();
@@ -455,14 +443,12 @@
           $conectar=parent::conexion();
           parent::set_names();
 
-          $sql="select * from usuarios where dni_usuario=? or correo=?";
+          $sql="select * from usuarios where dni_usuario=? or correo_usuario=?";
 
           $sql=$conectar->prepare($sql);
-
           $sql->bindValue(1, $dni_usuario);
           $sql->bindValue(2, $email);
           $sql->execute();
-
           return $resultado=$sql->fetchAll();
 
    	    }

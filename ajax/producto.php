@@ -49,7 +49,7 @@
 				
 				foreach($producto as $row)
 				{
-					$stock_procedente = $row["stock"];
+					$stock_procedente = $row["stock_producto"];
 				}
 				
                 // verificamos que el stock_procedente sea mayor al stock del producto 
@@ -183,27 +183,24 @@
 			{
 				$output["id_producto"] = $row["id_producto"];
 				$output["categoria"] = $row["id_categoria"];
-				$output["categoria_nombre"] = $row["categoria"];
-				$output["producto"] = $row["producto"];
-				$output["precio_compra"] = $row["precio_compra"];
+				$output["categoria_nombre"] = $row["nombre_categoria"];
+				$output["producto"] = $row["nombre_producto"];
 				$output["precio_venta"] = $row["precio_venta"];
-				$output["stock"] = $row["stock"];
-				$output["estado"] = $row["estado"];
+				$output["stock"] = $row["stock_producto"];
+				$output["estado"] = $row["estado_producto"];
 				$output["procedente"] = $row["procedente"];
 				$output["id_procedente"] = $row["id_procedente"];
 
-				if($row["imagen"] != '')
+				if($row["imagen_producto"] != '')
 					
 					{
-						$output['producto_imagen'] = '<img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="300" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />';
+						$output['producto_imagen'] = '<img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="300" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen_producto"].'" />';
 					}
 					else
 					{
 						$output['producto_imagen'] = '<input type="hidden" name="hidden_producto_imagen" value="" />';
 					}
 
-
-				
 
 				}
 
@@ -216,21 +213,18 @@
 				{
 					$output["producto_id"] = $row["id_producto"];
 					$output["categoria"] = $row["id_categoria"];
-					$output["producto"] = $row["producto"];
+					$output["producto"] = $row["nombre_producto"];
 					$output["precio_compra"] = $row["precio_compra"];
 					$output["precio_venta"] = $row["precio_venta"];
-					$output["stock"] = $row["stock"];
-					$output["estado"] = $row["estado"];
-					$output["categoria_nombre"] = $row["categoria"];
+					$output["stock"] = $row["stock_producto"];
+					$output["estado"] = $row["estado_producto"];
+					$output["categoria_nombre"] = $row["nombre_categoria"];
 					$output["procedente"] = $row["procedente"];
 					$output["id_procedente"] = $row["id_procedente"]; 
-
-
-
-					if($row["imagen"] != '')
+					if($row["imagen_producto"] != '')
 						
 						{
-							$output['producto_imagen'] = '<img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="300" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />';
+							$output['producto_imagen'] = '<img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="300" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen_producto"].'" />';
 						}
 						else
 						{
@@ -285,54 +279,47 @@
 				$sub_array = array();
 
 				$est = '';
-				//$atrib = 'activo';
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_producto"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_producto"] == 1){
 						$est = 'ACTIVO';
-						//$atrib = '';
 					}	
 				}
 
 				  //STOCK, si es mejor de 10 se pone rojo sino se pone verde
 				  $stock=""; 
 
-				  if($row["stock"]<=10){
+				  if($row["stock_producto"]<=10){
                       
-                     $stock = $row["stock"];
+                     $stock = $row["stock_producto"];
                      $atributo = "badge bg-red-active";
                             
 				 
 				  } else {
 
-				     $stock = $row["stock"];
+				     $stock = $row["stock_producto"];
                      $atributo = "badge bg-green";
                  
                  }
 
 
-                
-
-				
-				//$sub_array = array();
-				$sub_array[] = $row["categoria"];
-				$sub_array[] = $row["producto"];
-				$sub_array[] = "$ ".$row["precio_compra"];
+				$sub_array[] = $row["nombre_categoria"];_
+				$sub_array[] = $row["nombre_producto"];
 				$sub_array[] = "$ ".$row["precio_venta"];
-                if($row["categoria"]=="carnes" || $row["categoria"]=="fiambres" || $row["categoria"]=="quesos"){
-				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
+                if($row["nombre_categoria"]=="carnes" || $row["nombre_categoria"]=="fiambres" || $row["nombre_categoria"]=="quesos"){
+				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock_producto"].'
                   grs.</span>';}
 				  else{
-					$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
+					$sub_array[] = '<span class="'.$atributo.'">'.$row["stock_producto"].'
                   </span>';
 				  }
 				  $sub_array[] = $row["procedente"];
 
-				$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_categoria"].','.$row["id_producto"].','.$row["estado"].');" name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
+				$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_categoria"].','.$row["id_producto"].','.$row["estado_producto"].');" name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
 
 
 				$sub_array[] = '<button type="button" onClick="mostrar('.$row["id_producto"].');" id="'.$row["id_producto"].'" class="btn btn-warning btn-md"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
@@ -341,11 +328,11 @@
                		
 
 				
-				if($row["imagen"] != '')
+				if($row["imagen_producto"] != '')
 					{
 						$sub_array[] = '
 
-		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="200" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
+		 <img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="200" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
 
         
 
@@ -363,8 +350,11 @@
 			
 
 				$data[] = $sub_array;
-			 
+
+		
+
 			 }
+			 
 
 
       $results = array(
@@ -372,6 +362,7 @@
  			"iTotalRecords"=>count($data), //enviamos el total registros al datatable
  			"iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
  			"aaData"=>$data);
+
  		echo json_encode($results);
 
 
@@ -425,7 +416,6 @@
 				//$sub_array = array();
 				$sub_array[] = $row["categoria"];
 				$sub_array[] = $row["producto"];
-				$sub_array[] = "$ ".$row["precio_compra"];
 				$sub_array[] = "$ ".$row["precio_venta"];
 
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'

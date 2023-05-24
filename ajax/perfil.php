@@ -43,14 +43,14 @@
         foreach($datos as $row)
         {
           $output["dni_usuario"] = $row["dni_usuario"];
-          $output["nombre"] = $row["nombres"];
-          $output["apellido"] = $row["apellidos"];
+          $output["nombre"] = $row["nombre_usuario"];
+          $output["apellido"] = $row["apellido_usuario"];
           $output["usuario_perfil"] = $row["usuario"];
-          $output["password1"] = $row["password"];
-          $output["password2"] = $row["password2"];
-          $output["telefono"] = $row["telefono"];
-          $output["correo"] = $row["correo"];
-          $output["direccion"] = $row["direccion"];
+          $output["password1"] = $row["password_usuario"];
+          $output["password2"] = $row["password2_usuario"];
+          $output["telefono"] = $row["telefono_usuario"];
+          $output["correo"] = $row["correo_usuario"];
+          $output["direccion"] = $row["direccion_usuario"];
           
 
 

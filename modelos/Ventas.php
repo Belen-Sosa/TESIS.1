@@ -29,7 +29,6 @@ require_once("../config/conexion.php");
       
         $sql="select * from ventas";
 
-        //echo $sql;
         
         $sql=$conectar->prepare($sql);
 
@@ -44,7 +43,7 @@ require_once("../config/conexion.php");
       $conectar=parent::conexion();
           parent::set_names();
 
-         $sql="select v.fecha_venta,v.numero_venta, v.cliente, v.dni_cliente,v.total,c.id_cliente,c.dni_cliente,c.nombre_cliente, c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta,c.estado
+         $sql="select v.fecha_venta,v.numero_venta, v.nombre_cliente, v.dni_cliente,v.total_venta,c.id_cliente,c.dni_cliente,c.nombre_cliente, c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta_cliente,c.estado_cliente
          from ventas as v, clientes as c
          where 
          
@@ -54,12 +53,9 @@ require_once("../config/conexion.php");
          
          ;";
 
-         //echo $sql; exit();
 
          $sql=$conectar->prepare($sql);
-             
-
-             $sql->bindValue(1,$numero_venta);
+        $sql->bindValue(1,$numero_venta);
          $sql->execute();
          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -73,7 +69,7 @@ require_once("../config/conexion.php");
       $conectar=parent::conexion();
           parent::set_names();
 
-         $sql="select d.numero_venta,d.dni_cliente,d.producto,d.precio_venta,d.cantidad_venta,d.descuento,d.importe,d.fecha_venta,v.numero_venta,v.total,c.id_cliente,c.dni_cliente,c.nombre_cliente,c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta,c.estado
+         $sql="select d.numero_venta,d.dni_cliente,d.nombre_producto,d.precio_venta_producto,d.cantidad_detalle_v,d.descuento_detalle_v,d.importe_detalle_v,d.fecha_detalle_v,v.numero_venta,v.total_venta,c.id_cliente,c.dni_cliente,c.nombre_cliente,c.apellido_cliente,c.telefono_cliente,c.direccion_cliente,c.fecha_alta_cliente,c.estado_cliente
          from detalle_ventas as d, ventas as v, clientes as c
          where 
          
@@ -81,11 +77,7 @@ require_once("../config/conexion.php");
          and 
          d.dni_cliente = c.dni_cliente
          and
-         d.numero_venta=?
-         
-         ;";
-
-         //echo $sql; exit();
+         d.numero_venta=? ;";
 
          $sql=$conectar->prepare($sql);
              
@@ -116,10 +108,9 @@ require_once("../config/conexion.php");
        {
 
         
- $html.="<tr class='filas'><td>".$row['cantidad_venta']."</td><td>".$row['producto']."</td> <td>$ ".$row['precio_venta']."</td> <td>".$row['descuento']."</td> <td>$" .$row['importe']."</td></tr>";
-                  
+ $html.="<tr class='filas'><td>".$row['cantidad_detalle_v']."</td><td>".$row['nombre_producto']."</td> <td>$ ".$row['precio_venta_producto']."</td> <td>".$row['descuento_detalle_v']."</td> <td>$" .$row['importe_detalle_v']."</td></tr>";
               
-                  $total=  "$".$row["total"];
+                  $total=  "$".$row["total_venta"];
                   
        }
    
@@ -222,7 +213,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
 
  foreach ($detalles as $k => $v) {
-   //echo $v->codProd;
+
    //IMPORTANTE:estas variables son del array detalles
    $cantidad = $v->cantidad;
    $codProd = $v->codProd;
@@ -230,11 +221,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
    $precio = $v->precio; 
    $dscto = $v->dscto;
    $importe = $v->importe;
-   //$total = $v->total;
    $estado = $v->estado;
-
-   //echo "***************";
-   //echo "Cant: ".$cantidad." codProd: ".$codProd. " Producto: ". $producto. precio: ".$precio. " descuento: ".$dscto. " estado: ".$estado;
 
       $numero_venta = $_POST["numero_venta"];
       $dni_cliente = $_POST["dni"];
@@ -249,8 +236,11 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
       
       /*IMPORTANTE: no me imprimia porque tenia estas variables que no usaba*/
  
-   //estado 
-          
+   //modificamos estado si el metodo de pago es cc
+   if($tipo_pago=="CUENTA CORRIENTE"){
+    $estado= 2;
+
+   }    
 
        $sql="insert into detalle_ventas
        values(null,?,?,?,?,?,?,?,?,now(),?,?,?);";
@@ -266,7 +256,6 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        $sql->bindValue(2,$dni_cliente);
        $sql->bindValue(3,$codProd);
        $sql->bindValue(4,$producto);
-
        $sql->bindValue(5,$precio);
        $sql->bindValue(6,$cantidad);
        $sql->bindValue(7,$dscto);
@@ -274,29 +263,17 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        $sql->bindValue(9,$id_usuario);
        $sql->bindValue(10,$id_cliente);
        $sql->bindValue(11,$estado);
-      
-      
        $sql->execute();
-        
-        /*IMPORTANTE:esta linea $resultado=$sql->fetch(PDO::ASSOC); debe comentarse sino se insertaria una sola fila
-
-        Esta linea "$resultado=$sql->fetch(PDO::ASSOC);" se utliza cuando la consulta devuelva algún valor(osea si quieres imprimir un campo de la tabla de la bd) Pero la sentencia insert no deuelve nada
-        Y esperar que devuelva despues del insert es un error en el codigo por eso es que solo ejecuta 1 producto y no el resto, por lo tanto se comenta dicha linea  */
-
-       //$resultado=$sql->fetch(PDO::ASSOC);
-
-
-         /*$sql2="insert into ventas 
-          values(null,'".$fecha_venta."','".$numero_venta."','".$cliente_nombre."','".$dni_cliente."');";*/
      
+        //Esta linea "$resultado=$sql->fetch(PDO::ASSOC);" se utliza cuando la consulta devuelva algún valor(osea si quieres imprimir un campo de la tabla de la bd) Pero la sentencia insert no deuelve nada
+       // Y esperar que devuelva despues del insert es un error en el codigo por eso es que solo ejecuta 1 producto y no el resto, por lo tanto se comenta dicha linea  */
 
+      
          //si existe el producto entonces actualiza la cantidad, en caso contrario no lo inserta
 
 
             $sql3="select * from producto where id_producto=?;";
 
-            //echo $sql3;
-            
             $sql3=$conectar->prepare($sql3);
 
             $sql3->bindValue(1,$codProd);
@@ -306,12 +283,12 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                  foreach($resultado as $b=>$row){
 
-                   $re["existencia"] = $row["stock"];
+                   $re["existencia"] = $row["stock_producto"];
 
                  }
 
                //la cantidad total es la resta del stock menos la cantidad de productos vendido
-               $cantidad_total = $row["stock"] - $cantidad;
+               $cantidad_total = $row["stock_producto"] - $cantidad;
 
             
               //si existe el producto entonces actualiza el stock en producto
@@ -322,7 +299,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                  $sql4 = "update producto set 
                      
-                     stock=?
+                     stock_producto=?
                      where 
                      id_producto=?
                  ";
@@ -343,7 +320,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
       //SUMO EL TOTAL DE IMPORTE SEGUN EL CODIGO DE DETALLES DE VENTA
 
-        $sql5="select sum(importe) as total from detalle_ventas where numero_venta=?";
+        $sql5="select sum(importe_detalle_v) as total from detalle_ventas where numero_venta=?";
      
         $sql5=$conectar->prepare($sql5);
 
@@ -361,13 +338,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
             $subtotal=$d["total"];
 
-             //REALIZO EL CALCULO A REGISTRAR
-         /*$iva= 20/100;
-         $total_iv=$subtotal*$iva;
-         $total_iva=round($total_iv);
-         $tot=$subtotal+$total_iva;
-         $total=round($tot);
-        */
+         
         $total= $subtotal;
        //IMPORTANTE: hay que sacar la consulta INSERT INTO VENTAS fuera del foreach sino se repetiria el registro en la tabla ventas
        
@@ -432,7 +403,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
 
      //si la venta es a cuenta corriente no puede cambiar a pagado desde la seccion de ventas, debe ir a cuentas corrientes.
-     $sql="select tipo_pago from ventas where id_ventas=? ";
+     $sql="select tipo_pago_venta from ventas where id_ventas=? ";
      $sql=$conectar->prepare($sql);
      $sql->bindValue(1,$id_ventas);
      $sql->execute();
@@ -456,7 +427,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
      $sql="update ventas set 
            
-           estado=?
+           estado_venta=?
            where 
            id_ventas=?
           
@@ -475,7 +446,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
      $sql_detalle= "update detalle_ventas set
 
-         estado=?
+         estado_venta=?
          where 
          numero_venta=?
          ";
@@ -530,7 +501,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                         foreach($resultado as $row2){
                           
                           //este es la cantidad de stock para cada producto
-                          $stock=$output2["stock"]=$row2["stock"];
+                          $stock=$output2["stock"]=$row2["stock_producto"];
                           
                           //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
                           //cuando das click a estado pasa a PAGADO Y RESTA la cantidad de stock con la cantidad de venta
@@ -543,7 +514,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
 
               $sql6="update producto set 
-              stock=?
+              stock_producto=?
               where
 
               id_producto=?
@@ -570,7 +541,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                   $sql="update ventas set 
                         
-                        estado=?
+                        estado_venta=?
                         where 
                         id_ventas=?
                         
@@ -589,7 +560,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                       $sql_detalle= "update detalle_ventas set
 
-                      estado=?
+                      estado_venta=?
                       where 
                       numero_venta=?
                       ";
@@ -644,7 +615,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                                       foreach($resultado as $row2){
                                         
                                         //este es la cantidad de stock para cada producto
-                                        $stock=$output2["stock"]=$row2["stock"];
+                                        $stock=$output2["stock"]=$row2["stock_producto"];
                                         
                                         //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
                                   //cuando le da click al estado pasa de PAGADO A ANULADO y SUMA la cantidad de stock en productos con la cantidad de venta de detalle_ventas, aumentando de esta manera la cantidad actual de productos en el stock de productos
@@ -657,7 +628,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                             //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
 
                             $sql6="update producto set 
-                            stock=?
+                            stock_producto=?
                             where
 
                             id_producto=?
@@ -683,13 +654,11 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                $sql="update ventas set 
                      
-                     estado=?
+                     estado_venta=?
                      where 
                      id_ventas=?
                      
-                       ";
-
-                     // echo $sql; 
+                       "; 
 
                      $sql=$conectar->prepare($sql);
 
@@ -702,7 +671,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
                    $sql_detalle= "update detalle_ventas set
 
-                   estado=?
+                   estado_detalle_v=?
                    where 
                    numero_venta=?
                    ";
@@ -757,7 +726,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                                    foreach($resultado as $row2){
                                      
                                      //este es la cantidad de stock para cada producto
-                                     $stock=$output2["stock"]=$row2["stock"];
+                                     $stock=$output2["stock"]=$row2["stock_´producto"];
                                      
                                      //esta debe estar dentro del foreach para que recorra el $stock de los productos, ya que es mas de un producto que está asociado a la venta
                                //cuando le da click al estado pasa de PAGADO A ANULADO y SUMA la cantidad de stock en productos con la cantidad de venta de detalle_ventas, aumentando de esta manera la cantidad actual de productos en el stock de productos
@@ -770,7 +739,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
                          //LE ACTUALIZO LA CANTIDAD DEL PRODUCTO 
 
                          $sql6="update producto set 
-                         stock=?
+                         stock_producto=?
                          where
 
                          id_producto=?
@@ -792,11 +761,10 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
           $sqlcc="update detalle_cuentas_corrientes set 
        
-          estado=?,fecha_pago=null
+          estado_detalle_cc=?,fecha_pago_detalle_cc=null
           where 
           id_ventas=?";
-   
-          // echo $sql; 
+    
    
           $sqlcc=$conectar->prepare($sqlcc);
    
@@ -807,7 +775,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
 
           //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
-          $sql="select id_cuenta_corriente,monto 
+          $sql="select id_cuenta_corriente,monto_detalle_cc 
           from detalle_cuentas_corrientes
           where id_ventas=?
           ";
@@ -823,7 +791,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           foreach($resultado as $row){
             
             //este es la cantidad de stock para cada producto
-            $saldo_venta=$row["monto"];
+            $saldo_venta=$row["monto_detalle_cc"];
             $id_cuenta_corriente=$row["id_cuenta_corriente"];
 
           }
@@ -831,7 +799,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
            
             $sql="update cuentas_corrientes 
-            set saldo = saldo + ?
+            set saldo_cc = saldo_cc + ?
             where id_cuentas_corrientes = ?";
             
      
@@ -855,11 +823,9 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     
           $sql="update ventas set 
                 
-                estado=?
+                estado_venta=?
                 where 
                 id_ventas=?";
-     
-                // echo $sql; 
      
                 $sql=$conectar->prepare($sql);
      
@@ -872,7 +838,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
           $sql_detalle= "update detalle_ventas set
      
-              estado=?
+              estado_detalle_v=?
               where 
               numero_venta=?
               ";
@@ -885,12 +851,11 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
           $sqlcc="update detalle_cuentas_corrientes set 
           
-          estado=?
+          estado_detalle_cc=?
           where 
           id_ventas=?";
 
-          // echo $sql; 
-
+        
           $sqlcc=$conectar->prepare($sqlcc);
 
           $sqlcc->bindValue(1,"anulado");
@@ -900,7 +865,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
      
            //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
-           $sql="select id_cuenta_corriente,monto 
+           $sql="select id_cuenta_corriente,monto_detalle_cc 
            from detalle_cuentas_corrientes
            where id_ventas=?
            ";
@@ -916,7 +881,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            foreach($resultado as $row){
              
              //este es la cantidad de stock para cada producto
-             $saldo_venta=$row["monto"];
+             $saldo_venta=$row["monto_detalle_cc"];
              $id_cuenta_corriente=$row["id_cuenta_corriente"];
  
            }
@@ -924,14 +889,10 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
  
             
              $sql="update cuentas_corrientes 
-             set saldo = saldo - ?
+             set saldo_cc = saldo_cc - ?
              where id_cuentas_corrientes = ?";
-             
-      
-           
-      
+          
              $sql=$conectar->prepare($sql);
-      
              $sql->bindValue(1,$saldo_venta);
              $sql->bindValue(2,$id_cuenta_corriente);
              $sql->execute();
@@ -948,14 +909,11 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     
           $sql="update ventas set 
                 
-                estado=?
+                estado_venta=?
                 where 
                 id_ventas=?";
      
-                // echo $sql; 
-     
                 $sql=$conectar->prepare($sql);
-     
                 $sql->bindValue(1,$estado);
                 $sql->bindValue(2,$id_ventas);
                 $sql->execute();
@@ -965,7 +923,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
           $sql_detalle= "update detalle_ventas set
      
-              estado=?
+              estado_detalle_v=?
               where 
               numero_venta=?
               ";
@@ -979,21 +937,19 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
              
             $sqlcc="update detalle_cuentas_corrientes set 
       
-            estado=?,fecha_pago=null
+            estado_detalle_cc=?,fecha_pago_detalle_cc=null
             where 
             id_ventas=?";
   
-            // echo $sql; 
   
             $sqlcc=$conectar->prepare($sqlcc);
-  
             $sqlcc->bindValue(1,"adeuda");
             $sqlcc->bindValue(2,$id_ventas);
             $sqlcc->execute();
 
            
             //CAMBIAMOS EL SALDO DE LA CUENTA CORRIENTE
-          $sql="select id_cuenta_corriente,monto 
+          $sql="select id_cuenta_corriente,monto_detalle_cc
           from detalle_cuentas_corrientes
           where id_ventas=?
           ";
@@ -1009,7 +965,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
           foreach($resultado as $row){
             
             //este es la cantidad de stock para cada producto
-            $saldo_venta=$row["monto"];
+            $saldo_venta=$row["monto_detalle_cc"];
             $id_cuenta_corriente=$row["id_cuenta_corriente"];
 
           }
@@ -1017,14 +973,10 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
            
             $sql="update cuentas_corrientes 
-            set saldo = saldo + ?
+            set saldo_cc = saldo_cc + ?
             where id_cuentas_corrientes = ?";
-            
-     
-          
-     
+        
             $sql=$conectar->prepare($sql);
-     
             $sql->bindValue(1,$saldo_venta);
             $sql->bindValue(2,$id_cuenta_corriente);
             $sql->execute();
@@ -1041,13 +993,10 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     
           $sql="update ventas set 
                 
-                estado=?
+                estado_venta=?
                 where 
                 id_ventas=?";
-     
-                // echo $sql; 
-     
-                $sql=$conectar->prepare($sql);
+              $sql=$conectar->prepare($sql);
      
                 $sql->bindValue(1,$estado);
                 $sql->bindValue(2,$id_ventas);
@@ -1058,7 +1007,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      
           $sql_detalle= "update detalle_ventas set
      
-              estado=?
+              estado_detalle_v=?
               where 
               numero_venta=?
               ";
@@ -1072,12 +1021,9 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
              
             $sqlcc="update detalle_cuentas_corrientes set 
       
-            estado=?,fecha_pago=null
+            estado_detalle_cc=?,fecha_pago_detalle_cc=null
             where 
             id_ventas=?";
-  
-            // echo $sql; 
-  
             $sqlcc=$conectar->prepare($sqlcc);
   
             $sqlcc->bindValue(1,"adeuda");
@@ -1129,11 +1075,9 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
       $sql="update ventas set 
             
-            estado=?
+            estado_venta=?
             where 
             id_ventas=?";
- 
-            // echo $sql; 
  
             $sql=$conectar->prepare($sql);
  
@@ -1146,7 +1090,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
  
       $sql_detalle= "update detalle_ventas set
  
-          estado=?
+          estado_detalle_venta=?
           where 
           numero_venta=?
           ";
@@ -1171,13 +1115,12 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
       $sql="update ventas set 
             
-            estado=?
+            estado_venta=?
             where 
             id_ventas=?
            
               ";
  
-            // echo $sql; 
  
             $sql=$conectar->prepare($sql);
  
@@ -1189,7 +1132,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
  
       $sql_detalle= "update detalle_ventas set
  
-          estado=?
+          estado_detalle_v=?
           where 
           numero_venta=?
           ";
@@ -1289,7 +1232,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     $conectar= parent::conexion();
 
 
-     $sql="select * from ventas where id_cliente=? and tipo_pago=´CUENTA CORRIENTE´";
+     $sql="select * from ventas where id_cliente=? and tipo_pago_venta=´CUENTA CORRIENTE´";
 
      $sql=$conectar->prepare($sql);
 
@@ -1378,8 +1321,8 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
       parent::set_names();
 
 
-     $sql="SELECT MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
-       FROM ventas where estado='1' GROUP BY YEAR(fecha_venta) desc, month(fecha_venta) desc";
+     $sql="SELECT MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
+       FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc, month(fecha_venta) desc";
 
      
         $sql=$conectar->prepare($sql);
@@ -1396,7 +1339,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      $conectar=parent::conexion();
 
 
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total) as total_venta_ano FROM ventas where estado='1' GROUP BY YEAR(fecha_venta) desc";
+      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->execute();
@@ -1413,7 +1356,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      $conectar=parent::conexion();
 
 
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total) as total_venta_ano FROM ventas where estado='1' GROUP BY YEAR(fecha_venta) desc";
+      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->execute();
@@ -1439,7 +1382,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
      $conectar=parent::conexion();
 
 
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total) as total_venta_ano FROM ventas where estado='0' GROUP BY YEAR(fecha_venta) desc";
+      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='0' GROUP BY YEAR(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->execute();
@@ -1475,7 +1418,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          $fecha=$_POST["year"];
 
-   $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado ='1' GROUP BY MONTHname(fecha_venta) desc";
+   $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado_venta ='1' GROUP BY MONTHname(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->bindValue(1,$fecha);
@@ -1502,7 +1445,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
          $fecha_inicial=date("Y");
 
 
-  $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado ='1' GROUP BY MONTHname(fecha_venta) desc";
+  $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado_venta ='1' GROUP BY MONTHname(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->bindValue(1,$fecha_inicial);
@@ -1550,8 +1493,8 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          $fecha=$_POST["year"];
 
-       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
-       from ventas where YEAR(fecha_venta)=? and estado='1' group by MONTHname(fecha_venta) desc";
+       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
+       from ventas where YEAR(fecha_venta)=? and estado_venta='1' group by MONTHname(fecha_venta) desc";
          
 
          $sql=$conectar->prepare($sql);
@@ -1567,8 +1510,8 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          $fecha_inicial=date("Y");
 
-            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total) as total_venta
-       from ventas where YEAR(fecha_venta)=? and estado='1' group by MONTHname(fecha_venta) desc";
+            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
+       from ventas where YEAR(fecha_venta)=? and estado_venta='1' group by MONTHname(fecha_venta) desc";
          
 
         $sql=$conectar->prepare($sql);
@@ -1599,7 +1542,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
            $fecha_final = date("Y-m-d", strtotime($date));
 
 
-       $sql="select * from detalle_ventas where dni_cliente=? and fecha_venta>=? and fecha_venta<=? and estado='1' or estado='2';";
+       $sql="select * from detalle_ventas where dni_cliente=? and fecha_venta>=? and fecha_venta<=? and estado_venta='1' or estado_venta='2';";
 
    
        $sql=$conectar->prepare($sql);
@@ -1618,7 +1561,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
        $conectar=parent::conexion();
        parent::set_names();
 
-       $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_venta) desc";
+       $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado_venta='1' GROUP BY MONTHname(fecha_venta) desc";
 
        $sql=$conectar->prepare($sql);
        $sql->execute();
@@ -1633,7 +1576,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
       
-      $sql="SELECT  MONTHname(fecha_venta) as mes, SUM(total) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado='1' GROUP BY MONTHname(fecha_venta) desc";
+      $sql="SELECT  MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=YEAR(CURDATE()) and estado_venta='1' GROUP BY MONTHname(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
           $sql->execute();
@@ -1668,7 +1611,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
              $fecha_final = date("Y-m-d", strtotime($date));
 
 
-         $sql="select sum(cantidad_venta) as total from detalle_ventas where dni_cliente=? and fecha_venta >=? and fecha_venta <=? and estado='1' or estado='2';";
+         $sql="select sum(cantidad_venta) as total from detalle_ventas where dni_cliente=? and fecha_venta >=? and fecha_venta <=? and estado_detalle_v='1' or estado_detalle_v='2';";
 
      
          $sql=$conectar->prepare($sql);

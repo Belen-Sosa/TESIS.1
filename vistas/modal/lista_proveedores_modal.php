@@ -28,7 +28,7 @@
                   <tr>
                   <!--pongo la clase all para que se vea en cualquier tamaño-->
                     <th class="all" width="50%">Cuit</th>
-                    <th class="all" width="20%">Razón Social</th>
+                    <th class="all" width="20%">Nombre</th>
                     <!--<th>Dirección</th>-->
                     <th class="not-mobile desktop tablet-p tablet-l" width="10%">Fecha</th>
                  
