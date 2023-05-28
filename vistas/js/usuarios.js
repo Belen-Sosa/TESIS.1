@@ -52,7 +52,6 @@ var tabla;
 	$('#direccion').val("");
 	$('#estado').val("");
 	$('#id_usuario').val("");
-	//limpia los checkbox
 	$('input:checkbox').removeAttr('checked');
    }
 

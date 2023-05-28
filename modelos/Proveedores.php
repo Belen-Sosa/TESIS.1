@@ -142,7 +142,7 @@
               $sql="update proveedor set 
 
                  cuit_proveedor=?,
-                 nombre=?,
+                 nombre_proveedor=?,
                  telefono_proveedor=?,
                  correo_proveedor=?,
                  direccion_proveedor=?,

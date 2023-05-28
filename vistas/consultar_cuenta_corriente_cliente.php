@@ -25,14 +25,20 @@
        Detalle Cuenta Corriente 
        
       </h1>
-      
+      <div class="box-header with-border">
+                          <h1 class="box-title">
+                            <button class="btn btn-primary btn-lg" id="add_button" onclick="" data-toggle="modal" data-target="#pagoModal"><i class="fa fa-plus" aria-hidden="true"></i> Pago a Cuenta</button></h1>
+        
+                        <div class="box-tools pull-right">
+                        </div>
+                    </div>
     </section>
 
     <!-- Main content -->
     <section class="content">
     
    <div id="resultados_ajax"></div>
-  
+
 
     
 
@@ -110,12 +116,60 @@
       <!-- /.row -->
     </section>
     <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+    
 
-   
   
 
+  </div>
+    <!--FORMULARIO VENTANA MODAL-->
+  
+<div id="pagoModal" class="modal fade">
+  <div class="modal-dialog">
+    <form class="form-horizontal" method="post" id="pago_form">
+      <div class="modal-content">
+      
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Pago a Cuenta</h4>
+        </div>
+        <div class="modal-body">
+
+
+
+               <div class="form-group">
+                  <label for="inputText4" class="col-lg-1 control-label">Monto:</label>
+
+            
+                    <input type="text" class="form-control" id="monto_pago" name="monto_pago" placeholder="monto" required pattern="[0-9]{0,15}">
+                  
+                </div>
+
+               
+
+                
+          
+          </div>
+                 <!--modal-body-->
+
+        <div class="modal-footer">
+          <input type="hidden" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION["id_usuario"];?>"/>
+          
+
+          <button type="submit" name="action" id="#" class="btn btn-success pull-left" value="Add"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar </button>
+
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Cerrar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+ <!--FIN FORMULARIO VENTANA MODAL-->
+  
+
+
+   
+
+    
    <?php require_once("footer.php");?>
 
 <script type="text/javascript" src="js/cuenta_corriente_detalle.js"></script>

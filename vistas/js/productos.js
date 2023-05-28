@@ -55,7 +55,6 @@ function limpiar()
 	$('#producto').val("");
     $('#presentacion').val("");
     $('#unidad').val("");
-    $('#precio_compra').val("");
 	$('#precio_venta').val("");
 	$('#stock').val("");
 	$('#estado').val("");
@@ -172,7 +171,6 @@ function mostrar(id_producto)
 
 				$('#presentacion').val(data.presentacion);
 				$('#unidad').val(data.unidad);
-                $('#precio_compra').val(data.precio_compra);
 				$('#precio_venta').val(data.precio_venta);
 				$('#stock').val(data.stock);
 				$('#estado').val(data.estado);
@@ -225,8 +223,7 @@ function mostrar(id_producto)
 						$('#titulo_procedente').hide();
 					}
 		
-			
-	                $('#precio_compra').val(data.precio_compra);
+
 					$('#precio_venta').val(data.precio_venta);
 					$('#stock').val(data.stock);
 					$('#estado').val(data.estado);
@@ -888,8 +885,6 @@ function listar_en_ventas(){
 		        $.ajax({
 					url:"../ajax/producto.php?op=buscar_producto_en_venta",
 					 method:"POST",
-					//data:dataString,
-					//toma el valor del id y del estado
 					data:{id_producto:id_producto, producto:producto,estado:estado},
 					cache: false,
 					dataType:"json",
@@ -1157,7 +1152,11 @@ function setPrecioCompra(event, obj, idx){
 	
 	event.preventDefault();
   console.log("detalles[idx].precio"+detalles[idx].precio);
+  if( parseInt(obj.value)!=NaN){
 	detalles[idx].precio = parseInt(obj.value);
+  }else{
+	detalles[idx].precio =0;
+  }
 	console.log("detalles[idx].precio"+detalles[idx].precio);
 	recalcular(idx);
 }
@@ -1456,13 +1455,13 @@ function habilitar_stock(id_procedente){
 	if(d != "0"){
 		$('#stock').attr('disabled', false);
 			
-		$('#contenedor_precio_compra').hide();
+	
      	//muestra un mensaje de exito
 
 	}else{
 		$('#stock').attr('disabled', true);
 
-		$('#contenedor_precio_compra').show();
+		
 	}
 	
 }

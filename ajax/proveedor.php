@@ -139,13 +139,13 @@
 
     				foreach($datos as $row)
     				{
-    					$output["cuit_proveedor"] = $row["cuit"];
-						$output["proveedor"] = $row["razon_social"];
-						$output["telefono"] = $row["telefono"];
-						$output["correo"] = $row["correo"];
-						$output["direccion"] = $row["direccion"];
-						$output["fecha_alta"] = $row["fecha_alta"];
-						$output["estado"] = $row["estado"];
+    					$output["cuit_proveedor"] = $row["cuit_proveedor"];
+						$output["proveedor"] = $row["nombre_proveedor"];
+						$output["telefono"] = $row["telefono_proveedor"];
+						$output["correo"] = $row["correo_proveedor"];
+						$output["direccion"] = $row["direccion_proveedor"];
+						$output["fecha_alta"] = $row["fecha_alta_proveedor"];
+						$output["estado"] = $row["estado_proveedor"];
 
     				}
 
@@ -157,13 +157,13 @@
 
 		        	foreach($datos as $row)
 					{
-						$output["cuit_relacion"] = $row["cuit"];
-						$output["proveedor"] = $row["razon_social"];
-						$output["telefono"] = $row["telefono"];
-						$output["correo"] = $row["correo"];
-						$output["direccion"] = $row["direccion"];
-						$output["fecha_alta"] = $row["fecha_alta"];
-						$output["estado"] = $row["estado"];
+						$output["cuit_relacion"] = $row["cuit_proveedor"];
+						$output["proveedor"] = $row["nombre_proveedor"];
+						$output["telefono"] = $row["telefono_proveedor"];
+						$output["correo"] = $row["correo_proveedor"];
+						$output["direccion"] = $row["direccion_proveedor"];
+						$output["fecha_alta"] = $row["fecha_alta_proveedor"];
+						$output["estado"] = $row["estado_proveedor"];
 					}
 
 
@@ -206,30 +206,30 @@
 				$est = '';
 				
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_proveedor"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_proveedor"] == 1){
 						$est = 'ACTIVO';
 						
 					}	
 				}
 				
 				
-	             $sub_array[] = $row["cuit"];
-				 $sub_array[] = $row["razon_social"];
-				 $sub_array[] = $row["telefono"];
-				 $sub_array[] = $row["correo"];
-				 $sub_array[] = $row["direccion"];
-				 $sub_array[] = date("d-m-Y", strtotime($row["fecha_alta"]));
+	             $sub_array[] = $row["cuit_proveedor"];
+				 $sub_array[] = $row["nombre_proveedor"];
+				 $sub_array[] = $row["telefono_proveedor"];
+				 $sub_array[] = $row["correo_proveedor"];
+				 $sub_array[] = $row["direccion_proveedor"];
+				 $sub_array[] = date("d-m-Y", strtotime($row["fecha_alta_proveedor"]));
 				
 
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_proveedor"].','.$row["estado"].');" name="estado" id="'.$row["id_proveedor"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_proveedor"].','.$row["estado_proveedor"].');" name="estado" id="'.$row["id_proveedor"].'" class="'.$atrib.'">'.$est.'</button>';
 
 
-                 $sub_array[] = '<button type="button"  onClick="mostrar('.$row["cuit"].');" id="'.$row["id_proveedor"].'" class="btn btn-warning btn-md"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
+                 $sub_array[] = '<button type="button"  onClick="mostrar('.$row["cuit_proveedor"].');" id="'.$row["id_proveedor"].'" class="btn btn-warning btn-md"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
                 
 
                  $sub_array[] = '<button type="button" onClick="eliminar('.$row["id_proveedor"].');" id="'.$row["id_proveedor"].'" class="btn btn-danger btn-md"><i class="glyphicon glyphicon-edit"></i> Eliminar</button>';
@@ -262,21 +262,21 @@
 				$est = '';
 				
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_proveedor"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_proveedor"] == 1){
 						$est = 'ACTIVO';
 						
 					}	
 				}
 				
 				//$sub_array = array();
-	             $sub_array[] = $row["cuit"];
-				 $sub_array[] = $row["razon_social"];
-				 $sub_array[] = date("d-m-Y", strtotime($row["fecha_alta"]));
+	             $sub_array[] = $row["cuit_proveedor"];
+				 $sub_array[] = $row["nombre_proveedor"];
+				 $sub_array[] = date("d-m-Y", strtotime($row["fecha_alta_proveedor"]));
 				 
 
 
@@ -284,7 +284,7 @@
               
               
 
-                 $sub_array[] = '<button type="button" onClick="agregar_registro('.$row["id_proveedor"].','.$row["estado"].');" id="'.$row["id_proveedor"].'" class="btn btn-primary btn-md"><i class="fa fa-plus" aria-hidden="true"></i> Agregar</button>';
+                 $sub_array[] = '<button type="button" onClick="agregar_registro('.$row["id_proveedor"].','.$row["estado_proveedor"].');" id="'.$row["id_proveedor"].'" class="btn btn-primary btn-md"><i class="fa fa-plus" aria-hidden="true"></i> Agregar</button>';
                 
 				$data[] = $sub_array;
 			}
@@ -312,11 +312,11 @@
 
 				foreach($datos as $row)
 				{
-					$output["cuit"] = $row["cuit"];
-					$output["razon_social"] = $row["razon_social"];
-					$output["direccion"] = $row["direccion"];
-					$output["fecha_alta"] = $row["fecha_alta"];
-					$output["estado"] = $row["estado"];
+					$output["cuit"] = $row["cuit_proveedor"];
+					$output["razon_social"] = $row["nombre_proveedor"];
+					$output["direccion"] = $row["direccion_proveedor"];
+					$output["fecha_alta"] = $row["fecha_alta_proveedor"];
+					$output["estado"] = $row["estado_proveedor"];
 					
 				}
 

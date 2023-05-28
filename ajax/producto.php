@@ -16,7 +16,7 @@
    $id_categoria=isset($_POST["categoria"]);
    $id_usuario=isset($_POST["id_usuario"]);
    $producto=isset($_POST["producto"]);  
-   $precio_compra=isset($_POST["precio_compra"]);
+
    $precio_venta=isset($_POST["precio_venta"]);
    $stock = isset($_POST["stock"]);
    $estado = isset($_POST["estado"]);
@@ -62,7 +62,7 @@
 						//no existe el producto por lo tanto hacemos el registros
 						
 
-					    $productos->registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
+					    $productos->registrar_producto($id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$_POST["procedente"],$id_usuario);
 
                         $productos->editar_stock_procedente($_POST["procedente"],$_POST["stock"]);
 
@@ -88,7 +88,7 @@
 
 							//no existe el producto por lo tanto hacemos el registros
 
-					$productos->registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
+					$productos->registrar_producto($id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
 	
 
 
@@ -110,7 +110,7 @@
 	            	/*si ya existe entonces editamos el producto*/
 
 
-	             $productos->editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
+	             $productos->editar_producto($id_producto,$id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario);
 
 
 	            $messages[]="El producto se editó correctamente";
@@ -183,9 +183,9 @@
 			{
 				$output["id_producto"] = $row["id_producto"];
 				$output["categoria"] = $row["id_categoria"];
-				$output["categoria_nombre"] = $row["nombre_categoria"];
+				$output["categoria_nombre"] = $row["categoria"];
 				$output["producto"] = $row["nombre_producto"];
-				$output["precio_venta"] = $row["precio_venta"];
+				$output["precio_venta"] = $row["precio_venta_producto"];
 				$output["stock"] = $row["stock_producto"];
 				$output["estado"] = $row["estado_producto"];
 				$output["procedente"] = $row["procedente"];
@@ -214,7 +214,6 @@
 					$output["producto_id"] = $row["id_producto"];
 					$output["categoria"] = $row["id_categoria"];
 					$output["producto"] = $row["nombre_producto"];
-					$output["precio_compra"] = $row["precio_compra"];
 					$output["precio_venta"] = $row["precio_venta"];
 					$output["stock"] = $row["stock_producto"];
 					$output["estado"] = $row["estado_producto"];
@@ -307,9 +306,9 @@
                  }
 
 
-				$sub_array[] = $row["nombre_categoria"];_
+				$sub_array[] = $row["nombre_categoria"];
 				$sub_array[] = $row["nombre_producto"];
-				$sub_array[] = "$ ".$row["precio_venta"];
+				$sub_array[] = "$ ".$row["precio_venta_producto"];
                 if($row["nombre_categoria"]=="carnes" || $row["nombre_categoria"]=="fiambres" || $row["nombre_categoria"]=="quesos"){
 				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock_producto"].'
                   grs.</span>';}
@@ -332,11 +331,7 @@
 					{
 						$sub_array[] = '
 
-		 <img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="200" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
-
-        
-
-
+		 <img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="200" height="50" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen_producto"].'" />
 
 						';
 					}
@@ -380,45 +375,39 @@
 				$sub_array = array();
 
 				$est = '';
-				//$atrib = 'activo';
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_producto"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_producto"] == 1){
 						$est = 'ACTIVO';
-						//$atrib = '';
+				
 					}	
 				}
 
 				  //STOCK, si es mejor de 10 se pone rojo sino se pone verde
 				  $stock=""; 
 
-				  if($row["stock"]<=10){
+				  if($row["stock_producto"]<=10){
                       
-                     $stock = $row["stock"];
+                     $stock = $row["stock_producto"];
                      $atributo = "badge bg-red-active";
                             
 				 
 				  } else {
 
-				     $stock = $row["stock"];
+				     $stock = $row["stock_producto"];
                      $atributo = "badge bg-green";
                  
                  }
 
+				$sub_array[] = $row["nombre_categoria"];
+				$sub_array[] = $row["nombre_producto"];
+				$sub_array[] = "$ ".$row["precio_venta_producto"];
 
-                
-
-				
-				//$sub_array = array();
-				$sub_array[] = $row["categoria"];
-				$sub_array[] = $row["producto"];
-				$sub_array[] = "$ ".$row["precio_venta"];
-
-				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
+				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock_producto"].'
                   </span>';
 
                 
@@ -428,16 +417,13 @@
 
 			  
 
-				if($row["imagen"] != '')
+				if($row["imagen_producto"] != '')
 					{
 						$sub_array[] = '
 
-		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
+		 <img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen_producto"].'" />
 
          
-
-
-
 						';
 					}
 					else
@@ -450,7 +436,7 @@
 					
 
 
-			$sub_array[] = '<button type="button" name="" id="'.$row["id_producto"].'" class="btn btn-primary btn-md " onClick="agregarDetalle('.$row["id_producto"].',\''.$row["producto"].'\','.$row["estado"].')"><i class="fa fa-plus"></i> Agregar</button>';
+			$sub_array[] = '<button type="button" name="" id="'.$row["id_producto"].'" class="btn btn-primary btn-md " onClick="agregarDetalle('.$row["id_producto"].',\''.$row["nombre_producto"].'\','.$row["estado_producto"].')"><i class="fa fa-plus"></i> Agregar</button>';
                 
 			
 
@@ -482,14 +468,10 @@
 					
 					$output["id_producto"] = $row["id_producto"];
 					$output["id_categoria"] = $row["id_categoria"];
-					$output["producto"] = $row["producto"];
-					
-					$output["precio_compra"] = $row["precio_compra"];
-					$output["stock"] = $row["stock"];
-				     
-
-				    $output["estado"] = $row["estado"];
-					$output["nombre_categoria"] = $row["categoria"];
+					$output["producto"] = $row["nombre_producto"];				
+					$output["stock"] = $row["stock_producto"];	     
+				    $output["estado"] = $row["estado_producto"];
+					$output["nombre_categoria"] = $row["nombre_categoria"];
 					
 					
 				}
@@ -538,31 +520,31 @@
 				$sub_array = array();
 
 				$est = '';
-				//$atrib = 'activo';
+		
 				 $atrib = "btn btn-success btn-md estado";
-				if($row["estado"] == 0){
+				if($row["estado_producto"] == 0){
 					$est = 'INACTIVO';
 					$atrib = "btn btn-warning btn-md estado";
 				}
 				else{
-					if($row["estado"] == 1){
+					if($row["estado_producto"] == 1){
 						$est = 'ACTIVO';
-						//$atrib = '';
+
 					}	
 				}
 
 				  //STOCK, si es mejor de 10 se pone rojo sino se pone verde
 				  $stock=""; 
 
-				  if($row["stock"]<=10){
+				  if($row["stock_producto"]<=10){
                       
-                     $stock = $row["stock"];
+                     $stock = $row["stock_producto"];
                      $atributo = "badge bg-red-active";
                             
 				 
 				  } else {
 
-				     $stock = $row["stock"];
+				     $stock = $row["stock_producto"];
                      $atributo = "badge bg-green";
                  
                  }
@@ -573,30 +555,26 @@
 
 				
 				//$sub_array = array();
-				$sub_array[] = $row["categoria"];
-				$sub_array[] = $row["producto"];
-				$sub_array[] = "$ ".$row["precio_compra"];
-				$sub_array[] = "$ ".$row["precio_venta"];
+				$sub_array[] = $row["nombre_categoria"];
+				$sub_array[] = $row["nombre_producto"];
+				$sub_array[] = "$ ".$row["precio_venta_producto"];
 
-				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock"].'
+				$sub_array[] = '<span class="'.$atributo.'">'.$row["stock_producto"].'
                   </span>';
 
                
 
-				$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_producto"].','.$row["estado"].');" name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
+				$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_producto"].','.$row["estado_producto"].');" name="estado" id="'.$row["id_producto"].'" class="'.$atrib.'">'.$est.'</button>';
 
                
 
               
 
-				if($row["imagen"] != '')
+				if($row["imagen_producto"] != '')
 					{
 						$sub_array[] = '
 
-		 <img src="upload/'.$row["imagen"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen"].'" />
-
-
-
+		 <img src="upload/'.$row["imagen_producto"].'" class="img-thumbnail" width="100" height="100" /><input type="hidden" name="hidden_producto_imagen" value="'.$row["imagen_producto"].'" />
 
 						';
 					}
@@ -609,7 +587,7 @@
                			
 				
 
-			$sub_array[] = '<button type="button" name="" id="'.$row["id_producto"].'" class="btn btn-primary btn-md " onClick="agregarDetalleVenta('.$row["id_producto"].',\''.$row["producto"].'\','.$row["estado"].')"><i class="fa fa-plus"></i> Agregar</button>';
+			$sub_array[] = '<button type="button" name="" id="'.$row["id_producto"].'" class="btn btn-primary btn-md " onClick="agregarDetalleVenta('.$row["id_producto"].',\''.$row["nombre_producto"].'\','.$row["estado_producto"].')"><i class="fa fa-plus"></i> Agregar</button>';
         
 			
 
@@ -638,11 +616,11 @@
 				foreach($datos as $row)
 				{
 					$output["id_producto"] = $row["id_producto"];
-					$output["producto"] = $row["producto"];
-					$output["precio_venta"] = $row["precio_venta"];
-					$output["stock"] = $row["stock"];
-					$output["estado"] = $row["estado"];
-					$output["nombre_categoria"] = $row["categoria"];
+					$output["producto"] = $row["nombre_producto"];
+					$output["precio_venta"] = $row["precio_venta_producto"];
+					$output["stock"] = $row["stock_producto"];
+					$output["estado"] = $row["estado_producto"];
+					$output["nombre_categoria"] = $row["nombre_categoria"];
 					
 				}
 		

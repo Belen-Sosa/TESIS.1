@@ -28,7 +28,6 @@ function mostrar_perfil(id_usuario_perfil)
 				$('#telefono_perfil').val(data.telefono);
 				$('#email_perfil').val(data.correo);
 				$('#direccion_perfil').val(data.direccion);
-				//$('#estado').val(data.estado);
 				$('.modal-title').text("Editar Usuario");
 				$('#id_usuario_perfil').val(id_usuario_perfil);
 				$('#action').val("Edit");
@@ -47,16 +46,11 @@ function mostrar_perfil(id_usuario_perfil)
 function editar_perfil(e)
 {
 	e.preventDefault(); //No se activará la acción predeterminada del evento
-	//$("#btnGuardar").prop("disabled",true);
 	var formData = new FormData($("#perfil_form")[0]);
 
 
 	var password1= $("#password1_perfil").val();
 	var password2= $("#password2_perfil").val();
-
-	//var id_usuario= $("#usuario_perfil_id").val();
-
-    //alert(id_usuario);
 
 	if(password1==password2){
 
@@ -69,19 +63,14 @@ function editar_perfil(e)
 
 		    success: function(datos)
 		    {                    
-		          /*bootbox.alert(datos);	          
-		          mostrarform(false);
-		          tabla.ajax.reload();*/
-
-		         //alert(datos);
-
+		      
 		         console.log(datos);
 
-	            //$('#perfil_form')[0].reset();
+
 				$('#perfilModal').modal('hide');
 
 				$('#resultados_ajax').html(datos);
-				//$('#usuario_data').DataTable().ajax.reload();
+
 				
 
 					

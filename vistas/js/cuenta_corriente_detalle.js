@@ -1,6 +1,10 @@
 var tabla;
 var id_cliente= getParameterByName('id_cliente');
 console.log("id:"+id_cliente);
+
+
+
+
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -198,7 +202,8 @@ function listar_detalle_cc()
 				
 				success:function(data){
 	
-                 $('#ventas_data').DataTable().ajax.reload();
+                 
+				$('#ventas_data').DataTable().ajax.reload();
 
                   //refresca el datatable de ventas por fecha
                  $('#ventas_fecha_data').DataTable().ajax.reload();
@@ -220,6 +225,7 @@ function listar_detalle_cc()
 
 
 	  }
+	
 
 
 listar_detalle_cc();

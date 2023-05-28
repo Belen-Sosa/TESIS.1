@@ -155,15 +155,15 @@
              	 foreach($datos as $row){
                       
                     $output["dni_usuario"] = $row["dni_usuario"];
-                    $output["nombre"] = $row["nombres"];
-            				$output["apellido"] = $row["apellidos"];
+                    $output["nombre"] = $row["nombre_usuario"];
+            				$output["apellido"] = $row["apellido_usuario"];
             				$output["usuario"] = $row["usuario"];
-            				$output["password1"] = $row["password"];
-            				$output["password2"] = $row["password2"];
-            				$output["telefono"] = $row["telefono"];
-            				$output["correo"] = $row["correo"];
-            				$output["direccion"] = $row["direccion"];
-            				$output["estado"] = $row["estado"];
+            				$output["password1"] = $row["password_usuario"];
+            				$output["password2"] = $row["password2_usuario"];
+            				$output["telefono"] = $row["telefono_usuario"];
+            				$output["correo"] = $row["correo_usuario"];
+            				$output["direccion"] = $row["direccion_usuario"];
+            				$output["estado"] = $row["estado_usuario"];
              	 
                }
 
@@ -178,15 +178,15 @@
                    foreach($datos as $row){
 
                     $output["dni_usuario_relacion"] = $row["dni_usuario"];
-                    $output["nombre"] = $row["nombres"];
-                    $output["apellido"] = $row["apellidos"];
+                    $output["nombre"] = $row["nombre_usuario"];
+                    $output["apellido"] = $row["apellido_usuario"];
                     $output["usuario"] = $row["usuario"];
-                    $output["password1"] = $row["password"];
-                    $output["password2"] = $row["password2"];
-                    $output["telefono"] = $row["telefono"];
-                    $output["correo"] = $row["correo"];
-                    $output["direccion"] = $row["direccion"];
-                    $output["estado"] = $row["estado"];
+                    $output["password1"] = $row["password_usuario"];
+                    $output["password2"] = $row["password2_usaurio"];
+                    $output["telefono"] = $row["telefono_usuario"];
+                    $output["correo"] = $row["correo_usuario"];
+                    $output["direccion"] = $row["direccion_usuario"];
+                    $output["estado"] = $row["estado_usuario"];
 
                   }
 
@@ -229,12 +229,12 @@
 	        $est = '';
 	       
 	         $atrib = "btn btn-success btn-md estado";
-	        if($row["estado"] == 0){
+	        if($row["estado_usuario"] == 0){
 	          $est = 'INACTIVO';
 	          $atrib = "btn btn-warning btn-md estado";
 	        }
 	        else{
-	          if($row["estado"] == 1){
+	          if($row["estado_usuario"] == 1){
 	            $est = 'ACTIVO';
 	            
 	          } 
@@ -245,16 +245,16 @@
 
 
 	     $sub_array[]= $row["dni_usuario"];
-	     $sub_array[] = $row["nombres"];
-         $sub_array[] = $row["apellidos"];
+	     $sub_array[] = $row["nombre_usuario"];
+         $sub_array[] = $row["apellido_usuario"];
          $sub_array[] = $row["usuario"];
-         $sub_array[] = $row["telefono"];
-         $sub_array[] = $row["correo"];
-         $sub_array[] = $row["direccion"];
-         $sub_array[] = date("d-m-Y",strtotime($row["fecha_ingreso"]));
+         $sub_array[] = $row["telefono_usuario"];
+         $sub_array[] = $row["correo_usuario"];
+         $sub_array[] = $row["direccion_usuario"];
+         $sub_array[] = date("d-m-Y",strtotime($row["fecha_ingreso_usuario"]));
 
               
-              $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_usuario"].','.$row["estado"].');" name="estado" id="'.$row["id_usuario"].'" class="'.$atrib.'">'.$est.'</button>';
+              $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_usuario"].','.$row["estado_usuario"].');" name="estado" id="'.$row["id_usuario"].'" class="'.$atrib.'">'.$est.'</button>';
 
 
                 $sub_array[] = '<button type="button" onClick="mostrar('.$row["id_usuario"].');"  id="'.$row["id_usuario"].'" class="btn btn-warning btn-md update"><i class="glyphicon glyphicon-edit"></i> Editar</button>';
@@ -437,13 +437,13 @@
           foreach($listar_permisos as $row){
 
                 $output["id_permiso"]=$row["id_permiso"];
-                $output["nombre"]=$row["nombre"];
+                $output["nombre"]=$row["nombre_permiso"];
 
                 /*verificamos si el $row["id_permiso"] estan dentro del array $valores y y si lo está entonces estaría marcado, en caso contrario no estaría marcado*/
                 
                 $sw = in_array($row['id_permiso'],$valores) ? 'checked':'';
                  
-                 echo '<li><input type="checkbox" '.$sw.' name="permiso[]" value="'.$row["id_permiso"].'">'.$row["nombre"].'</li>';
+                 echo '<li><input type="checkbox" '.$sw.' name="permiso[]" value="'.$row["id_permiso"].'">'.$row["nombre_permiso"].'</li>';
             }
 
        break;

@@ -780,11 +780,11 @@
        //hacer la consulta que seleccione la fecha de mayor a menos
 
 
-      $sql="SELECT MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total) as total_compra FROM compras where estado='1' GROUP BY YEAR(fecha_compra) desc, month(fecha_compra) desc";
+      $sql="SELECT MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra FROM compras where estado_compra='1' AND YEAR(fecha_compra)=? GROUP BY YEAR(fecha_compra) desc, month(fecha_compra) desc";
 
-      
+      $año= date("Y");
          $sql=$conectar->prepare($sql);
-
+         $sql->bindValue(1,$año );
          $sql->execute();
          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -810,13 +810,16 @@
      //recorro el array para traerme la lista de una en vez de traerlo con el return, y hago el formato para la grafica
      //suma total por año 
      public function suma_compras_total_grafica(){
+      $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
       $conectar=parent::conexion();
 
 
-       $sql="SELECT YEAR(fecha_compra) as ano,SUM(total_compra) as total_compra_ano FROM compras where estado_compra='1' GROUP BY YEAR(fecha_compra) desc";
-           
-           $sql=$conectar->prepare($sql);
+       $sql="SELECT MONTH(fecha_compra) as mes,SUM(total_compra) as total_compra_mes FROM compras where estado_compra='1' AND YEAR(fecha_compra)=? GROUP BY MONTH(fecha_compra) desc";
+     
+       $año= date("Y");
+       $sql=$conectar->prepare($sql);
+       $sql->bindValue(1,$año );
            $sql->execute();
 
            $resultado= $sql->fetchAll();
@@ -824,10 +827,10 @@
              //recorro el array y lo imprimo
            foreach($resultado as $row){
 
-                 $ano= $output["ano"]=$row["ano"];
-                 $p = $output["total_compra_ano"]=$row["total_compra_ano"];
+                 $mes= $output["mes"]=$row["mes"];
+                 $p = $output["total_compra_mes"]=$row["total_compra_mes"];
 
-         echo $grafica= "{name:'".$ano."', y:".$p."},";
+         echo $grafica= "{name:'".$meses[$mes-1]."', y:".$p."},";
 
            }
 
@@ -862,7 +865,7 @@
 
        /*REPORTE DE COMPRAS MENSUAL*/
 
-     public function suma_compras_anio_mes_grafica($fecha){
+     public function suma_compras_anio_mes_grafica($año,$mes){
 
       $conectar=parent::conexion();
       parent::set_names();
@@ -874,26 +877,40 @@
          
 
        //SI EXISTE EL ENVIO POST ENTONCES SE MUESTRA LA FECHA SELECCIONADA
-        if(isset($_POST["year"])){
+        if(isset($_POST["year"])&&isset($_POST["mes"])){
 
-          $fecha=$_POST["year"];
+          $year=$_POST["year"];
+          $mes=$_POST["mes"];
 
-       $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
-           
+       $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra,tipo_pago_compra,estado_compra
+               FROM compras WHERE YEAR(fecha_compra)=? and MONTH(fecha_compra)=?  GROUP BY mes,estado_compra desc";
+     
            $sql=$conectar->prepare($sql);
-           $sql->bindValue(1,$fecha);
+           $sql->bindValue(1,$year);
+           $sql->bindValue(2,$mes);
            $sql->execute();
 
            $resultado= $sql->fetchAll();
              
              //recorro el array y lo imprimo
            foreach($resultado as $row){
+            $estado="";
+            if($row["estado_compra"]==1){
+              $estado="PAGADO";
+            }
+            if($row["estado_compra"]==2){
+              $estado="PENDIENTE";
+            }
+            if($row["estado_compra"]==0){
+              $estado="ANULADO";
+            }
 
 
-                 $ano= $output["mes"]=$meses[date("n", strtotime($row["mes"]))-1];
-                 $p = $output["total_compra_mes"]=$row["total_compra_mes"];
 
-         echo $grafica= "{name:'".$ano."', y:".$p."},";
+            $mes= $output["mes"]=$estado;
+            $p = $output["total_compra"]=$row["total_compra"];
+
+         echo $grafica= "{name:'".$mes."', y:".$p."},";
 
            }
 
@@ -902,25 +919,39 @@
 
 
 //sino se envia el POST, entonces se mostraria los datos del año actual cuando se abra la pagina por primera vez
+$year=date("Y"); 
+$mes=date("n");
 
-          $fecha_inicial=date("Y");
 
-
-   $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra_mes FROM compras WHERE YEAR(fecha_compra)=? and estado_compra='1' GROUP BY MONTHname(fecha_compra) desc";
+   $sql="SELECT YEAR(fecha_compra) as ano, MONTHname(fecha_compra) as mes, SUM(total_compra) as total_compra,tipo_pago_compra,estado_compra
+   FROM compras WHERE YEAR(fecha_compra)=? and MONTH(fecha_compra)=?  GROUP BY mes,estado_compra desc";
            
            $sql=$conectar->prepare($sql);
-           $sql->bindValue(1,$fecha_inicial);
+           $sql->bindValue(1,$año);
+           $sql->bindValue(2,$mes);
            $sql->execute();
 
            $resultado= $sql->fetchAll();
              
              //recorro el array y lo imprimo
            foreach($resultado as $row){
-
-                 $ano= $output["mes"]=$meses[date("n", strtotime($row["mes"]))-1];
-                 $p = $output["total_compra_mes"]=$row["total_compra_mes"];
-
-         echo $grafica= "{name:'".$ano."', y:".$p."},";
+            $estado="";
+            if($row["estado_compra"]==1){
+              $estado="PAGADO";
+            }
+            if($row["estado_compra"]==2){
+              $estado="PENDIENTE";
+            }
+            if($row["estado_compra"]==0){
+              $estado="ANULADO";
+            }
+    
+    
+    
+                $mes= $output["mes"]=$estado;
+                $p = $output["estado_compra"]=$row["estado_compra"];
+    
+        echo $grafica= "{name:'".$mes."', y:".$p."},";
 
            }//cierre del foreach
 
@@ -935,7 +966,7 @@
 
         $conectar=parent::conexion();
 
-          $sql="select year(fecha_compra) as fecha from compras group by year(fecha_compra) asc";
+          $sql="select year(fecha_compra) as año from compras group by year(fecha_compra) asc";
           
 
           $sql=$conectar->prepare($sql);
@@ -944,24 +975,41 @@
 
 
      }
+     
+     public function get_mes_compras(){
+
+      $conectar=parent::conexion();
+
+        $sql="select month(fecha_compra) as mes from compras group by month(fecha_compra) asc";
+        
+
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
+        return $resultado= $sql->fetchAll();
 
 
-     public function get_compras_mensual($fecha){
+   }
+
+
+     public function get_compras_mensual($año,$mes){
 
 
         $conectar=parent::conexion();
        
 
-      if(isset($_POST["year"])){
+      if(isset($_POST["year"]) && isset($_POST["mes"])){
 
-          $fecha=$_POST["year"];
+        $año=$_POST["year"];
+        $mes=$_POST["mes"];
 
-        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra
-        from compras where YEAR(fecha_compra)=? and estado_compra='1' group by MONTHname(fecha_compra) asc";
-          
+        $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra,tipo_pago_compra,estado_compra
+        from compras where YEAR(fecha_compra)=? and  MONTH(fecha_compra)=? group by mes,tipo_pago_compra,estado_compra ";
+
+        
 
             $sql=$conectar->prepare($sql);
-            $sql->bindValue(1,$fecha);
+            $sql->bindValue(1,$año);
+            $sql->bindValue(2,$mes);
             $sql->execute();
             return $resultado= $sql->fetchAll();
 
@@ -969,16 +1017,21 @@
 
             } else {
 
+
               //sino se envia el POST, entonces se mostraria los datos del año actual cuando se abra la pagina por primera vez
 
-              $fecha_inicial=date("Y");
+              
+         $año=date("Y");
+         $mes=date("n");
 
-                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra
-            from compras where YEAR(fecha_compra)=? and estado_compra='1' group by MONTHname(fecha_compra) asc";
+
+                 $sql="select MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra,tipo_pago_compra,estado_compra
+                 from compras where YEAR(fecha_compra)=? and  MONTH(fecha_compra)=? group by mes,tipo_pago_compra,estado_compra ";
               
 
                 $sql=$conectar->prepare($sql);
-                $sql->bindValue(1,$fecha_inicial);
+                $sql->bindValue(1,$año);
+                $sql->bindValue(2,$mes);
                 $sql->execute();
                 return $resultado= $sql->fetchAll();
 

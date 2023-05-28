@@ -1319,14 +1319,15 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
       $conectar=parent::conexion();
       parent::set_names();
+      $año=date("Y");
 
 
      $sql="SELECT MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
-       FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc, month(fecha_venta) desc";
+       FROM ventas where estado_venta='1' and YEAR(fecha_venta)=? GROUP BY YEAR(fecha_venta) desc, month(fecha_venta) desc";
 
      
         $sql=$conectar->prepare($sql);
-
+        $sql->bindValue(1, $año);
         $sql->execute();
         return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1337,11 +1338,13 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     public function suma_ventas_total_ano(){
 
      $conectar=parent::conexion();
+     $año=date("Y");
 
 
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc";
+      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1' and YEAR(fecha_venta)=? GROUP BY YEAR(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $año);
           $sql->execute();
 
           return $resultado= $sql->fetchAll();
@@ -1352,13 +1355,16 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     //recorro el array para traerme la lista de una en vez de traerlo con el return, y hago el formato para la grafica
     //suma total por año 
     public function suma_ventas_total_grafica(){
+      $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
      $conectar=parent::conexion();
+     $año=date("Y");
 
 
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1' GROUP BY YEAR(fecha_venta) desc";
+      $sql="SELECT MONTH(fecha_venta) as mes,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='1'  and YEAR(fecha_venta)=? GROUP BY MONTH(fecha_venta) desc";
           
           $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $año);
           $sql->execute();
 
           $resultado= $sql->fetchAll();
@@ -1366,7 +1372,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
             //recorro el array y lo imprimo
           foreach($resultado as $row){
 
-                $ano= $output["ano"]=$row["ano"];
+                $ano= $output["mes"]=$meses[$row["mes"]-1];
                 $p = $output["total_venta_ano"]=$row["total_venta_ano"];
 
            echo $grafica= "{name:'".$ano."', y:".$p."},";
@@ -1377,62 +1383,57 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
     }
 
 
-      public function suma_ventas_cancelada_total_grafica(){
+    
 
-     $conectar=parent::conexion();
-
-
-      $sql="SELECT YEAR(fecha_venta) as ano,SUM(total_venta) as total_venta_ano FROM ventas where estado_venta='0' GROUP BY YEAR(fecha_venta) desc";
-          
-          $sql=$conectar->prepare($sql);
-          $sql->execute();
-
-          $resultado= $sql->fetchAll();
-            
-            //recorro el array y lo imprimo
-          foreach($resultado as $row){
-
-                $ano= $output["ano"]=$row["ano"];
-                $p = $output["total_venta_ano"]=$row["total_venta_ano"];
-
-        echo $grafica= "{name:'".$ano."', y:".$p."},";
-
-          }
+    
 
 
-    }
-
-
-    public function suma_ventas_anio_mes_grafica($fecha){
+    public function suma_ventas_anio_mes_grafica($mes,$año){
 
      $conectar=parent::conexion();
      parent::set_names();
 
      //se usa para traducir el mes en la grafica
       //imprime la fecha por separado ejemplo: dia, mes y año
-         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+       
        
 
       //SI EXISTE EL ENVIO POST ENTONCES SE MUESTRA LA FECHA SELECCIONADA
-       if(isset($_POST["year"])){
+       if(isset($_POST["year"])&&isset($_POST["mes"])){
 
-         $fecha=$_POST["year"];
+        $year=$_POST["year"];
+        $mes=$_POST["mes"];
+        $sql=  " select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta,tipo_pago_venta,estado_venta
+               from ventas where YEAR(fecha_venta)=? and month(fecha_venta)=? group by mes,estado_venta";
 
-   $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado_venta ='1' GROUP BY MONTHname(fecha_venta) desc";
+   
           
           $sql=$conectar->prepare($sql);
-          $sql->bindValue(1,$fecha);
+          $sql->bindValue(1,$year);
+          $sql->bindValue(2,$mes);
           $sql->execute();
 
           $resultado= $sql->fetchAll();
             
             //recorro el array y lo imprimo
           foreach($resultado as $row){
+            $estado="";
+            if($row["estado_venta"]==1){
+              $estado="PAGADO";
+            }
+            if($row["estado_venta"]==2){
+              $estado="PENDIENTE";
+            }
+            if($row["estado_venta"]==0){
+              $estado="ANULADO";
+            }
 
-                $ano= $output["mes"]=$meses[date("n", strtotime($row["mes"]))-1];
-                $p = $output["total_venta_mes"]=$row["total_venta_mes"];
 
-        echo $grafica= "{name:'".$ano."', y:".$p."},";
+
+                $mes= $output["mes"]=$estado;
+                $p = $output["total_venta"]=$row["total_venta"];
+
+        echo $grafica= "{name:'".$mes."', y:".$p."},";
 
           }
 
@@ -1440,28 +1441,43 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
         } else {
 
 
-//sino se envia el POST, entonces se mostraria los datos del año actual cuando se abra la pagina por primera vez
+    //sino se envia el POST, entonces se mostraria los datos del año actual cuando se abra la pagina por primera vez
+ 
+    $year=date("Y"); 
+    $mes=date("n");
+    $sql=  " select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta,tipo_pago_venta,estado_venta
+          from ventas where YEAR(fecha_venta)=? and month(fecha_venta)=? group by mes,estado_venta";
 
-         $fecha_inicial=date("Y");
+
+      
+      $sql=$conectar->prepare($sql);
+      $sql->bindValue(1,$year);
+      $sql->bindValue(2,$mes);
+      $sql->execute();
+
+      $resultado= $sql->fetchAll();
+        
+        //recorro el array y lo imprimo
+      foreach($resultado as $row){
+        $estado="";
+        if($row["estado_venta"]==1){
+          $estado="PAGADO";
+        }
+        if($row["estado_venta"]==2){
+          $estado="PENDIENTE";
+        }
+        if($row["estado_venta"]==0){
+          $estado="ANULADO";
+        }
 
 
-  $sql="SELECT YEAR(fecha_venta) as ano, MONTHname(fecha_venta) as mes, SUM(total_venta) as total_venta_mes FROM ventas WHERE YEAR(fecha_venta)=? and estado_venta ='1' GROUP BY MONTHname(fecha_venta) desc";
-          
-          $sql=$conectar->prepare($sql);
-          $sql->bindValue(1,$fecha_inicial);
-          $sql->execute();
 
-          $resultado= $sql->fetchAll();
-            
-            //recorro el array y lo imprimo
-          foreach($resultado as $row){
+            $mes= $output["mes"]=$estado;
+            $p = $output["total_venta"]=$row["total_venta"];
 
-                $ano= $output["mes"]=$meses[date("n", strtotime($row["mes"]))-1];
-                $p = $output["total_venta_mes"]=$row["total_venta_mes"];
+    echo $grafica= "{name:'".$mes."', y:".$p."},";
 
-        echo $grafica= "{name:'".$ano."', y:".$p."},";
-
-          }//cierre del foreach
+  }
 
 
         }//cierre del else
@@ -1469,11 +1485,11 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
     }
 
-     public function get_year_ventas(){
+     public function get_mes_ventas(){
 
        $conectar=parent::conexion();
 
-         $sql="select year(fecha_venta) as fecha from ventas group by year(fecha_venta) asc";
+         $sql="select month(fecha_venta) as fecha_mes from ventas group by  MONTH(fecha_venta)  asc";
          
 
          $sql=$conectar->prepare($sql);
@@ -1482,23 +1498,39 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
 
     }
+    public function get_año_ventas(){
+
+      $conectar=parent::conexion();
+
+        $sql="select year(fecha_venta) as fecha_año from ventas group by  year(fecha_venta)  asc";
+        
+
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
+        return $resultado= $sql->fetchAll();
 
 
-     public function get_ventas_mensual($fecha){
+   }
+
+
+
+     public function get_ventas_mensual($año,$mes){
 
 
        $conectar=parent::conexion();
      
-     if(isset($_POST["year"])){
+     if(isset($_POST["year"]) && isset($_POST["mes"])){
 
-         $fecha=$_POST["year"];
+         $año=$_POST["year"];
+         $mes=$_POST["mes"];
 
-       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
-       from ventas where YEAR(fecha_venta)=? and estado_venta='1' group by MONTHname(fecha_venta) desc";
+       $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta,tipo_pago_venta,estado_venta
+       from ventas where YEAR(fecha_venta)=? and month(fecha_venta)=?  group by mes,tipo_pago_venta,estado_venta";
          
 
          $sql=$conectar->prepare($sql);
-         $sql->bindValue(1,$fecha);
+         $sql->bindValue(1,$año);
+         $sql->bindValue(2,$mes);
          $sql->execute();
          return $resultado= $sql->fetchAll();
 
@@ -1508,14 +1540,16 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
          //sino se envia el POST, entonces se mostraria los datos del año actual cuando se abra la pagina por primera vez
 
-         $fecha_inicial=date("Y");
+         $año=date("Y");
+         $mes=date("n");
 
-            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta
-       from ventas where YEAR(fecha_venta)=? and estado_venta='1' group by MONTHname(fecha_venta) desc";
+            $sql="select MONTHname(fecha_venta) as mes, MONTH(fecha_venta) as numero_mes, YEAR(fecha_venta) as ano, SUM(total_venta) as total_venta,tipo_pago_venta,estado_venta
+            from ventas where YEAR(fecha_venta)=? and month(fecha_venta)=?  group by mes,tipo_pago_venta,estado_venta";
          
 
         $sql=$conectar->prepare($sql);
-         $sql->bindValue(1,$fecha_inicial);
+        $sql->bindValue(1,$año);
+        $sql->bindValue(2,$mes);
          $sql->execute();
            return $resultado= $sql->fetchAll();
 
@@ -1523,6 +1557,7 @@ Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST
 
        }
     }
+
 
 
 

@@ -65,7 +65,6 @@
                                   
                                 <th width="10%">Categoría</th>
                                 <th width="12%">Producto</th>                
-                                <th width="10%">Precio Compra</th>
                                 <th width="10%">Precio Venta</th>
                                 <th width="5%">Stock</th>
                                 <th width="5%">Procedente</th>
@@ -137,7 +136,7 @@
                            for($i=0; $i<sizeof($cat);$i++){
                              
                              ?>
-                              <option value="<?php echo $cat[$i]["id_categoria"]?>"><?php echo $cat[$i]["categoria"];?></option>
+                              <option value="<?php echo $cat[$i]["id_categoria"]?>"><?php echo $cat[$i]["nombre_categoria"];?></option>
                              <?php
                            }
                         ?>
@@ -173,7 +172,7 @@
                            for($i=0; $i<sizeof($listaProdCarn);$i++){
                             
                              ?>
-                              <option  value="<?php echo $listaProdCarn[$i]["id_producto"]?>"><?php echo $listaProdCarn[$i]["producto"];?></option>
+                              <option  value="<?php echo $listaProdCarn[$i]["id_producto"]?>"><?php echo $listaProdCarn[$i]["nombre_producto"];?></option>
                              <?php
                            }
                         ?>
@@ -183,18 +182,6 @@
               </div>
 
 
-              <div id="contenedor_precio_compra" class="form-group">
-                  <label for="" id="titulo_precio_compra" class="col-lg-1 control-label">Precio Compra</label>
-
-                  <div class="col-lg-9 col-lg-offset-1">
-
-
-                  
-
-                    <input type="text" class="form-control" id="precio_compra" name="precio_compra" placeholder="Precio Compra"  pattern="[0-9]{0,15}">
-
-                  </div>
-              </div>
 
                <div class="form-group">
                   <label for="" class="col-lg-1 control-label">Precio Venta</label>

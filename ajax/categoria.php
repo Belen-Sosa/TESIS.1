@@ -139,7 +139,7 @@
 
     				foreach($datos as $row)
     				{
-    					$output["categoria"] = $row["categoria"];
+    					$output["categoria"] = $row["nombre_categoria"];
     					$output["estado_categoria"] = $row["estado_categoria"];
                         $output["id_usuario"] = $row["id_usuario"];
 

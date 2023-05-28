@@ -30,7 +30,7 @@
 
           $conectar= parent::conexion();
           $sql= "
-          select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto,p.imagen_producto,c.id_categoria, c.nombre_categoria as categoria
+          select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto,p.imagen_producto,c.id_categoria, c.nombre_categoria 
           from producto as p 
           inner join categoria as c on
           p.id_categoria=c.id_categoria 
@@ -84,7 +84,7 @@
       public function get_productos_en_ventas(){
 
           $conectar= parent::conexion();
-          $sql= "select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria as categoria 
+          $sql= "select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria 
           from producto p 
           INNER JOIN categoria c ON p.id_categoria=c.id_categoria
           where p.stock_producto > 0 and p.estado_producto='1'";
@@ -112,7 +112,7 @@
   }
           //método para insertar registros
 
-        public function registrar_producto($id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
+        public function registrar_producto($id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
 
             $conectar=parent::conexion();
@@ -146,17 +146,16 @@
   }
       
             $sql="insert into producto
-            values(null,?,?,?,?,?,?,?,?,?);";        
+            values(null,?,?,?,?,?,?,?,?);";        
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $_POST["categoria"]);
             $sql->bindValue(2, $_POST["producto"]);
-            $sql->bindValue(3, $_POST["precio_compra"]);
-            $sql->bindValue(4, $_POST["precio_venta"]);
-            $sql->bindValue(5, $stocker);
-            $sql->bindValue(6, $_POST["estado"]);    
-            $sql->bindValue(7, $image);    
-            $sql->bindValue(8, $_POST["id_usuario"]);
-            $sql->bindValue(9, $_POST["procedente"]);
+            $sql->bindValue(3, $_POST["precio_venta"]);
+            $sql->bindValue(4, $stocker);
+            $sql->bindValue(5, $_POST["estado"]);    
+            $sql->bindValue(6, $image);    
+            $sql->bindValue(7, $_POST["id_usuario"]);
+            $sql->bindValue(8, $_POST["procedente"]);
             $sql->execute();
 
            
@@ -215,7 +214,7 @@
 
          //método para editar registros
 
-    public function editar_producto($id_producto,$id_categoria,$producto,$precio_compra,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
+    public function editar_producto($id_producto,$id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
       $conectar=parent::conexion();
       parent::set_names();
@@ -290,14 +289,13 @@
 
                 $sql->bindValue(1, $_POST["categoria"]);
                 $sql->bindValue(2, $_POST["producto"]);
-                $sql->bindValue(3, $_POST["precio_compra"]);
-                $sql->bindValue(4, $_POST["precio_venta"]);
-                $sql->bindValue(5, $stocker);
-                $sql->bindValue(6, $_POST["estado"]);
-                $sql->bindValue(7, $imagen);
-                $sql->bindValue(8, $_POST["id_usuario"]);
-                $sql->bindValue(9, $_POST["procedente"]);
-                $sql->bindValue(10, $_POST["id_producto"]);
+                $sql->bindValue(3, $_POST["precio_venta"]);
+                $sql->bindValue(4, $stocker);
+                $sql->bindValue(5, $_POST["estado"]);
+                $sql->bindValue(6, $imagen);
+                $sql->bindValue(7, $_POST["id_usuario"]);
+                $sql->bindValue(8, $_POST["procedente"]);
+                $sql->bindValue(9, $_POST["id_producto"]);
                 $sql->execute();
 
 
@@ -320,12 +318,11 @@
                       $sql=$conectar->prepare($sql);
                       
                   
-                      $sql->bindValue(1, $_POST["precio_compra"]);
-                      $sql->bindValue(2, $_POST["precio_venta"]);
-                      $sql->bindValue(3, $_POST["estado"]);
-                      $sql->bindValue(4, $imagen);
-                      $sql->bindValue(5, $_POST["id_usuario"]);
-                      $sql->bindValue(6, $_POST["id_producto"]);
+                      $sql->bindValue(1, $_POST["precio_venta"]);
+                      $sql->bindValue(2, $_POST["estado"]);
+                      $sql->bindValue(3, $imagen);
+                      $sql->bindValue(4, $_POST["id_usuario"]);
+                      $sql->bindValue(5, $_POST["id_producto"]);
                       $sql->execute();
 
 

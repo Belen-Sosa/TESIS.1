@@ -95,7 +95,7 @@ ob_start();
   </tr>
 <tr>
 <th width="5%" bgcolor="#317eac"><span class="Estilo11">CUIT</span></th>
-<th width="15%" bgcolor="#317eac"><span class="Estilo11">RAZON SOCIAL</span></th>
+<th width="15%" bgcolor="#317eac"><span class="Estilo11">NOMBRE</span></th>
 <th width="12%" bgcolor="#317eac"><span class="Estilo11">TELEFONO</span></th>
 <th width="38%" bgcolor="#317eac"><span class="Estilo11">DIRECCION</span></th>
 <th width="30%" bgcolor="#317eac"><span class="Estilo11">CORREO</span></th>
@@ -124,10 +124,10 @@ ob_start();
 
 <tr style="font-size:10pt" class="even_row">
 <td><div align="center"><span class=""><?php echo $datos[$i]["cuit"];?></span></div></td>
-<td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["razon_social"];?></span></div></td>
-<td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["telefono"];?></span></div></td>
-<td style="text-align: right"><div align="center"><span class=""><?php echo $datos[$i]["direccion"];?></span></div></td>
-<td style="text-align:center"><div align="center"><span class=""><?php echo $datos[$i]["correo"];?></span></div></td>
+<td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["nombre_proveedor"];?></span></div></td>
+<td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["telefono_proveedor"];?></span></div></td>
+<td style="text-align: right"><div align="center"><span class=""><?php echo $datos[$i]["direccion_proveedor"];?></span></div></td>
+<td style="text-align:center"><div align="center"><span class=""><?php echo $datos[$i]["correo_proveedor"];?></span></div></td>
 </tr>
 
 <?php
@@ -148,12 +148,13 @@ ob_start();
   </tr>
   
     <tr>
+    <th width="10%" bgcolor="#317eac"><span class="Estilo11">FECHA COMPRA </span></th>
       
       <th width="15%" bgcolor="#317eac"><span class="Estilo1">PRODUCTO </span></th>
       <th width="10%" bgcolor="#317eac"><span class="Estilo11">PRECIO COMPRA</span></th>
       <th width="5%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD</span></th>
-      <th width="10%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD * PRECIO COMPRA</span>
-      <th width="10%" bgcolor="#317eac"><span class="Estilo11">FECHA COMPRA </span></th>
+      <th width="10%" bgcolor="#317eac"><span class="Estilo11">TOTAL</span>
+      
 
       <?php
 
@@ -184,12 +185,12 @@ ob_start();
 
          ?>
     <tr class="even_row" style="font-size:10pt">
-     
+    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra"])); ?></span></td>
       <td style="text-align: center"><span><?php echo $pedidos[$j]["producto"];?></span></td>
        <td style="text-align: center"><span><?php echo "$ ".$pedidos[$j]["precio_compra"];?></span></td>
       <td style="text-align: center"><span><?php echo $pedidos[$j]["cantidad_compra"];?></span></td>
         <td style="text-align: center"><span class=""><?php echo "$ ".$pedidos[$j]["cantidad_compra"] * $pedidos[$j]["precio_compra"];?></span></td>
-      <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra"])); ?></span></td>
+   
      
       </tr>
       <?php } ?>

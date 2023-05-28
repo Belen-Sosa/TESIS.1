@@ -68,9 +68,9 @@
 
 
 		}
+        $descripcion=$_POST["numero_venta"];
 
-
-	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"],$_POST["estado"]);
+	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"],$_POST["estado"],$descripcion);
 		
 		
 
@@ -175,8 +175,8 @@
 					$sub_array[] = $row["fecha_venta"];
 					$sub_array[] = $row["numero_venta"];
 					
-					$sub_array[] = "$ ".$row["total"];
-					$sub_array[] = $row["estado_dc"];	
+					$sub_array[] = "$ ".$row["total_venta"];
+					$sub_array[] = $row["estado_detalle_cc"];	
 
 					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                  
@@ -277,5 +277,8 @@
 
 
       break;
+	  
+
+
 		}
    ?>

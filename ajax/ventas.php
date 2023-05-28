@@ -27,17 +27,17 @@
 				$est = '';
 				//$atrib = 'activo';
 				 $atrib = "btn btn-danger btn-md estado";
-				 if($row["estado"] == 0){
+				 if($row["estado_venta"] == 0){
 					$est = 'ANULADO';
 					//$atrib = '';
 				}
-				if($row["estado"] == 1){
+				if($row["estado_venta"] == 1){
 					$est = 'PAGADO';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				
 					
-				if($row["estado"] == 2){
+				if($row["estado_venta"] == 2){
 					$est = 'PENDIENTE';
 					//$atrib = '';
 				}
@@ -47,15 +47,15 @@
 				 $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
 	             $sub_array[] = date("d-m-Y",strtotime($row["fecha_venta"]));
 				 $sub_array[] = $row["numero_venta"];
-				 $sub_array[] = $row["cliente"];
+				 $sub_array[] = $row["nombre_cliente"];
 				 $sub_array[] = $row["dni_cliente"];
-				 $sub_array[] = $row["vendedor"];
-				 $sub_array[] = $row["tipo_pago"];
-				 $sub_array[] = "$ ".$row["total"];
+				 $sub_array[] = $row["usuario"];
+				 $sub_array[] = $row["tipo_pago_venta"];
+				 $sub_array[] = "$ ".$row["total_venta"];
 
 				
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado_venta"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
                 
 				$data[] = $sub_array;
 			}
@@ -83,7 +83,7 @@
 				foreach($datos as $row)
 				{
 					
-					$output["cliente"] = $row["cliente"];
+					$output["cliente"] = $row["nombre_cliente"];
 					$output["numero_venta"] = $row["numero_venta"];
 					$output["dni_cliente"] = $row["dni_cliente"];
 					$output["direccion"] = $row["direccion_cliente"];
@@ -149,7 +149,7 @@
 				foreach($datos as $row)
 				{
 					
-					$stock = $s["stock"] = $row["stock"];
+					$stock = $s["stock"] = $row["stock_producto"];
                  
                  //consultamos si la cantidad que se va a querer vender es mayor a la cantidad de stock entonces que solo se refleje la cantidad maxima que se encuentre en el stock y que me devuelva ese valor en el campo
 
@@ -272,18 +272,18 @@
         $est = '';
         
          $atrib = "btn btn-danger btn-md estado";
-		 if($row["estado"] == 0){
+		 if($row["estado_venta"] == 0){
             $est = 'ANULADO';
            
           
         }
-        if($row["estado"] == 1){
+        if($row["estado_venta"] == 1){
           $est = 'PAGADO';
           $atrib = "btn btn-success btn-md estado";
         }
        
           
-		if($row["estado"] == 2){
+		if($row["estado_venta"] == 2){
 			$est = 'PENDIENTE';
 			//$atrib = '';
 		}
@@ -292,15 +292,15 @@
          $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                $sub_array[] = date("d-m-Y",strtotime($row["fecha_venta"]));
          $sub_array[] = $row["numero_venta"];
-         $sub_array[] = $row["cliente"];
+         $sub_array[] = $row["nombre_cliente"];
          $sub_array[] = $row["dni_cliente"];
-         $sub_array[] = $row["vendedor"];
-         $sub_array[] = $row["tipo_pago"];
-         $sub_array[] ="$ ".$row["total"];
+         $sub_array[] = $row["usuario"];
+         $sub_array[] = $row["tipo_pago_venta"];
+         $sub_array[] ="$ ".$row["total_venta"];
 
         
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-        $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
+        $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado_venta"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
                 
         $data[] = $sub_array;
       }
@@ -334,16 +334,16 @@
 		        $est = '';
 		        
 		         $atrib = "btn btn-danger btn-md estado";
-		        if($row["estado"] == 1){
+		        if($row["estado_venta"] == 1){
 		          $est = 'PAGADO';
 		          $atrib = "btn btn-success btn-md estado";
 		        }
 		        
-		       if($row["estado"] == 0){
+		       if($row["estado_venta"] == 0){
 		            $est = 'ANULADO';
 		           
 		          } 
-				  if($row["estado"] == 2){
+				  if($row["estado_venta"] == 2){
 					$est = 'PENDIENTE';
 					//$atrib = '';
 				}
@@ -353,15 +353,15 @@
       $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
          $sub_array[] = date("d-m-Y", strtotime($row["fecha_venta"]));
          $sub_array[] = $row["numero_venta"];
-         $sub_array[] = $row["cliente"];
+         $sub_array[] = $row["nombre_cliente"];
          $sub_array[] = $row["dni_cliente"];
-         $sub_array[] = $row["vendedor"];
-         $sub_array[] = $row["tipo_pago"];
-         $sub_array[] = $row["total"];
+         $sub_array[] = $row["usuario"];
+         $sub_array[] = $row["tipo_pago_venta"];
+         $sub_array[] = $row["total_venta"];
 
         
            /*IMPORTANTE: poner \' cuando no sea numero, sino no imprime*/
-                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
+                 $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_ventas"].',\''.$row["numero_venta"].'\','.$row["estado_venta"].');" name="estado" id="'.$row["id_ventas"].'" class="'.$atrib.'">'.$est.'</button>';
                 
         $data[] = $sub_array;
         

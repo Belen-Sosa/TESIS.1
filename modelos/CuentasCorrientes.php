@@ -157,14 +157,14 @@
          }
          //método para crear detalle de cuenta corriente
 
-         public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente,$estado){
+         public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente,$estado,$descripcion){
 
 
             $conectar= parent::conexion();
             parent::set_names();
  
             $sql="insert into detalle_cuentas_corrientes
-            values(null,?,?,now(),?,?,?,?,null)";
+            values(null,?,?,now(),?,?,?,?,null,?)";
  
            
              $sql=$conectar->prepare($sql);
@@ -175,6 +175,7 @@
              $sql->bindValue(4, $estado);
              $sql->bindValue(5, $id_cliente);
              $sql->bindValue(6, $id_usuario);
+             $sql->bindValue(7, $descripcion);
              $sql->execute();
        
             

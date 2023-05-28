@@ -183,8 +183,6 @@
             $permisos= $_POST["permiso"];
 
 
-           // print_r($_POST);
-     
   
               $num_elementos=0;
 
@@ -267,8 +265,7 @@
                      $sql_delete=$conectar->prepare($sql_delete);
                      $sql_delete->bindValue(1,$_POST["id_usuario"]);
                      $sql_delete->execute();
-                     //$resultado=$sql_delete->fetchAll();
-
+           
 
                         //insertamos los permisos
                     
@@ -279,8 +276,6 @@
                        $permisos= $_POST["permiso"];
 
 
-                      // print_r($_POST);
-             
               
                          $num_elementos=0;
 

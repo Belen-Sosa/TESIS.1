@@ -13,20 +13,19 @@
      
     $ventas=new Ventas();
 
-   	if(isset($_POST["year"])){
-   
+   	
 
-      $datos= $ventas->get_ventas_mensual($_POST["year"]);  
- 
-    } else {
+	$año=date("Y");
+	$mes=date("n");
+	$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+	$nombre_mes= $meses[$mes-1];
 
-    	$fecha_inicial=date("Y");
-
-        $datos= $ventas->get_ventas_mensual($fecha_inicial);  
-    }
+	$datos= $ventas->get_ventas_mensual($año,$mes);  
 
 
-     $fecha_ventas= $ventas->get_year_ventas();
+
+     $fecha_ventas_mes= $ventas->get_mes_ventas();
+	 $fecha_ventas_año= $ventas->get_año_ventas();
 ?>
 
 
@@ -47,12 +46,12 @@
   <div class="content-wrapper">
 
 
-   <h2 class="reporte_compras_general container-fluid bg-red text-white col-lg-12 text-center mh-50">
+   <h2   id="titulo_reporte_mensual" class="reporte_compras_general container-fluid bg-red text-white col-lg-12 text-center mh-50">
         
          REPORTE DE VENTAS MENSUAL
     </h2>
 
-   <div class="panel panel-default">
+   <div id="panel_imprimir" class="panel panel-default">
         
         <div class="panel-body">
 
@@ -64,7 +63,7 @@
        </div>
       </div>
 
-   <div class="panel panel-default">
+   <div id="panel_form" class="panel panel-default">
         
         <div class="panel-body">
 
@@ -74,29 +73,29 @@
               <div class="form-group">
                 <!--<label for="staticEmail" class="col-sm-2 col-form-label">Año</label>-->
                  <div class="col-sm-10">
-                  <select class="form-control" name="year" id="year">
-						 <option value="0">Seleccione...</option>
+                  <select class="form-control" name="mes" id="mes">
+						 <option value="0">Seleccione mes...</option>
 						 <?php
                        
-                         
+					   $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
                        //si se envia el POST
-                       if(isset($_POST["year"])){
+                       if(isset($_POST["mes"])){
                           
-                          //$year= date("Y");
+                          
 
-						 for($i=0; $i<count($fecha_ventas); $i++){
+						 for($i=0; $i<count($fecha_ventas_mes); $i++){
 
-                          //if($i==$datos[0]["ano"]){
+                          
 
-                          	if($fecha_ventas[$i]["fecha"]==$_POST["year"]){
+                          	if($fecha_ventas_mes[$i]["fecha_mes"]==$_POST["fecha_mes"]){
 
 
-                          	echo '<option value="'.$fecha_ventas[$i]["fecha"].'" selected=selected>'.$fecha_ventas[$i]["fecha"].'</option>';
+                          	echo '<option value="'.$fecha_ventas_mes[$i]["fecha_mes"].'" selected=selected>'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
                                   
        	      
                             }else{ 
 
-                                   	echo '<option value="'.$fecha_ventas[$i]["fecha"].'">'.$fecha_ventas[$i]["fecha"].'</option>';
+                                   	echo '<option value="'.$fecha_ventas_mes[$i]["fecha_mes"].'">'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
                              } 
 
                         }//cierre del ciclo for
@@ -105,17 +104,15 @@
                        //SI NO SE ENVIA EL POST
                        } else {
 
-                            //$year= date("Y");
+                            
 
-						 for ($i=0; $i<count($fecha_ventas); $i++){
+						 for ($i=0; $i<count($fecha_ventas_mes); $i++){
 
 
-						//if($fecha_compras[$i]["fecha"]==$year){
-       
 
-                    echo '<option value="'. $fecha_ventas[$i]["fecha"].'" selected=selected>'. $fecha_ventas[$i]["fecha"].'</option>';
+                    echo '<option value="'. $fecha_ventas_mes[$i]["fecha_mes"].'" selected=selected>'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
                            
-						 //}          
+						       
 
                         }//cierre del ciclo for
 
@@ -124,9 +121,64 @@
 					  ?>
 						 
 					 </select>
+					 
                  </div>
               </div>
+			  <div class="form-group">
+                <!--<label for="staticEmail" class="col-sm-2 col-form-label">Año</label>-->
+                 <div class="col-sm-10">
+                
 
+			  <select class="form-control" name="year" id="year">
+						 <option value="0">Seleccione año...</option>
+						 <?php
+                       
+					 
+                       //si se envia el POST
+                       if(isset($_POST["year"])){
+                          
+                          
+
+						 for($i=0; $i<count($fecha_ventas_año); $i++){
+
+                          
+
+                          	if($fecha_ventas_año[$i]["year"]==$_POST["year"]){
+
+
+                          	echo '<option value="'.$fecha_ventas_año[$i]["fecha_año"].'" selected=selected>'.$fecha_ventas_año[$i]["fecha_año"].'</option>';
+                                  
+       	      
+                            }else{ 
+
+                                   	echo '<option value="'.$fecha_ventas_año[$i]["fecha_año"].'">'.$fecha_ventas_año[$i]["fecha_año"].'</option>';
+                             } 
+
+                        }//cierre del ciclo for
+
+                       
+                       //SI NO SE ENVIA EL POST
+                       } else {
+
+                            
+
+						 for ($i=0; $i<count($fecha_ventas_año); $i++){
+
+
+
+                    echo '<option value="'. $fecha_ventas_año[$i]["fecha"].'" selected=selected>'.$fecha_ventas_año[$i]["fecha"].'</option>';
+                           
+						       
+
+                        }//cierre del ciclo for
+
+                      }//cierre del ese*/
+
+					  ?>
+						 
+					 </select>
+					 </div>
+              </div>
              
 
                <div class="btn-group text-center">
@@ -148,14 +200,17 @@
 	       <div class="">
 
 				  <h2 class="reporte_compras_general container-fluid bg-primary text-white col-lg-12 text-center mh-50">REPORTE DE VENTAS MENSUAL</h2>
+				  <h3 class="col-lg-12 ">  AÑO:  <?php if(isset($_POST["year"])){ echo" ".$_POST["year"];}else{ echo " ".$año;} ?></h3>
+				  <h3 class="col-lg-12">  MES: <?php if(isset($_POST["mes"])){ echo" ".$meses[$_POST["mes"]-1];}else{ echo " ".$nombre_mes;} ?></h3>
 				              
 				  <table class="table table-bordered">
 				    <thead>
 				      <tr>
-				        <th>AÑO</th>
-				        <th>N° MES</th>
-				        <th>NOMBRE MES</th>
-				        <th>TOTAL</th>
+					
+				        
+				        <th>TIPO DE PAGO</th>
+						<th>TOTAL</th>
+						<th>ESTADO</th>
 				      </tr>
 				    </thead>
 
@@ -166,11 +221,11 @@
 
 
 			   	  //si existe el envia del post entonces se llama al metodo
-			   	  if(isset($_POST["year"])){
+			   	  if(isset($_POST["year"])&&isset($_POST["mes"])){
 			    
 				//SI EXISTE EL POST ENTONCES SE LLAMA AL METODO
 
-			      $datos= $ventas->get_ventas_mensual($_POST["year"]);  
+			      $datos= $ventas->get_ventas_mensual($_POST["year"],$_POST["mes"]);  
 
 				    
                     for($i=0;$i<count($datos);$i++){
@@ -178,18 +233,26 @@
                     	  //imprime la fecha por separado ejemplo: dia, mes y año
                       $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
  
-                       $fecha= $datos[$i]["mes"];
 
-                       $fecha_mes = $meses[date("n", strtotime($fecha))-1];
+                       $fecha_mes =$meses[$datos[$i]["numero_mes"]-1] ;   
+					   $estado=$datos[$i]["estado_venta"];
+					   if($estado==1){
+						$estado="PAGADOS";
+
+					   }elseif($estado==2){
+						$estado="PENDIENTES";
+					   }elseif($estado==0){
+						$estado="ANULADOS";
+					   }
 
     			     ?>
 
-
+        
 					      <tr>
-					        <td><?php echo $datos[$i]["ano"]?></td>
-					        <td><?php echo $datos[$i]["numero_mes"]?></td>
-					        <td><?php echo $fecha_mes?></td>
+					
+					        <td><?php echo $datos[$i]["tipo_pago_venta"]?></td>
                             <td><?php echo "$ ".$datos[$i]["total_venta"]?></td>
+							<td><?php echo $estado?></td>
 					      </tr>
 					      
 				      <?php
@@ -204,36 +267,44 @@
 
                      //SI NO EXISTE EL POST ENTONCES SE LLAMA AL METODO
 
-                     	$fecha_inicial=date("Y");
+                     	$año=date("Y");
+						 $mes=date("n");
 
-			           $datos= $ventas->get_ventas_mensual($fecha_inicial);  
+			           $datos= $ventas->get_ventas_mensual($año,$mes);  
 
 				    
-                        for($i=0;$i<count($datos);$i++){
+					   for($i=0;$i<count($datos);$i++){
+
+						//imprime la fecha por separado ejemplo: dia, mes y año
+						$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
 
-                    	  //imprime la fecha por separado ejemplo: dia, mes y año
-                      $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
- 
-                       $fecha= $datos[$i]["mes"];
+					 $fecha_mes =$meses[$datos[$i]["numero_mes"]-1] ;   
+					 $estado=$datos[$i]["estado_venta"];
+					 if($estado==1){
+					  $estado="PAGADOS";
 
-                       $fecha_mes = $meses[date("n", strtotime($fecha))-1];
+					 }elseif($estado==2){
+					  $estado="PENDIENTES";
+					 }elseif($estado==0){
+					  $estado="ANULADOS";
+					 }
 
+				   ?>
 
-    			     ?>
+	  
+						<tr>
+						
+						  <td><?php echo $datos[$i]["tipo_pago_venta"]?></td>
+						  <td><?php echo "$ ".$datos[$i]["total_venta"]?></td>
+						  <td><?php echo $estado?></td>
+						</tr>
+						
+					<?php
 
+					 
+					  }//cierre del for
 
-					      <tr>
-					        <td><?php echo $datos[$i]["ano"]?></td>
-					        <td><?php echo $datos[$i]["numero_mes"]?></td>
-					        <td><?php echo $fecha_mes?></td>
-                            <td><?php echo "$ ".$datos[$i]["total_venta"]?></td>
-					      </tr>
-					      
-				      <?php
-
-                       
-                        }//cierre ciclo for
 
                      }//cierre condicional else
                                  
@@ -359,15 +430,16 @@
            //si existe el envia del post entonces se llama al metodo
 		  if(isset($_POST["year"])){
 
-          echo $datos_grafica= $ventas->suma_ventas_anio_mes_grafica($_POST["year"]);
+          echo $datos_grafica= $ventas->suma_ventas_anio_mes_grafica($_POST["year"],$_POST["mes"]);
 
            } else {
 
            //sino existe el envio post entonces se mostraran los datos de la grafica del año actual
            
-           $fecha_inicial=date("Y");
+           $year=date("Y");
+		   $mes=date("n");
 
-           	echo $datos_grafica= $ventas->suma_ventas_anio_mes_grafica($fecha_inicial);
+           	echo $datos_grafica= $ventas->suma_ventas_anio_mes_grafica($year,$mes);
            }
 
           ?>
@@ -401,9 +473,17 @@
  //function
 
 	function printHTML() { 
-	  if (window.print) { 
+	  if (window.print) {
+		$('#buttonExport').hide();
+		$('#panel_imprimir').hide();
+		$('#titulo_reporte_mensual').hide(); 
+		$('#panel_form').hide(); 
 	    window.print();
 	  }
+	  $('#buttonExport').show();
+	  $('#panel_imprimir').show();
+	  $('#titulo_reporte_mensual').show(); 
+	  $('#panel_form').show(); 
 	}
 	
 </script>

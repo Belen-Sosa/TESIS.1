@@ -12,21 +12,26 @@
 //SI EXISTE EL POST ENTONCES SE LLAMA AL METODO PARA SELECCIONAR LA FECHA
      
     $compras=new Compras();
+	$año=date("Y");
+	$mes=date("n");
+	$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+	$nombre_mes= $meses[$mes-1];
+
 
    	if(isset($_POST["year"])){
    
 
-      $datos= $compras->get_compras_mensual($_POST["year"]);  
+      $datos= $compras->get_compras_mensual($_POST["year"],$_POST["mes"]);  
  
     } else {
 
-    	$fecha_inicial=date("Y");
-
-        $datos= $compras->get_compras_mensual($fecha_inicial);  
+  
+        $datos= $compras->get_compras_mensual($año,$mes);  
     }
 
 
-    $fecha_compras= $compras->get_year_compras();
+    $fecha_compras_año= $compras->get_year_compras();
+	$fecha_compras_mes= $compras->get_mes_compras();
 ?>
 
 
@@ -45,13 +50,13 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
 
-   <h2 class="reporte_compras_general container-fluid bg-red text-white col-lg-12 text-center mh-50">
+   <h2 id="titulo" class="reporte_compras_general container-fluid bg-red text-white col-lg-12 text-center mh-50">
         
          REPORTE DE COMPRAS MENSUAL
     </h2>
 
 
-   <div class="panel panel-default">
+   <div id="panel_imprimir" class="panel panel-default">
         
         <div class="panel-body">
 
@@ -63,7 +68,7 @@
        </div>
       </div>
 
-   <div class="panel panel-default">
+   <div id="panel_form"class="panel panel-default">
         
         <div class="panel-body">
 
@@ -71,6 +76,57 @@
 
             
               <div class="form-group">
+                <!--<label for="staticEmail" class="col-sm-2 col-form-label">Año</label>-->
+                 <div class="col-sm-10">
+                  <select class="form-control" name="mes" id="mes">
+						 <option value="0">Seleccione...</option>
+						 <?php
+                       
+                       //si se envia el POST
+                       if(isset($_POST["year"])){
+                          
+
+						 for($i=0; $i<count($fecha_compras_mes); $i++){
+
+                        
+                          	if($fecha_compras_mes[$i]["mes"]==$_POST["mes"]){
+
+
+                          	echo '<option value="'.$fecha_compras_mes[$i]["mes"].'" selected=selected>'.$meses[$fecha_compras_mes[$i]["mes"]-1].'</option>';
+                                  
+       	      
+                            } else{ 
+
+                            	  /*despues de enviarse entonces se alistan los años*/
+
+                                   	echo '<option value="'.$fecha_compras_mes[$i]["mes"].'">'.$meses[$fecha_compras_mes[$i]["mes"]-1].'</option>';
+                             } 
+
+                        }//cierre del ciclo for
+
+                       
+                       //SI NO SE ENVIA EL POST
+                       } else {
+
+
+						 for ($i=0; $i<count($fecha_compras_mes); $i++){
+
+                     /*si no se envia entonces se alistan los años*/
+
+                    echo '<option value="'. $fecha_compras_mes[$i]["mes"].'" selected=selected>'.$meses[$fecha_compras_mes[$i]["mes"]-1].'</option>';
+                           
+						 //}          
+
+                        }//cierre del ciclo for
+
+                      }//cierre del ese*/
+
+					  ?>
+						 
+					 </select>
+                 </div>
+              </div>
+			  <div class="form-group">
                 <!--<label for="staticEmail" class="col-sm-2 col-form-label">Año</label>-->
                  <div class="col-sm-10">
                   <select class="form-control" name="year" id="year">
@@ -81,20 +137,20 @@
                        if(isset($_POST["year"])){
                           
 
-						 for($i=0; $i<count($fecha_compras); $i++){
+						 for($i=0; $i<count($fecha_compras_año); $i++){
 
                         
-                          	if($fecha_compras[$i]["fecha"]==$_POST["year"]){
+                          	if($fecha_compras_año[$i]["año"]==$_POST["year"]){
 
 
-                          	echo '<option value="'.$fecha_compras[$i]["fecha"].'" selected=selected>'.$fecha_compras[$i]["fecha"].'</option>';
+                          	echo '<option value="'.$fecha_compras_año[$i]["año"].'" selected=selected>'.$fecha_compras_año[$i]["año"].'</option>';
                                   
        	      
                             } else{ 
 
                             	  /*despues de enviarse entonces se alistan los años*/
 
-                                   	echo '<option value="'.$fecha_compras[$i]["fecha"].'">'.$fecha_compras[$i]["fecha"].'</option>';
+                                   	echo '<option value="'.$fecha_compras_año[$i]["año"].'">'.$fecha_compras_año[$i]["año"].'</option>';
                              } 
 
                         }//cierre del ciclo for
@@ -104,11 +160,11 @@
                        } else {
 
 
-						 for ($i=0; $i<count($fecha_compras); $i++){
+						 for ($i=0; $i<count($fecha_compras_año); $i++){
 
                      /*si no se envia entonces se alistan los años*/
 
-                    echo '<option value="'. $fecha_compras[$i]["fecha"].'" selected=selected>'. $fecha_compras[$i]["fecha"].'</option>';
+                    echo '<option value="'. $fecha_compras_año[$i]["año"].'" selected=selected>'. $fecha_compras_año[$i]["año"].'</option>';
                            
 						 //}          
 
@@ -143,14 +199,17 @@
 	       <div class="">
 
 				  <h2 class="reporte_compras_general container-fluid bg-primary text-white col-lg-12 text-center mh-50">REPORTE DE COMPRAS MENSUAL</h2>
+				  <h3 class="col-lg-12 ">  AÑO:  <?php if(isset($_POST["year"])){ echo" ".$_POST["year"];}else{ echo " ".$año;} ?></h3>
+				  <h3 class="col-lg-12">  MES: <?php if(isset($_POST["mes"])){ echo" ".$meses[$_POST["mes"]-1];}else{ echo " ".$nombre_mes;} ?></h3>
 				              
 				  <table class="table table-bordered">
 				    <thead>
 				      <tr>
-				        <th>AÑO</th>
-				        <th>N° MES</th>
-				        <th>NOMBRE MES</th>
-				        <th>TOTAL</th>
+					
+				        
+				        <th>TIPO DE PAGO</th>
+						<th>TOTAL</th>
+						<th>ESTADO</th>
 				      </tr>
 				    </thead>
 
@@ -161,11 +220,11 @@
 
 
 			   	  //si existe el envia del post entonces se llama al metodo
-			   	  if(isset($_POST["year"])){
+			   	  if(isset($_POST["year"])&&isset($_POST["mes"])){
 			    
 				//SI EXISTE EL POST ENTONCES SE LLAMA AL METODO
 			     
-			      $datos= $compras->get_compras_mensual($_POST["year"]); 
+			      $datos= $compras->get_compras_mensual($_POST["year"],$_POST["mes"]); 
 
 				    
                     for($i=0;$i<count($datos);$i++){
@@ -174,18 +233,27 @@
                       $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
  
                        $fecha= $datos[$i]["mes"];
+					   $fecha_mes =$meses[$datos[$i]["numero_mes"]-1] ;   
+					   $estado=$datos[$i]["estado_compra"];
+					   if($estado==1){
+						$estado="PAGADOS";
 
-                       $fecha_mes = $meses[date("n", strtotime($fecha))-1];
+					   }elseif($estado==2){
+						$estado="PENDIENTES";
+					   }elseif($estado==0){
+						$estado="ANULADOS";
+					   }
+
 
 
     			     ?>
 
 
 					      <tr>
-					        <td><?php echo $datos[$i]["ano"]?></td>
-					        <td><?php echo $datos[$i]["numero_mes"]?></td>
-					        <td><?php echo $fecha_mes?></td>
+					      
+						  <td><?php echo $datos[$i]["tipo_pago_compra"]?></td>
                             <td><?php echo "$ ".$datos[$i]["total_compra"]?></td>
+							<td><?php echo $estado?></td>
 					      </tr>
 					      
 				      <?php
@@ -200,9 +268,8 @@
 
                      //SI NO EXISTE EL POST ENTONCES SE LLAMA AL METODO
 
-                     	$fecha_inicial=date("Y");
-
-			           $datos= $compras->get_compras_mensual($fecha_inicial);  
+                     
+			           $datos= $compras->get_compras_mensual($año,$mes);  
 
 				    
                         for($i=0;$i<count($datos);$i++){
@@ -210,24 +277,29 @@
                         //imprime la fecha por separado ejemplo: dia, mes y año
                       $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
  
-                       $fecha= $datos[$i]["mes"];
+                      
+					 $fecha_mes =$meses[$datos[$i]["numero_mes"]-1] ;   
+					 $estado=$datos[$i]["estado_compra"];
+					 if($estado==1){
+					  $estado="PAGADOS";
 
-                       $fecha_mes = $meses[date("n", strtotime($fecha))-1];
+					 }elseif($estado==2){
+					  $estado="PENDIENTES";
+					 }elseif($estado==0){
+					  $estado="ANULADOS";
+					 }
 
+				   ?>
 
-    			     ?>
-
-
-					      <tr>
-					        <td><?php echo $datos[$i]["ano"]?></td>
-					        <td><?php echo $datos[$i]["numero_mes"]?></td>
-					        <td><?php echo $fecha_mes?></td>
-                            <td><?php echo "$ ".$datos[$i]["total_compra"]?></td>
-					      </tr>
-					      
-				      <?php
-
-                       
+	  
+						<tr>
+						
+						  <td><?php echo $datos[$i]["tipo_pago_compra"]?></td>
+						  <td><?php echo "$ ".$datos[$i]["total_compra"]?></td>
+						  <td><?php echo $estado?></td>
+						</tr>
+						
+					<?php
                         }//cierre ciclo for
 
                      }//cierre condicional else
@@ -355,7 +427,7 @@
            //si existe el envia del post entonces se llama al metodo
 		  if(isset($_POST["year"])){
 
-          echo $datos_grafica= $compras->suma_compras_anio_mes_grafica($_POST["year"]);
+          echo $datos_grafica= $compras->suma_compras_anio_mes_grafica($_POST["year"],$_POST["mes"]);
 
            } else {
 
@@ -363,7 +435,7 @@
            
            $fecha_inicial=date("Y");
 
-           	echo $datos_grafica= $compras->suma_compras_anio_mes_grafica($fecha_inicial);
+           	echo $datos_grafica= $compras->suma_compras_anio_mes_grafica($año,$mes);
            }
 
           ?>
@@ -398,8 +470,18 @@
 
 	function printHTML() { 
 	  if (window.print) { 
+
+		$('#panel_imprimir').hide();
+		$('#titulo').hide(); 
+		$('#panel_form').hide(); 
+		$('#buttonExport').hide();
+		
 	    window.print();
 	  }
+	  $('#panel_imprimir').show();
+		$('#titulo').show(); 
+		$('#buttonExport').show();
+		$('#panel_form').show(); 
 	}
 	
 </script>

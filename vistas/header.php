@@ -38,6 +38,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title> Industria del Pollo </title>
+  <link rel="shortcut icon" href="upload/industriasba.png">
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -95,7 +96,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>IdP</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Industria del Pollo</b></span>
+      <span class="logo-lg"><b>Industria del Pollo </b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -129,20 +130,7 @@
                 </p>
               </li>
               <!-- Menu Body -->
-              <!--<li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>-->
-                <!-- /.row -->
-              <!--</li>-->
+             
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
@@ -277,7 +265,7 @@
 
            <ul class="treeview-menu">
            
-            <li><a href="clientes.php"><i class="fa fa-circle-o"></i>Listado de Clientes</a></li>
+            <li><a href="clientes.php"><i class="fa fa-circle-o"></i> Clientes</a></li>
             
             <li><a href="cuentas_corrientes.php"><i class="fa fa-circle-o"></i> Cuentas Corrientes</a></li>
           </ul>
@@ -354,7 +342,7 @@
             echo '
 
          <li class="treeview">
-          <a href="reporte_ventas.php">
+          <a href="reporte_general_ventas.php">
           <i class="fa fa-pie-chart" aria-hidden="true"></i> <span>Reportes de Ventas</span>
             <span class="pull-right-container badge bg-blue">
                  <i class="fa fa-angle-left pull-right"></i>

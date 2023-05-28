@@ -68,11 +68,14 @@
 							}
 
 							if($_POST["habilitar_cc"]=="1"){
+									//me dijo si existe ya la cuenta corriente
+									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
+								if(is_array($datos_cc)==false){
 								//se crea la cuenta corriente del usuario
 								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								//edita el estado del cliente
 								$messages[]="cc creada";
-							  
+								}
 							}
 						
 								
@@ -121,11 +124,15 @@
 							}
 
 							if($_POST["habilitar_cc"]=="1"){
+								
+									//me dijo si existe ya la cuenta corriente
+									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
+									if(is_array($datos_cc==false)){
 								//se crea la cuenta corriente del usuario
 								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								//edita el estado del cliente
-								
-							}if($_POST["habilitar_cc"]=="0"){
+									}
+							}else if($_POST["habilitar_cc"]=="0"){
 								$cuentas_corrientes->editar_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								
 								

@@ -152,11 +152,12 @@ ob_start();
   </tr>
   
     <tr>
+    <th width="10%" bgcolor="#317eac"><span class="Estilo11">FECHA VENTA </span></th>
        <th width="15%" bgcolor="#317eac"><span class="Estilo1">PRODUCTO </span></th>
       <th width="10%" bgcolor="#317eac"><span class="Estilo11">PRECIO VENTA</span></th>
       <th width="5%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD</span></th>
-      <th width="10%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD * PRECIO VENTA</span>
-      <th width="10%" bgcolor="#317eac"><span class="Estilo11">FECHA VENTA </span></th>
+      <th width="10%" bgcolor="#317eac"><span class="Estilo11">TOTAL</span>
+     
 
       <?php
 
@@ -185,12 +186,12 @@ ob_start();
 
          ?>
     <tr class="even_row" style="font-size:10pt">
-     
+    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($venta[$j]["fecha_venta"])); ?></span></td>
       <td style="text-align: center"><span><?php echo $venta[$j]["producto"];?></span></td>
        <td style="text-align: center"><span><?php echo "$ ".$venta[$j]["precio_venta"];?></span></td>
       <td style="text-align: center"><span><?php echo $venta[$j]["cantidad_venta"];?></span></td>
       <td style="text-align: center"><span class=""><?php echo "$ ".$venta[$j]["cantidad_venta"] * $venta[$j]["precio_venta"];?></span></td>
-      <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($venta[$j]["fecha_venta"])); ?></span></td>
+    
      
       </tr>
       <?php } ?>
