@@ -17,8 +17,7 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    
-  <?php require_once("modal/pago_cuenta_corriente_modal.php");?>
+
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -140,7 +139,7 @@
                   <label for="inputText4" class="col-lg-1 control-label">Monto:</label>
 
             
-                    <input type="text" class="form-control" id="monto_pago" name="monto_pago" placeholder="monto" required pattern="[0-9]{0,15}">
+                    <input type="text" class="form-control" id="monto" name="monto" placeholder="monto" required >
                   
                 </div>
 
@@ -153,7 +152,7 @@
 
         <div class="modal-footer">
           <input type="hidden" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION["id_usuario"];?>"/>
-          
+    
 
           <button type="submit" name="action" id="#" class="btn btn-success pull-left" value="Add"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar </button>
 

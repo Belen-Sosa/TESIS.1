@@ -1,9 +1,14 @@
 var tabla;
 var id_cliente= getParameterByName('id_cliente');
 console.log("id:"+id_cliente);
+//agrega el id del cliente por si se necesia hacer un pago a cuenta
 
+ //cuando se da click al boton submit entonces se ejecuta la funcion guardaryeditar(e);
+ $("#pago_form").on("submit",function(e)
+ {
 
-
+	 guardaryeditar(e);	
+ })
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -114,8 +119,6 @@ function listar_detalle_cc()
 			   $("#direccion").html(data.direccion);
 			   $("#fecha_venta").html(data.fecha_venta);
 			
-				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-			   //alert(data);
 			   
 		   }
 	   })
@@ -137,8 +140,7 @@ function listar_detalle_cc()
 			   
 			   $("#detalles").html(data);
 				
-				//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-			   
+			
 			   
 		   }
 	   })
@@ -222,10 +224,44 @@ function listar_detalle_cc()
 
 		
 		});//bootbox
+      
+
 
 
 	  }
 	
+function guardaryeditar(e)
+{
+	e.preventDefault(); //No se activará la acción predeterminada del evento
+	var formData = new FormData($("#pago_form")[0]);
+	formData.append("id_cliente", id_cliente);
+
+		$.ajax({
+			url: "../ajax/cuenta_corriente.php?op=guardaryeditar" ,
+		    type: "POST",
+		    data: formData,
+		    contentType: false,
+		    processData: false,
+		
+		    success: function(datos)
+		    {                    
+		        
+		         
+                 
+		         console.log(datos);
+
+	            $('#pago_form')[0].reset();
+				$('#pagoModal').modal('hide');
+
+	
+				$('#cuenta_corriente_data').DataTable().ajax.reload();
+				
+				
+		    }
+
+		});
+       
+}
 
 
 listar_detalle_cc();

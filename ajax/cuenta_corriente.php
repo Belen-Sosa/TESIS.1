@@ -277,6 +277,112 @@
 
 
       break;
+
+	  case "guardaryeditar":
+
+		/*si la dni_cliente no existe entonces lo registra
+	 importante: se debe poner el $_POST sino no funciona*/
+	     
+	 require_once("../modelos/consolelog.php");
+
+			  //importante: se debe poner el $_POST sino no funciona
+			  $datos = $cuentaCorriente->get_idcc_por_cliente($_POST["id_cliente"]);
+			  $id_usuario=$_POST["id_usuario"];
+              $id_cliente=$_POST["id_cliente"];
+              $monto=$_POST["monto"];
+			  $estado="adeuda";
+			  $descripcion="Pago a cuenta";
+
+
+				if(is_array($datos)==true and count($datos)>0){
+					foreach($datos as $row)
+					{
+						$id_cc=$row["id_cuentas_corrientes"];
+						$id_cliente=$row["id_cliente"];
+				  
+					}
+
+							//no existe el cliente por lo tanto hacemos el registros
+				
+					
+				
+
+					
+					
+					echo Console::log('un_nombre', "id_cc");
+					echo Console::log('un_nombre', $id_cc);
+					echo Console::log('un_nombre', "total");
+					echo Console::log('un_nombre',$monto);
+					echo Console::log('un_nombre', "id_usuario");
+					echo Console::log('un_nombre', $_POST["id_usuario"]);
+					echo Console::log('un_nombre', "id_cliente");
+					echo Console::log('un_nombre', $id_cliente);
+					echo Console::log('un_nombre', "estado");
+					echo Console::log('un_nombre', $estado);
+					echo Console::log('un_nombre', "descripcion");
+					echo Console::log('un_nombre', $descripcion);
+				
+					$cuentaCorriente->registrar_detalle_cc(null,$id_cc,$monto,$_POST["id_usuario"],$id_cliente,$estado,$descripcion);
+					$messages[]="El Cliente se registró correctamente.";
+					
+			
+					
+				  }
+			  
+			  else {
+
+				  $errors[]="no se pudo hacer el registro";
+			  }
+			  
+					  
+		
+	
+
+
+
+
+			//mensaje success
+			if (isset($messages)){
+				
+				?>
+				<div class="alert alert-success" role="alert">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<strong>¡Bien hecho!</strong>
+						<?php
+							foreach ($messages as $message) {
+									echo $message;
+								}
+							?>
+				</div>
+				<?php
+				
+				
+			}
+			//fin success
+
+			//mensaje error
+			if (isset($errors)){
+			
+			?>
+				<div class="alert alert-danger" role="alert">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<strong>Error!</strong> 
+						<?php
+							foreach ($errors as $error) {
+									echo $error;
+								}
+							?>
+				</div>
+			<?php
+
+			}
+
+//fin mensaje error
+
+
+
+
+break;
 	  
 
 
