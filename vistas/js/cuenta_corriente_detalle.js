@@ -98,53 +98,56 @@ function listar_detalle_cc()
 	
 }
 
+  //VER DETALLE CLIENTE-VENTA
+  $(document).on('click', '.detalle', function(){
+	//toma el valor del id
+   var numero_venta = $(this).attr("id");
 
-	  //VER DETALLE CLIENTE-VENTA
-	  $(document).on('click', '.detalle', function(){
-		//toma el valor del id
-	   var numero_venta = $(this).attr("id");
-
-	   $.ajax({
-		   url:"../ajax/ventas.php?op=ver_detalle_cliente_venta",
-		   method:"POST",
-		   data:{numero_venta:numero_venta},
-		   cache:false,
-		   dataType:"json",
-		   success:function(data)
-		   {
-			   
-			   $("#cliente").html(data.cliente);
-			   $("#numero_venta").html(data.numero_venta);
-			   $("#dni_cliente").html(data.dni_cliente);
-			   $("#direccion").html(data.direccion);
-			   $("#fecha_venta").html(data.fecha_venta);
+   $.ajax({
+	   url:"../ajax/ventas.php?op=ver_detalle_cliente_venta",
+	   method:"POST",
+	   data:{numero_venta:numero_venta},
+	   cache:false,
+	   dataType:"json",
+	   success:function(data)
+	   {
+		   
+		   $("#cliente").html(data.cliente);
+		   $("#numero_venta").html(data.numero_venta);
+		   $("#dni_cliente").html(data.dni_cliente);
+		   $("#direccion").html(data.direccion);
+		   $("#fecha_venta").html(data.fecha_venta);
 			
-			   
-		   }
-	   })
-   });
+			//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+		   //alert(data);
+		   
+	   }
+   })
+});
 
-	 //VER DETALLE VENTA
-	$(document).on('click', '.detalle', function(){
-		//toma el valor del id
-	   var numero_venta = $(this).attr("id");
+ //VER DETALLE VENTA
+$(document).on('click', '.detalle', function(){
+	//toma el valor del id
+   var numero_venta = $(this).attr("id");
 
-	   $.ajax({
-		   url:"../ajax/ventas.php?op=ver_detalle_venta",
-		   method:"POST",
-		   data:{numero_venta:numero_venta},
-		   cache:false,
-		   dataType:"json",
-		   success:function(data)
-		   {
-			   
-			   $("#detalles").html(data);
-				
+   $.ajax({
+	   url:"../ajax/ventas.php?op=ver_detalle_venta",
+	   method:"POST",
+	   data:{numero_venta:numero_venta},
+	   cache:false,
+	   success:function(data)
+	   {
+		   
+		   $("#detalles").html(data);
 			
-			   
-		   }
-	   })
-   });
+			//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
+		   //alert(data);
+		   
+	   }
+   })
+});
+
+	
 
    function mostrar_total(){
 
@@ -176,7 +179,7 @@ function listar_detalle_cc()
     console.log(id_detalle_cc,id_cuenta_corriente,est);
     	
 
-	bootbox.confirm("¿Estas seguro que deseas cambiar el estado de esta venta?", function(result){
+	bootbox.confirm("¿Estas seguro que deseas cambiar el estado de este pago?", function(result){
 		if(result)
 		{
 
@@ -255,7 +258,7 @@ function guardaryeditar(e)
 
 	
 				$('#cuenta_corriente_data').DataTable().ajax.reload();
-				
+				mostrar_total();
 				
 		    }
 

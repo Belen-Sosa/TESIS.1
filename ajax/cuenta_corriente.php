@@ -39,8 +39,7 @@
          
 	 case "registrar_detalle_cc";
 	
-	  
-        //se llama al modelo Ventas.php
+	
 
 
 		$datos=$cuentaCorriente->get_idcc_por_cliente($_POST["id_cliente"]);
@@ -68,9 +67,10 @@
 
 
 		}
-        $descripcion=$_POST["numero_venta"];
+        $descripcion="adeuda";
+		$estado="f";
 
-	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"],$_POST["estado"],$descripcion);
+	    $cuentaCorriente->registrar_detalle_cc($id_ventas,$id_cc,$total,$id_usuario,$_POST["id_cliente"],$descripcion,$estado);
 		
 		
 
@@ -172,34 +172,46 @@
 		foreach($datos as $row)
 			   {
 				   $sub_array = array();
-					$sub_array[] = $row["fecha_venta"];
+					$sub_array[] = $row["fecha_detalle_cc"];
+					$sub_array[] = $row["descripcion_detalle_cc"];
 					$sub_array[] = $row["numero_venta"];
+					$sub_array[] = "$ ".$row["monto_detalle_cc"];
 					
-					$sub_array[] = "$ ".$row["total_venta"];
-					$sub_array[] = $row["estado_detalle_cc"];	
 
-					$sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
+					
                  
-				   $est = '';
 				   
+				 
+				  
 				   $atrib = "btn btn-danger btn-md estado";
-				   if($row["estado_detalle_cc"] == "adeuda"){
-					$est = 'PAGAR';
+				   if($row["tipo_movimiento_detalle_cc"] == "c"){
+					$est = 'REACTIVAR PAGO';
+					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["tipo_movimiento_detalle_cc"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
 					  
 				   }
-				   else{
-					   if($row["estado_detalle_cc"] == "pagado"){
+				  
+				  
+					   if($row["tipo_movimiento_detalle_cc"] == "p"){
 						   $est = 'ANULAR PAGO';
 						   $atrib = "btn btn-success btn-md estado";
-						   
-					   }	
-				   }
+						   $sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["tipo_movimiento_detalle_cc"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
+					
+					   }
+					   if($row["tipo_movimiento_detalle_cc"] == "f" ){
+						
+				
+						$sub_array[] = '<button class="btn btn-warning detalle"  id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta">ver mas<i class="fa fa-eye"></i></button>';
+					}	
+					if($row["tipo_movimiento_detalle_cc"] == "fc"){
+						$sub_array[] = '<button class="btn btn-warning detalle"  id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta">venta cancelada <i class="fa fa-eye"></i></button>';
+					}
+                    if($row["tipo_movimiento_detalle_cc"] == ""){
+						
+				
+						$sub_array[] = '<button class="btn btn-warning detalle"  id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta">ver mas<i class="fa fa-eye"></i></button>';
+					}	
                    
-					
-					
 			   
-					$sub_array[] = '<button type="button" onClick="cambiarEstado('.$row["id_detalle_cc"].','.$row["id_cuenta_corriente"].',\''.$row["estado_detalle_cc"].'\');" name="" id="'.$row["id_detalle_cc"].'" class="'.$atrib.'">'.$est.'</button>';
-					$sub_array[] = $row["fecha_pago_detalle_cc"];
 					$data[] = $sub_array;
 			   }
    
@@ -280,18 +292,17 @@
 
 	  case "guardaryeditar":
 
-		/*si la dni_cliente no existe entonces lo registra
-	 importante: se debe poner el $_POST sino no funciona*/
-	     
-	 require_once("../modelos/consolelog.php");
+	
 
-			  //importante: se debe poner el $_POST sino no funciona
+			
 			  $datos = $cuentaCorriente->get_idcc_por_cliente($_POST["id_cliente"]);
 			  $id_usuario=$_POST["id_usuario"];
               $id_cliente=$_POST["id_cliente"];
               $monto=$_POST["monto"];
-			  $estado="adeuda";
-			  $descripcion="Pago a cuenta";
+			  $id_venta=null;
+ 
+			  $descripcion=$_POST["descripcion_pago"];
+			
 
 
 				if(is_array($datos)==true and count($datos)>0){
@@ -302,45 +313,21 @@
 				  
 					}
 
-							//no existe el cliente por lo tanto hacemos el registros
 				
-					
-				
-
-					
-					
-					echo Console::log('un_nombre', "id_cc");
-					echo Console::log('un_nombre', $id_cc);
-					echo Console::log('un_nombre', "total");
-					echo Console::log('un_nombre',$monto);
-					echo Console::log('un_nombre', "id_usuario");
-					echo Console::log('un_nombre', $_POST["id_usuario"]);
-					echo Console::log('un_nombre', "id_cliente");
-					echo Console::log('un_nombre', $id_cliente);
-					echo Console::log('un_nombre', "estado");
-					echo Console::log('un_nombre', $estado);
-					echo Console::log('un_nombre', "descripcion");
-					echo Console::log('un_nombre', $descripcion);
-				
-					$cuentaCorriente->registrar_detalle_cc(null,$id_cc,$monto,$_POST["id_usuario"],$id_cliente,$estado,$descripcion);
-					$messages[]="El Cliente se registró correctamente.";
+					//tipos estados (p=pagos,f=facturas adeudadas,c=cancelados)
+				    $estado="p";
+					$cuentaCorriente->registrar_detalle_cc($id_venta,$id_cc,$monto,$_POST["id_usuario"],$id_cliente,$descripcion,$estado);
+					$messages[]="se registró correctamente.";
 					
 			
-					
+					$cuentaCorriente->actualizar_saldo_cuenta_corriente($id_cliente,$id_cc);
 				  }
 			  
 			  else {
 
 				  $errors[]="no se pudo hacer el registro";
 			  }
-			  
-					  
 		
-	
-
-
-
-
 			//mensaje success
 			if (isset($messages)){
 				

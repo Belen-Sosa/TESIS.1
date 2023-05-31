@@ -154,7 +154,7 @@ function listar()
     //alert(numero_compra);
     	
 
-	bootbox.confirm("¿Estas seguro que quieres anular esta venta?", function(result){
+	bootbox.confirm("¿Estas seguro que quieres cambiar el estado de esta venta?", function(result){
 		if(result)
 		{
 

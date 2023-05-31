@@ -52,7 +52,7 @@ ob_start();
 
 <table style="width: 100%;" class="header">
 <tr>
-<td width="54%" height="111"><h1 style="text-align: left; margin-right:20px;"><img src="../public/images/logo_mercado.jpg" width="340" height="200"  /></h1></td>
+<td width="54%" height="111"><h1 style="text-align: left; margin-right:20px;"><img src="../public/images/logo_mercado.jfif" width="340" height="200"  /></h1></td>
 
 
 <td width="46%" height="111">
@@ -157,7 +157,7 @@ ob_start();
       <th width="10%" bgcolor="#317eac"><span class="Estilo11">PRECIO VENTA</span></th>
       <th width="5%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD</span></th>
       <th width="10%" bgcolor="#317eac"><span class="Estilo11">TOTAL</span>
-     
+      </tr>
 
       <?php
 
@@ -171,7 +171,7 @@ ob_start();
 
       ?>
 
-      </tr>
+     
 
         <?php
 
@@ -180,17 +180,17 @@ ob_start();
 
          for($j=0;$j<count($venta);$j++){
 
-           $decision=$venta[$j]["precio_venta"] * $venta[$j]["cantidad_venta"];
+           $decision=$venta[$j]["precio_venta_producto"] * $venta[$j]["cantidad_detalle_v"];
 
           $pagoTotal= $pagoTotal + $decision;
 
          ?>
     <tr class="even_row" style="font-size:10pt">
-    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($venta[$j]["fecha_venta"])); ?></span></td>
-      <td style="text-align: center"><span><?php echo $venta[$j]["producto"];?></span></td>
-       <td style="text-align: center"><span><?php echo "$ ".$venta[$j]["precio_venta"];?></span></td>
-      <td style="text-align: center"><span><?php echo $venta[$j]["cantidad_venta"];?></span></td>
-      <td style="text-align: center"><span class=""><?php echo "$ ".$venta[$j]["cantidad_venta"] * $venta[$j]["precio_venta"];?></span></td>
+    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($venta[$j]["fecha_detalle_v"])); ?></span></td>
+      <td style="text-align: center"><span><?php echo $venta[$j]["nombre_producto"];?></span></td>
+       <td style="text-align: center"><span><?php echo "$ ".$venta[$j]["precio_venta_producto"];?></span></td>
+      <td style="text-align: center"><span><?php echo $venta[$j]["cantidad_detalle_v"];?></span></td>
+      <td style="text-align: center"><span class=""><?php echo "$ ".$venta[$j]["cantidad_detalle_v"] * $venta[$j]["precio_venta_producto"];?></span></td>
     
      
       </tr>

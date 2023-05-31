@@ -1325,7 +1325,7 @@ obj.value es el valor del campo de texto*/
 					$.ajax({
 							url:"../ajax/cuenta_corriente.php?op=registrar_detalle_cc",
 							method:"POST",
-							data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente,"estado":"adeuda"},
+							data:{'numero_venta':numero_venta,'dni':dni,'tipo_pago':tipo_pago,'id_usuario':id_usuario,'id_cliente':id_cliente,"descripcion":"adeuda","tipo_movimiento":"f"},
 							cache: false,
 							dataType:"html",
 							error:function(x,y,z){

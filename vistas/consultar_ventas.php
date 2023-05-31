@@ -70,6 +70,7 @@
                   <th>Tipo Pago</th>
                   <th>Total</th>
                   <th>Estado</th>
+               
                   
                  
                 </tr>

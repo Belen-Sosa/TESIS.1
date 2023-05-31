@@ -87,15 +87,15 @@
 
 				$est = '';
 				
-				 $atrib = "btn btn-danger btn-md estado";
+				
 				if($row["estado_compra"] == 1){
-					$est = 'PAGADO';
+					$est = 'dado de alta';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
 					if($row["estado_compra"] == 0){
-						$est = 'ANULADO';
-						
+						$est = 'dado de baja';
+						$atrib = "btn btn-danger btn-md estado";
 					}	
 				}
 
@@ -156,19 +156,16 @@
 				$sub_array = array();
 
 				$est = '';
-			
-				 $atrib = "btn btn-danger btn-md estado";
 				if($row["estado_compra"] == 1){
-					$est = 'PAGADO';
+					$est = 'dado de alta';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
 					if($row["estado_compra"] == 0){
-						$est = 'ANULADO';
-						
+						$est = 'dado de baja';
+						$atrib = "btn btn-danger btn-md estado";
 					}	
 				}
-
 				
 	
 				 $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_compra"].'"  data-toggle="modal" data-target="#detalle_compra"><i class="fa fa-eye"></i></button>';
@@ -216,18 +213,16 @@
 				$sub_array = array();
 
 				$est = '';
-		    	 $atrib = "btn btn-danger btn-md estado";
 				if($row["estado_compra"] == 1){
-					$est = 'PAGADO';
+					$est = 'dado de alta';
 					$atrib = "btn btn-success btn-md estado";
 				}
 				else{
 					if($row["estado_compra"] == 0){
-						$est = 'ANULADO';
-						
+						$est = 'dado de baja';
+						$atrib = "btn btn-danger btn-md estado";
 					}	
 				}
-
 				
 
 				 $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_compra"].'"  data-toggle="modal" data-target="#detalle_compra"><i class="fa fa-eye"></i></button>';

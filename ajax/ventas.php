@@ -25,23 +25,19 @@
 				$sub_array = array();
 
 				$est = '';
-				//$atrib = 'activo';
-				 $atrib = "btn btn-danger btn-md estado";
-				 if($row["estado_venta"] == 0){
-					$est = 'ANULADO';
-					//$atrib = '';
-				}
-				if($row["estado_venta"] == 1){
-					$est = 'PAGADO';
+				
+				 if($row["estado_venta"] == 1){
+					$est = 'dado de alta';
 					$atrib = "btn btn-success btn-md estado";
+				}
+				if($row["estado_venta"] == 0){
+					$est = 'dado de baja';
+					$atrib = "btn btn-danger btn-md estado";
+					
 				}
 				
 					
-				if($row["estado_venta"] == 2){
-					$est = 'PENDIENTE';
-					//$atrib = '';
-				}
-
+				
 				
 
 				 $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
@@ -128,7 +124,9 @@
   	 case "ver_detalle_venta":
 
   	   $datos= $ventas->get_detalle_ventas_cliente($_POST["numero_venta"]);	
-
+		 require_once("../modelos/consolelog.php");
+		 $var ="hola" ;
+		 echo Console::log('un_nombre',$datos);
 
   	 break;
 
@@ -223,39 +221,26 @@
 
                   //cambia el estado de la compra
 				  $ventas->cambiar_estado($_POST["id_ventas"], $_POST["numero_venta"], $_POST["est"]);
-		
+				  foreach($datos as $row){
+                    $id_cliente=$row["id_cliente"];
+				  }
+				  require_once("../modelos/CuentasCorrientes.php");
+
+	             $cuentaCorriente= new CuentaCorriente();
+				 foreach($datos as $row){
+                    $id_cliente=$row["id_cliente"];
+				  }
+				 $dato_cc= $cuentaCorriente-> get_cc_por_cliente($id_cliente);
+				 foreach($dato_cc as $row){
+                    $id_cc=$row["id_cuenta_corriente"];
+				  }
+				  $cuentaCorriente->actualizar_saldo_cuenta_corriente($id_cliente,$id_cc);
 		     
 	        } 
 
 
      break;
-	 case "cambiar_estado_venta_cc":
-		 //llamo al modelo Venta
-		 require_once("../modelos/CuentasCorrientes.php");
-
-		 $CuentaCorriente = new CuentaCorriente();
-		
-		 
 	
-		if($_POST["est"]=="pagado"){
-			$estado_venta=1;
-			
-		}
-		if($_POST["est"]=="adeuda"){
-			$estado_venta=2;
-			
-		}
-		require_once("../modelos/consolelog.php");
-		$hola="id_detalle_cc en ventas php ajax";
-	   echo Console::log('un_nombre', $hola);
-	   echo Console::log('un_nombre', $_POST["id_detalle_cc"]);
-		$dato= $CuentaCorriente->get_id_ventas_por_id_detalle_cc($_POST["id_detalle_cc"]);
-				foreach($dato as $row)
-				{
-					$id_venta= $row["id_ventas"];
-				}
-		
-	    $ventas->cambiar_estado_venta_cc($estado_venta,$id_venta);
 
    break;
 
@@ -271,23 +256,17 @@
 
         $est = '';
         
-         $atrib = "btn btn-danger btn-md estado";
-		 if($row["estado_venta"] == 0){
-            $est = 'ANULADO';
-           
-          
-        }
-        if($row["estado_venta"] == 1){
-          $est = 'PAGADO';
-          $atrib = "btn btn-success btn-md estado";
-        }
-       
-          
-		if($row["estado_venta"] == 2){
-			$est = 'PENDIENTE';
-			//$atrib = '';
+        
+		if($row["estado_venta"] == 1){
+			$est = 'dado de alta';
+			$atrib = "btn btn-success btn-md estado";
 		}
-
+		if($row["estado_venta"] == 0){
+			$est = 'dado de baja';
+			$atrib = "btn btn-danger btn-md estado";
+			
+		}
+		
         
          $sub_array[] = '<button class="btn btn-warning detalle" id="'.$row["numero_venta"].'"  data-toggle="modal" data-target="#detalle_venta"><i class="fa fa-eye"></i></button>';
                $sub_array[] = date("d-m-Y",strtotime($row["fecha_venta"]));
@@ -333,19 +312,15 @@
 
 		        $est = '';
 		        
-		         $atrib = "btn btn-danger btn-md estado";
-		        if($row["estado_venta"] == 1){
-		          $est = 'PAGADO';
-		          $atrib = "btn btn-success btn-md estado";
-		        }
-		        
-		       if($row["estado_venta"] == 0){
-		            $est = 'ANULADO';
-		           
-		          } 
-				  if($row["estado_venta"] == 2){
-					$est = 'PENDIENTE';
-					//$atrib = '';
+		       
+				if($row["estado_venta"] == 1){
+					$est = 'dado de alta';
+					$atrib = "btn btn-success btn-md estado";
+				}
+				if($row["estado_venta"] == 0){
+					$est = 'dado de baja';
+					$atrib = "btn btn-danger btn-md estado";
+					
 				}
 
         

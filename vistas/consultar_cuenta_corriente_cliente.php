@@ -4,6 +4,11 @@
   require_once("../config/conexion.php");
 
     if(isset($_SESSION["id_usuario"])){
+      require_once("../modelos/CuentasCorrientes.php");
+
+      $cc = new CuentaCorriente();
+
+      $lista = $cc-> get_cc_por_cliente($_GET["id_cliente"]);
     
         
 
@@ -51,7 +56,7 @@
           
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Lista de Compras</h3>
+              <h3 class="box-title">Movimientos</h3>
               
             </div>
            
@@ -62,13 +67,13 @@
                 <thead>
                 <tr>
                  
-                  <th>Fecha Venta</th>
-                  <th>Número Venta</th>
+                  <th>Fecha</th>
+                  <th>descripcion</th>
+                  <th>N° Venta </th>
                   <th>Total</th>
-                  <th>Estado</th>
-                  <th>Ver Detalle</th>
                   <th>Accion</th>
-                  <th>Fecha Pago</th>
+                  
+             
              
                   
                  
@@ -132,6 +137,18 @@
           <h4 class="modal-title">Pago a Cuenta</h4>
         </div>
         <div class="modal-body">
+
+        <div class="form-group">
+                  <label  for=""  class="control-label">Descripcion de pago:</label>
+
+             
+                    
+                    <input type="" name="descripcion_pago" id="descripcion_pago" value="" class="form-control">   
+
+                    
+                 
+                
+              </div>
 
 
 

@@ -74,7 +74,7 @@
           $conectar=parent::conexion();
           parent::set_names();  
 
-          $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d, ventas as v  where v.id_ventas=d.id_ventas and d.id_cliente=? and d.estado_detalle_cc='adeuda'";
+          $sql="select saldo_cc  from cuentas_corrientes where id_cliente=?";
 
           $sql=$conectar->prepare($sql);
           $sql->bindValue(1, $id_cliente);
@@ -84,7 +84,7 @@
           $datos=$sql->fetchAll(PDO::FETCH_ASSOC);
           foreach($datos as $row)
 			{
-         $dato = $row["saldo"];
+         $dato = $row["saldo_cc"];
          if($dato==null){
           $dato=0;
          }
@@ -157,14 +157,14 @@
          }
          //método para crear detalle de cuenta corriente
 
-         public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente,$estado,$descripcion){
+         public function registrar_detalle_cc($id_venta,$id_cc,$total,$id_usuario,$id_cliente,$descripcion,$estado){
 
 
             $conectar= parent::conexion();
             parent::set_names();
  
             $sql="insert into detalle_cuentas_corrientes
-            values(null,?,?,now(),?,?,?,?,null,?)";
+            values(null,?,?,now(),?,?,?,?,?)";
  
            
              $sql=$conectar->prepare($sql);
@@ -172,16 +172,16 @@
              $sql->bindValue(1, $id_cc);
              $sql->bindValue(2, $id_venta);
              $sql->bindValue(3, $total);
-             $sql->bindValue(4, $estado);
-             $sql->bindValue(5, $id_cliente);
-             $sql->bindValue(6, $id_usuario);
-             $sql->bindValue(7, $descripcion);
+             $sql->bindValue(4, $id_cliente);
+             $sql->bindValue(5, $id_usuario);
+             $sql->bindValue(6, $descripcion);
+             $sql->bindValue(7, $estado);
              $sql->execute();
        
             
 
 
-             $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d, ventas as v  where v.id_ventas=d.id_ventas and d.id_cliente=? and d.estado_detalle_cc='adeuda'";
+             $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d  where  d.id_cliente=? and d.tipo_movimiento_detalle_cc='f'";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1, $id_cliente);
@@ -190,12 +190,29 @@
              
              $datos=$sql->fetchAll(PDO::FETCH_ASSOC);
              foreach($datos as $row)
-            {
-            $saldo = $row["saldo"];
-            if($saldo==null){
-             $saldo=0;
+              {
+              $saldo_adeudado = $row["saldo"];
+              if($saldo_adeudado==null){
+              $saldo_adeudado=0;
+              }
             }
-          }
+            $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d where d.id_cliente=? and d.tipo_movimiento_detalle_cc='p'";
+
+             $sql=$conectar->prepare($sql);
+             $sql->bindValue(1, $id_cliente);
+             $sql->execute();
+            
+             
+             $datos=$sql->fetchAll(PDO::FETCH_ASSOC);
+             foreach($datos as $row)
+              {
+              $saldo_pagado = $row["saldo"];
+              if($saldo_pagado==null){
+              $saldo_pagado=0;
+              }
+            }
+
+            $saldo_actual=$saldo_adeudado-$saldo_pagado;
 
              $sql2 = "update cuentas_corrientes set 
                      
@@ -206,7 +223,7 @@
 
 
               $sql2 = $conectar->prepare($sql2);
-              $sql2->bindValue(1,$saldo);
+              $sql2->bindValue(1,$saldo_actual);
               $sql2->bindValue(2,$id_cc);
               $sql2->execute(); 
 
@@ -224,7 +241,8 @@
             $conectar= parent::conexion();
             parent::set_names();
 
-            $sql="select dc.id_detalle_cc,dc.id_cuenta_corriente,dc.id_ventas,v.numero_venta,v.fecha_venta,v.total_venta,dc.estado_detalle_cc,dc.fecha_pago_detalle_cc from detalle_cuentas_corrientes as dc,ventas as v where v.id_cliente=? and v.id_ventas=dc.id_ventas and dc.estado_detalle_cc!='anulado'";
+            $sql="select dc.id_detalle_cc,dc.id_cliente,dc.id_cuenta_corriente,dc.id_ventas,v.numero_venta,dc.fecha_detalle_cc,dc.monto_detalle_cc,dc.descripcion_detalle_cc,dc.tipo_movimiento_detalle_cc from detalle_cuentas_corrientes as dc left join ventas as v
+            on  v.id_ventas=dc.id_ventas where dc.id_cliente=?";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $id_cliente);
             $sql->execute();
@@ -249,26 +267,58 @@
 
          //método para editar saldo de cc
        
-        public function editar_saldo_cuenta_corriente($id_cliente,$saldo_actualizado){
+        public function actualizar_saldo_cuenta_corriente($id_cliente,$id_cc){
+          $conectar= parent::conexion();
+          parent::set_names();
 
-        	$conectar=parent::conexion();
-        	parent::set_names();
+        
+          $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d  where  d.id_cliente=? and d.tipo_movimiento_detalle_cc='f'";
 
-         $sql="update cuentas_corrientes set 
+          $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $id_cliente);
+          $sql->execute();
+         
+          
+          $datos=$sql->fetchAll(PDO::FETCH_ASSOC);
+          foreach($datos as $row)
+           {
+           $saldo_adeudado = $row["saldo"];
+           if($saldo_adeudado==null){
+           $saldo_adeudado=0;
+           }
+         }
+         $sql="select sum(d.monto_detalle_cc) as saldo from detalle_cuentas_corrientes as d where d.id_cliente=? and d.tipo_movimiento_detalle_cc='p'";
 
-            saldo_cc=?,
-            
-            where 
-            id_cliente=?
+          $sql=$conectar->prepare($sql);
+          $sql->bindValue(1, $id_cliente);
+          $sql->execute();
+         
+          
+          $datos=$sql->fetchAll(PDO::FETCH_ASSOC);
+          foreach($datos as $row)
+           {
+           $saldo_pagado = $row["saldo"];
+           if($saldo_pagado==null){
+           $saldo_pagado=0;
+           }
+         }
 
-         ";
-            
+         $saldo_actual=$saldo_adeudado-$saldo_pagado;
 
-         $sql=$conectar->prepare($sql);
+          $sql2 = "update cuentas_corrientes set 
+                  
+           saldo_cc=?
+           where 
+           id_cuentas_corrientes=?
+           ";
 
-         $sql->bindValue(1, $saldo_actualizado);
-         $sql->bindValue(2, $dni_cliente);
-         $sql->execute();
+
+           $sql2 = $conectar->prepare($sql2);
+           $sql2->bindValue(1,$saldo_actual);
+           $sql2->bindValue(2,$id_cc);
+           $sql2->execute(); 
+
+         
 
         }
         public function get_detalle_ventas_cc_cliente($id_cliente){
@@ -389,28 +439,24 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
    public function cambiar_estado($id_detalle_cc,$id_cuenta_corriente,$estado){
 
-
+    $cuentaCorriente= new CuentaCorriente();
     $conectar=parent::conexion();
     parent::set_names();
    
     
           
-          //si estado es igual a 0 entonces lo cambia a 1
+     
     $est = "";
     //el parametro est se envia por via ajax, viene del $est:est
-    /*si el estado es ==0 cambiaria a PAGADO Y SE EJECUTARIA TODO LO QUE ESTA ABAJO*/
-    if($estado == "adeuda"){
-      $est = "pagado";
+    /*si el estado es ==p cambiaria a cancelado ==p Y SE EJECUTARIA TODO LO QUE ESTA ABAJO*/
+    if($estado == "p"){
+      $est = "c";
     
-
-      //declaro $numero_venta, viene via ajax
-
-  
 
 
       $sql="update detalle_cuentas_corrientes set 
             
-            estado_detalle_cc=?
+            tipo_movimiento_detalle_cc=?
             where 
             id_detalle_cc=?";
 
@@ -425,7 +471,6 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
       /*una vez se cambie de estado a ACTIVO entonces actualizamos el saldo en la cuenta corriente*/
 
 
-      //INICIO CONSULTA EN DETALLE DE VENTAS Y VENTAS
 
       $sql2="select * from detalle_cuentas_corrientes where id_detalle_cc=?";
 
@@ -436,58 +481,14 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
       foreach($resultado as $row){
 
-          $monto=$row["monto_detalle_cc"];
+          $id_cliente=$row["id_cliente"];
+          $id_cc=$row["id_cuenta_corriente"];
       
 
 
       }
+      $cuentaCorriente->actualizar_saldo_cuenta_corriente($id_cliente,$id_cc);
       
-      
-      $sql3="select saldo_cc from cuentas_corrientes where id_cuentas_corrientes=?";
-      $sql3=$conectar->prepare($sql3);
-      $sql3->bindValue(1, $id_cuenta_corriente);
-      $sql3->execute();
-      $resultado=$sql3->fetchAll();
-
-      foreach($resultado as $row2){
-        
-        
-        $saldo=$row2["saldo_cc"];
-        
-                    
-      }
-
-      //actualizo el saldo de la cuenta corriente
-      $saldo_actual= $saldo - $monto;
-
-    
-      
-      //LE ACTUALIZO EL SALDO
-      
-
-    
-      $sql4="update cuentas_corrientes set 
-      saldo_cc=?
-      where
-
-      id_cuentas_corrientes=?
-
-      ";
-             
-      $sql4=$conectar->prepare($sql4);       
-      $sql4->bindValue(1,$saldo_actual);
-      $sql4->bindValue(2, $id_cuenta_corriente);
-      $sql4->execute();
-
-      $sql5="update detalle_cuentas_corrientes set 
-      fecha_pago_detalle_cc=now()
-      where id_detalle_cc=?";
-             
-      $sql5=$conectar->prepare($sql5);   
-      $sql5->bindValue(1, $id_detalle_cc);
-      $sql5->execute();
-
-
             
 
     }//cierre del if del estado
@@ -495,81 +496,52 @@ public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 
       /*si el estado es igual a 0, entonces pasaria a ANULADO y reverteria de nuevo la cantidad de productos al stock*/
 
-      if($estado == "pagado"){
-         $est = "adeuda";
+      if($estado == "c"){
+        $est = "p";
+    
 
 
-
-
-
-      $sql="update detalle_cuentas_corrientes set 
-                  
-      estado_detalle_cc=?
-      where 
-      id_detalle_cc=?";
-
-      $sql=$conectar->prepare($sql);
-      $sql->bindValue(1,$est);
-      $sql->bindValue(2,$id_detalle_cc);
-      $sql->execute();
-      $resultado= $sql->fetch(PDO::FETCH_ASSOC);
-
-
-
-
-
-    //INICIO CONSULTA EN DETALLE DE VENTAS Y VENTAS
-
-    $sql2="select * from detalle_cuentas_corrientes where id_detalle_cc=?";
-    $sql2=$conectar->prepare($sql2);
-    $sql2->bindValue(1,$id_detalle_cc);
-    $sql2->execute();
-    $resultado=$sql2->fetchAll();
-
-    foreach($resultado as $row){
-    $monto=$row["monto_detalle_cc"];
-    }
-
-
-      $sql3="select saldo_cc from cuentas_corrientes where id_cuentas_corrientes=?";
-
-      $sql3=$conectar->prepare($sql3);
-      $sql3->bindValue(1, $id_cuenta_corriente);
-      $sql3->execute();
-      $resultado=$sql3->fetchAll();
-
-      foreach($resultado as $row2){
-
-      $saldo=$row2["saldo_cc"];
+        $sql="update detalle_cuentas_corrientes set 
               
+              tipo_movimiento_detalle_cc=?
+              where 
+              id_detalle_cc=?";
+  
+  
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1,$est);
+        $sql->bindValue(2,$id_detalle_cc);
+        $sql->execute();
+        $resultado= $sql->fetch(PDO::FETCH_ASSOC);
+  
+  
+        /*una vez se cambie de estado a ACTIVO entonces actualizamos el saldo en la cuenta corriente*/
+  
+  
+  
+        $sql2="select * from detalle_cuentas_corrientes where id_detalle_cc=?";
+  
+        $sql2=$conectar->prepare($sql2);      
+        $sql2->bindValue(1,$id_detalle_cc);
+        $sql2->execute();
+        $resultado=$sql2->fetchAll();
+  
+        foreach($resultado as $row){
+  
+            $id_cliente=$row["id_cliente"];
+            $id_cc=$row["id_cuenta_corriente"];
+        
+  
+  
+        }
+        $cuentaCorriente->actualizar_saldo_cuenta_corriente($id_cliente,$id_cc);
+
       }
 
-      //actualizo el saldo de la cuenta corriente
-      $saldo_actual= $saldo + $monto;
-      $sql4="update cuentas_corrientes set 
-      saldo_cc=?
-      where
-      id_cuentas_corrientes=?";
-            
-      $sql4=$conectar->prepare($sql4);   
-      $sql4->bindValue(1,$saldo_actual);
-      $sql4->bindValue(2, $id_cuenta_corriente);
-      $sql4->execute();
 
-      $sql5="update detalle_cuentas_corrientes set 
-      fecha_pago_detalle_cc=null
-      where
-      id_detalle_cc=?";
-      
-     $sql5=$conectar->prepare($sql5);   
-     $sql5->bindValue(1, $id_detalle_cc);
-     $sql5->execute();
-
-   }//cierre del if del estado del else
-
-
-     }
     }
+    
   }
+}
 
    ?>
