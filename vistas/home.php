@@ -62,7 +62,7 @@
 
             </div>
             <div class="icon">
-              <i class="fa fa-users" aria-hidden="true""></i>
+              <i class="fa fa-users" aria-hidden="true"></i>
             </div>
             
           </div>

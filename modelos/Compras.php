@@ -1062,7 +1062,7 @@ $mes=date("n");
             $fecha_final = date("Y-m-d", strtotime($date));
 
 
-            $sql="select * from detalle_compras where cuit_proveedor=? and fecha_compra>=? and fecha_compra<=? and estado_dc='1';";
+            $sql="select * from detalle_compras where cuit_proveedor=? and fecha_compra_dc>=? and fecha_compra_dc<=? and estado_dc='1';";
 
     
               $sql=$conectar->prepare($sql);
@@ -1094,7 +1094,7 @@ $mes=date("n");
             $fecha_final = date("Y-m-d", strtotime($date));
 
 
-           $sql="select sum(cantidad_compra_dc) as total from detalle_compras where cuit_proveedor=? and fecha_compra >=? and fecha_compra <=? and estado_dc = '1';";
+           $sql="select sum(cantidad_compra_dc) as total from detalle_compras where cuit_proveedor=? and fecha_compra_dc >=? and fecha_compra_dc <=? and estado_dc = '1';";
 
         
             $sql=$conectar->prepare($sql);

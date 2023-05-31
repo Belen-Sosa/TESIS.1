@@ -47,7 +47,7 @@ ob_start();
 
 <table style="width: 100%;" class="header">
 <tr>
-<td width="54%" height="111"><h1 style="text-align: left; margin-right:20px;"><img src="../public/images/logo_mercado.jpg" width="340" height="200"  /></h1></td>
+<td width="54%" height="111"><h1 style="text-align: left; margin-right:20px;"><img src="../public/images/logo_mercado.jfif" width="340" height="200"  /></h1></td>
 
 
 <td width="46%" height="111">
@@ -123,7 +123,7 @@ ob_start();
 ?>
 
 <tr style="font-size:10pt" class="even_row">
-<td><div align="center"><span class=""><?php echo $datos[$i]["cuit"];?></span></div></td>
+<td><div align="center"><span class=""><?php echo $datos[$i]["cuit_proveedor"];?></span></div></td>
 <td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["nombre_proveedor"];?></span></div></td>
 <td style="text-align: center"><div align="center"><span class=""><?php echo $datos[$i]["telefono_proveedor"];?></span></div></td>
 <td style="text-align: right"><div align="center"><span class=""><?php echo $datos[$i]["direccion_proveedor"];?></span></div></td>
@@ -155,7 +155,7 @@ ob_start();
       <th width="5%" bgcolor="#317eac"><span class="Estilo11">CANTIDAD</span></th>
       <th width="10%" bgcolor="#317eac"><span class="Estilo11">TOTAL</span>
       
-
+      </tr>
       <?php
 
          if(is_array($pedidos)==true and count($pedidos)==0){
@@ -168,7 +168,7 @@ ob_start();
 
       ?>
 
-      </tr>
+     
 
         <?php
         
@@ -178,18 +178,18 @@ ob_start();
        
          for($j=0;$j<count($pedidos);$j++){
 
-           $decision=$pedidos[$j]["precio_compra"] * $pedidos[$j]["cantidad_compra"];
+           $decision=$pedidos[$j]["precio_compra_dc"] * $pedidos[$j]["cantidad_compra_dc"];
 
           $pagoTotal= $pagoTotal + $decision;
 
 
          ?>
     <tr class="even_row" style="font-size:10pt">
-    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra"])); ?></span></td>
-      <td style="text-align: center"><span><?php echo $pedidos[$j]["producto"];?></span></td>
-       <td style="text-align: center"><span><?php echo "$ ".$pedidos[$j]["precio_compra"];?></span></td>
-      <td style="text-align: center"><span><?php echo $pedidos[$j]["cantidad_compra"];?></span></td>
-        <td style="text-align: center"><span class=""><?php echo "$ ".$pedidos[$j]["cantidad_compra"] * $pedidos[$j]["precio_compra"];?></span></td>
+    <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra_dc"])); ?></span></td>
+      <td style="text-align: center"><span><?php echo $pedidos[$j]["nombre_producto"];?></span></td>
+       <td style="text-align: center"><span><?php echo "$ ".$pedidos[$j]["precio_compra_dc"];?></span></td>
+      <td style="text-align: center"><span><?php echo $pedidos[$j]["cantidad_compra_dc"];?></span></td>
+        <td style="text-align: center"><span class=""><?php echo "$ ".$pedidos[$j]["cantidad_compra_dc"] * $pedidos[$j]["precio_compra_dc"];?></span></td>
    
      
       </tr>

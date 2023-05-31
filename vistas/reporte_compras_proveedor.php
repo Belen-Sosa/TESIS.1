@@ -74,7 +74,7 @@
 
                        ?>
                          
-                         <option value="<?php echo $proveedores[$i]["cuit"]?>"><?php echo $proveedores[$i]["razon_social"]?></option>
+                         <option value="<?php echo $proveedores[$i]["cuit_proveedor"]?>"><?php echo $proveedores[$i]["nombre_proveedor"]?></option>
 
                        <?php
 
