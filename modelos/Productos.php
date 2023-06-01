@@ -7,61 +7,58 @@
    class Producto extends Conectar{
 
 
-       public function get_filas_producto(){
+  public function get_filas_producto(){
 
-             $conectar= parent::conexion();
-           
-             $sql="select * from producto";
-             
-             $sql=$conectar->prepare($sql);
+        $conectar= parent::conexion();
+      
+        $sql="select * from producto";
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
+        $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
-             $sql->execute();
+        return $sql->rowCount();
 
-             $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-
-             return $sql->rowCount();
-        
-        }
+  }
 
           
       //método para seleccionar registros
 
-   	  public function get_productos(){
+  public function get_productos(){
 
-          $conectar= parent::conexion();
-          $sql= "
-          select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto,p.imagen_producto,c.id_categoria, c.nombre_categoria 
-          from producto as p 
-          inner join categoria as c on
-          p.id_categoria=c.id_categoria 
-          LEFT JOIN producto as proc
-          ON p.id_procedente = proc.id_producto ";
+      $conectar= parent::conexion();
+      $sql= "
+      select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto,p.id_procedente,proc.nombre_producto as procedente, p.estado_producto,p.imagen_producto,c.id_categoria, c.nombre_categoria 
+      from producto as p 
+      inner join categoria as c on
+      p.id_categoria=c.id_categoria 
+      LEFT JOIN producto as proc
+      ON p.id_procedente = proc.id_producto ";
 
-          $sql=$conectar->prepare($sql);
-          $sql->execute();
-          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+      $sql=$conectar->prepare($sql);
+      $sql->execute();
+      return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
-         
-         }
+      
+  }
 
      //metodo para listar en productos al registrar un producto de carniceria
          public function get_productos_carniceria(){
 
-          $conectar= parent::conexion();
-    
-          //declaramos que el estado esté activo, igual a 1
-    
-           $estado=1;
- 
-           $sql="select p.estado_producto,c.nombre_categoria,p.id_producto,p.id_categoria,p.nombre_producto,c.id_categoria 
-           from producto as p,categoria as c 
-           where c.id_categoria=p.id_categoria and c.nombre_categoria='carnes' and p.estado_producto=?";
-    
-           $sql=$conectar->prepare($sql);
-           $sql->bindValue(1, $estado);
-           $sql->execute();
-           return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-    
+        $conectar= parent::conexion();
+  
+        //declaramos que el estado esté activo, igual a 1
+  
+        $estado=1;
+
+        $sql="select p.estado_producto,c.nombre_categoria,p.id_producto,p.id_categoria,p.nombre_producto,c.id_categoria 
+        from producto as p,categoria as c 
+        where c.id_categoria=p.id_categoria and c.nombre_categoria='carnes' and p.estado_producto=?";
+
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1, $estado);
+        $sql->execute();
+        return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+  
     
     }
 
@@ -77,23 +74,23 @@
        return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
-}
+     }
 
           //método para seleccionar registros
 
-      public function get_productos_en_ventas(){
+    public function get_productos_en_ventas(){
 
-          $conectar= parent::conexion();
-          $sql= "select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria 
-          from producto p 
-          INNER JOIN categoria c ON p.id_categoria=c.id_categoria
-          where p.stock_producto > 0 and p.estado_producto='1'";
-          $sql=$conectar->prepare($sql);
-          $sql->execute();
-          return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+        $conectar= parent::conexion();
+        $sql= "select p.id_producto,p.id_categoria,p.nombre_producto, p.precio_venta_producto, p.stock_producto, p.estado_producto, p.imagen_producto,c.id_categoria, c.nombre_categoria 
+        from producto p 
+        INNER JOIN categoria c ON p.id_categoria=c.id_categoria
+        where p.stock_producto > 0 and p.estado_producto='1'";
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
+        return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
-         
-         }
+        
+        }
 
 
    /*poner la ruta vistas/upload*/
@@ -112,7 +109,7 @@
   }
           //método para insertar registros
 
-        public function registrar_producto($id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
+    public function registrar_producto($id_categoria,$producto,$precio_venta,$stock,$estado,$imagen,$procedente,$id_usuario){
 
 
             $conectar=parent::conexion();
@@ -136,14 +133,14 @@
 
 
 
-  $imagen_producto = new Producto();
+            $imagen_producto = new Producto();
 
-        
-  $image = '';
-  if($_FILES["producto_imagen"]["name"] != '')
-  {
-    $image = $imagen_producto->upload_image();
-  }
+                  
+            $image = '';
+            if($_FILES["producto_imagen"]["name"] != '')
+            {
+              $image = $imagen_producto->upload_image();
+            }
       
             $sql="insert into producto
             values(null,?,?,?,?,?,?,?,?);";        
@@ -220,16 +217,16 @@
       parent::set_names();
        //declaro que si el campo stock es vacio entonces seria un 0 en caso contrario se pondria el valor que se envia 
 
-         $stock = "";
+      $stock = "";
 
-         if($stock==""){
-                   
-           $stocker=0;
-        
-         } else {
+      if($stock==""){
+                
+        $stocker=0;
+    
+      } else {
 
-            $stocker = $_POST["stock"];
-         }
+        $stocker = $_POST["stock"];
+      }
 
 
       //llamo a la funcion upload_image()
@@ -311,9 +308,7 @@
                      estado_producto=?,
                      imagen_producto=?,
                      id_usuario=?
-                     where 
-                     id_producto=?
-                               ";
+                     where id_producto=?";
 
                       $sql=$conectar->prepare($sql);
                       
@@ -349,9 +344,7 @@
               $sql="update producto set 
                     
                     estado_producto=?
-                    where 
-                    id_producto=?
-                      ";
+                    where  id_producto=? ";
 
                     $sql=$conectar->prepare($sql);
 
@@ -363,18 +356,18 @@
           }
 
 
-          public function get_producto_nombre($producto){
+        public function get_producto_nombre($producto){
 
-              $conectar=parent::conexion();
+            $conectar=parent::conexion();
 
-              $sql= "select * from producto where nombre_producto=?";
+            $sql= "select * from producto where nombre_producto=?";
 
-              $sql=$conectar->prepare($sql);
+            $sql=$conectar->prepare($sql);
 
-              $sql->bindValue(1, $producto);
-              $sql->execute();
-              return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-        }
+            $sql->bindValue(1, $producto);
+            $sql->execute();
+            return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+      }
 
 
         //editar estado del producto por categoria
@@ -395,9 +388,7 @@
       $sql="update producto set 
             
             estado_producto=?
-            where 
-            id_categoria=?
-              ";
+            where  id_categoria=? ";
 
             $sql=$conectar->prepare($sql);
 
@@ -553,19 +544,7 @@
 
       }
 
-        public function eliminar_producto($id_producto){
-
-        $conectar=parent::conexion();
-
-              $sql="delete from producto where id_producto=?";
-
-              $sql=$conectar->prepare($sql);
-
-              $sql->bindValue(1, $id_producto);
-              $sql->execute();
-
-              return $resultado=$sql->fetch(PDO::FETCH_ASSOC);
-      }
+     
         
         public function get_producto_por_id_usuario($id_usuario){
 

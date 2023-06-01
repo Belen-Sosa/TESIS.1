@@ -10,78 +10,68 @@
 
        public function get_filas_proveedor(){
 
-         $conectar= parent::conexion();
-           
-             $sql="select * from proveedor";
-             
-             $sql=$conectar->prepare($sql);
-
-             $sql->execute();
-
-             $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-
-             return $sql->rowCount();
+          $conectar= parent::conexion();  
+          $sql="select * from proveedor";            
+          $sql=$conectar->prepare($sql);
+          $sql->execute();
+          $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+          return $sql->rowCount();
         
         }
 
 
       //método para seleccionar registros
 
-   	   public function get_proveedores(){
+      public function get_proveedores(){
 
-   	   	  $conectar=parent::conexion();
-   	   	  parent::set_names();
+        $conectar=parent::conexion();
+        parent::set_names();
+        $sql="select * from proveedor";
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
 
-   	   	  $sql="select * from proveedor";
-
-   	   	  $sql=$conectar->prepare($sql);
-   	   	  $sql->execute();
-
-   	   	  return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-   	   }
+        return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+      }
 
    	    //método para insertar registros
 
-        public function registrar_proveedor($cuit,$proveedor,$telefono,$correo,$direccion,$estado,$id_usuario){
+      public function registrar_proveedor($cuit,$proveedor,$telefono,$correo,$direccion,$estado,$id_usuario){
 
 
-           $conectar= parent::conexion();
-           parent::set_names();
+          $conectar= parent::conexion();
+          parent::set_names();
 
-           $sql="insert into proveedor
-           values(null,?,?,?,?,?,now(),?,?);";
+          $sql="insert into proveedor
+          values(null,?,?,?,?,?,now(),?,?);";
 
+        
+          $sql=$conectar->prepare($sql);
+
+          $sql->bindValue(1, $_POST["cuit"]);
+          $sql->bindValue(2, $_POST["razon"]);
+          $sql->bindValue(3, $_POST["telefono"]);
+          $sql->bindValue(4, $_POST["email"]);
+          $sql->bindValue(5, $_POST["direccion"]);
+          $sql->bindValue(6, $_POST["estado"]);
+          $sql->bindValue(7, $_POST["id_usuario"]);
+          $sql->execute();
+    
           
-            $sql=$conectar->prepare($sql);
-
-            $sql->bindValue(1, $_POST["cuit"]);
-            $sql->bindValue(2, $_POST["razon"]);
-            $sql->bindValue(3, $_POST["telefono"]);
-            $sql->bindValue(4, $_POST["email"]);
-            $sql->bindValue(5, $_POST["direccion"]);
-            $sql->bindValue(6, $_POST["estado"]);
-            $sql->bindValue(7, $_POST["id_usuario"]);
-            $sql->execute();
-      
-           
-            
-        }
+          
+      }
 
         //método para mostrar los datos de un registro a modificar
-        public function get_proveedor_por_cuit($cuit){
+      public function get_proveedor_por_cuit($cuit){
 
-            
-            $conectar= parent::conexion();
-            parent::set_names();
+        $conectar= parent::conexion();
+        parent::set_names();
+        $sql="select * from proveedor where cuit_proveedor=?";
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1, $cuit);
+        $sql->execute();
+        return $resultado=$sql->fetchAll();
 
-            $sql="select * from proveedor where cuit_proveedor=?";
-
-            $sql=$conectar->prepare($sql);
-
-            $sql->bindValue(1, $cuit);
-            $sql->execute();
-            return $resultado=$sql->fetchAll();
-        }
+      }
 
          //este metodo es para validar el id del proveedor(luego llamamos el metodo de editar_estado()) 
         //el id_proveedor se envia por ajax cuando se editar el boton cambiar estado y que se ejecuta el evento onclick y llama la funcion de javascript
@@ -128,13 +118,10 @@
          require_once("Proveedores.php");
 
          $proveedor = new Proveedor();
-
          //verifica si la cuit tiene registro asociado a compras
          $proveedor_compras=$proveedor->get_proveedor_por_cuit_compras($_POST["cuit_proveedor"]);
-
           //verifica si la cuit tiene registro asociado a detalle_compras
          $proveedor_detalle_compras=$proveedor->get_proveedor_por_cuit_detalle_compras($_POST["cuit_proveedor"]);
-
            //si la cuit del proveedor NO tiene registros asociados en las tablas compras y detalle_compras entonces se puede editar el proveedor completo
         if(is_array($proveedor_compras)==true and count($proveedor_compras)==0 and is_array($proveedor_detalle_compras)==true and count($proveedor_detalle_compras)==0){
 
@@ -148,19 +135,18 @@
                  direccion_proveedor=?,
                  estado_proveedor=?,
                  id_usuario=?
-                 where 
-                 cuit_proveedor=? ";
+                 where cuit_proveedor=? ";
                 
-                  $sql=$conectar->prepare($sql);
-                  $sql->bindValue(1, $_POST["cuit"]);
-                  $sql->bindValue(2, $_POST["razon"]);
-                  $sql->bindValue(3, $_POST["telefono"]);
-                  $sql->bindValue(4, $_POST["email"]);
-                  $sql->bindValue(5, $_POST["direccion"]);
-                  $sql->bindValue(6, $_POST["estado"]);
-                  $sql->bindValue(7, $_POST["id_usuario"]);
-                  $sql->bindValue(8, $_POST["cuit_proveedor"]);
-                  $sql->execute();
+                $sql=$conectar->prepare($sql);
+                $sql->bindValue(1, $_POST["cuit"]);
+                $sql->bindValue(2, $_POST["razon"]);
+                $sql->bindValue(3, $_POST["telefono"]);
+                $sql->bindValue(4, $_POST["email"]);
+                $sql->bindValue(5, $_POST["direccion"]);
+                $sql->bindValue(6, $_POST["estado"]);
+                $sql->bindValue(7, $_POST["id_usuario"]);
+                $sql->bindValue(8, $_POST["cuit_proveedor"]);
+                $sql->execute();
 
 
             } else {
@@ -178,14 +164,14 @@
                where 
                cuit_proveedor=?";
 
-                $sql=$conectar->prepare($sql);     
-                $sql->bindValue(1, $_POST["telefono"]);
-                $sql->bindValue(2, $_POST["email"]);
-                $sql->bindValue(3, $_POST["direccion"]);
-                $sql->bindValue(4, $_POST["estado"]);
-                $sql->bindValue(5, $_POST["id_usuario"]);
-                $sql->bindValue(6, $_POST["cuit_proveedor"]);
-                $sql->execute();
+              $sql=$conectar->prepare($sql);     
+              $sql->bindValue(1, $_POST["telefono"]);
+              $sql->bindValue(2, $_POST["email"]);
+              $sql->bindValue(3, $_POST["direccion"]);
+              $sql->bindValue(4, $_POST["estado"]);
+              $sql->bindValue(5, $_POST["id_usuario"]);
+              $sql->bindValue(6, $_POST["cuit_proveedor"]);
+              $sql->execute();
 
             }
 
@@ -241,16 +227,6 @@
         }
 
        
-         public function eliminar_proveedor($id_proveedor){
-
-              $conectar=parent::conexion();
-              $sql="delete from proveedor where id_proveedor=?";
-              $sql=$conectar->prepare($sql);
-              $sql->bindValue(1, $id_proveedor);
-              $sql->execute();
-              return $resultado=$sql->fetch(PDO::FETCH_ASSOC);
-      }
-
 
         public function get_proveedor_por_id_usuario($id_usuario){
 
@@ -272,11 +248,10 @@
              $conectar=parent::conexion();
              parent::set_names();
 
-
-          $sql="select p.cuit_proveedor,c.cuit_proveedor
-           from proveedor p 
-              INNER JOIN compras c ON p.cuit_proveedor=c.cuit_proveedor
-              where p.cuit_proveedor=?";
+            $sql="select p.cuit_proveedor,c.cuit_proveedor
+            from proveedor p 
+            INNER JOIN compras c ON p.cuit_proveedor=c.cuit_proveedor
+            where p.cuit_proveedor=?";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$cuit_proveedor);

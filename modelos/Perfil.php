@@ -9,8 +9,7 @@
            
            //método para mostrar los datos de un registro a modificar
         public function get_usuario_por_id($id_usuario){
-
-            
+   
             $conectar= parent::conexion();
             parent::set_names();
 
@@ -35,9 +34,6 @@
           $sql->bindValue(1, $dni_usuario);
           $sql->bindValue(2, $email);
           $sql->execute();
-
-          //print_r($dni_usuario); exit();
-
           return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
