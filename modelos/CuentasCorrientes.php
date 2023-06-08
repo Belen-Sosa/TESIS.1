@@ -95,7 +95,7 @@
 
    	     //método para crear cuenta corriente
 
-        public function crear_cuenta_corriente($dni_cliente,$estado){
+        public function crear_cuenta_corriente($id_cliente,$estado){
 
  
          $conectar=parent::conexion();
@@ -110,7 +110,7 @@
           
             $sql=$conectar->prepare($sql);
 
-            $sql->bindValue(1, $dni_cliente);
+            $sql->bindValue(1, $id_cliente);
             $sql->bindValue(2, $saldo);
             $sql->bindValue(3, $estado);
             $sql->execute();

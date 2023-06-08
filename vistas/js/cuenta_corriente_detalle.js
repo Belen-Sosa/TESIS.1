@@ -118,8 +118,7 @@ function listar_detalle_cc()
 		   $("#direccion").html(data.direccion);
 		   $("#fecha_venta").html(data.fecha_venta);
 			
-			//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-		   //alert(data);
+		
 		   
 	   }
    })
@@ -139,9 +138,7 @@ $(document).on('click', '.detalle', function(){
 	   {
 		   
 		   $("#detalles").html(data);
-			
-			//puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-		   //alert(data);
+		
 		   
 	   }
    })

@@ -297,11 +297,8 @@
 
           $sql="select c.fecha_compra,c.numero_compra, c.nombre_proveedor, c.cuit_proveedor,c.total_compra,p.id_proveedor,p.cuit_proveedor,p.nombre_proveedor,p.telefono_proveedor,p.correo_proveedor,p.direccion_proveedor,p.fecha_alta_proveedor,p.estado_proveedor
           from compras as c, proveedor as p
-          where 
-          
-          c.cuit_proveedor_compra=p.cuit_proveedor
-          and
-          c.numero_compra=?;";
+          where c.cuit_proveedor=p.cuit_proveedor
+          and c.numero_compra=?;";
 
           $sql=$conectar->prepare($sql);          
           $sql->bindValue(1,$numero_compra);
@@ -644,8 +641,7 @@
             
             $date_inicial = $_POST["fecha_inicial"];
             $date = str_replace('/', '-', $date_inicial);
-            $fecha_inicial = date("Y-m-d", strtotime($date));
-         
+            $fecha_inicial = date("Y-m-d", strtotime($date)); 
             $date_final = $_POST["fecha_final"];
             $date = str_replace('/', '-', $date_final);
             $fecha_final = date("Y-m-d", strtotime($date));

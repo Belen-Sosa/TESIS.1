@@ -91,66 +91,54 @@ function listar()
 	       
 	}).DataTable();
 }
+//VER DETALLE PROVEEDOR-COMPRA
 
-     //VER DETALLE PROVEEDOR-COMPRA
-	 $(document).on('click', '.detalle', function(){
-	 	//toma el valor del id
-		var numero_compra = $(this).attr("id");
+ $(document).on('click', '.detalle', function(){
+	//toma el valor del id
+	var numero_compra = $(this).attr("id");
+	console.log("id:" + numero_compra);
 
-		$.ajax({
-			url:"../ajax/compras.php?op=ver_detalle_proveedor_compra",
-			method:"POST",
-			data:{numero_compra:numero_compra},
-			cache:false,
-			dataType:"json",
-			success:function(data)
-			{
-				
-				$("#proveedor").html(data.proveedor);
-				$("#numero_compra").html(data.numero_compra);
-				$("#cuit_proveedor").html(data.cuit_proveedor);
-				$("#direccion").html(data.direccion);
-				$("#fecha_compra").html(data.fecha_compra);
-                 
-                 //puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-				//alert(data);
-				
-			}
-		})
-	});
+   $.ajax({
+	url:"../ajax/compras.php?op=ver_detalle_proveedor_compra",
+	   method:"POST",
+	   data:{numero_compra:numero_compra},
+	   cache:false,
+	   dataType:"json",
+	   success:function(data)
+	   {
+		$("#proveedor").html(data.nombre_proveedor);
+		$("#numero_compra").html(data.numero_compra);
+		$("#cuit_proveedor").html(data.cuit_proveedor);
+		$("#direccion").html(data.direccion_proveedor);
+		$("#fecha_compra").html(data.fecha_compra);
+	 }
+   })
+});
 
 
-	  //VER DETALLE COMPRA
-	 $(document).on('click', '.detalle', function(){
-	 	//toma el valor del id
-		var numero_compra = $(this).attr("id");
+ //VER DETALLE COMPRA
+$(document).on('click', '.detalle', function(){
+	//toma el valor del id
+   var numero_compra = $(this).attr("id");
 
-		$.ajax({
-			url:"../ajax/compras.php?op=ver_detalle_compra",
-			method:"POST",
-			data:{numero_compra:numero_compra},
-			cache:false,
-			//dataType:"json",
-			success:function(data)
-			{
-				
-				$("#detalles").html(data);
-                 
-                 //puse el alert para ver el error, sin necesidad de hacer echo en la consulta ni nada
-				//alert(data);
-				
-			}
-		})
-	});
+   $.ajax({
+	   url:"../ajax/compras.php?op=ver_detalle_compra",
+	   method:"POST",
+	   data:{numero_compra:numero_compra},
+	   cache:false,
+	   success:function(data)
+	   {
+		   
+		   $("#detalles").html(data);
+		   
+	   }
+   })
+});
 
 	 //CAMBIAR ESTADO DE LA COMPRA
 
    
     function cambiarEstado(id_compras, numero_compra, est){
-    
-
-    //alert(numero_compra);
-    	
 
 	bootbox.confirm("¿Estas seguro que quieres cambiar el estado de esta compra?", function(result){
 		if(result)
@@ -160,8 +148,6 @@ function listar()
 			$.ajax({
 				url:"../ajax/compras.php?op=cambiar_estado_compra",
 				 method:"POST",
-				//data:dataString,
-				//toma el valor del id y del estado
 				data:{id_compras:id_compras,numero_compra:numero_compra, est:est},
 				cache: false,
 				
@@ -195,9 +181,6 @@ function listar()
            	var fecha_inicial= $("#datepicker").val();
            	var fecha_final= $("#datepicker2").val();
 
-           	//alert(fecha_inicial);
-           	//alert(fecha_final);
-
         //validamos si existe las fechas entonces se ejecuta el ajax
 
         if(fecha_inicial!="" && fecha_final!=""){
@@ -219,7 +202,6 @@ function listar()
 	         "ajax":{
 	            url:"../ajax/compras.php?op=buscar_compras_fecha",
                 type : "post",
-				//dataType : "json",
 				data:{fecha_inicial:fecha_inicial,fecha_final:fecha_final},						
 				error: function(e){
 					console.log(e.responseText);
@@ -300,13 +282,9 @@ function listar()
 
            $(document).on("click","#btn_compra_fecha_mes", function(){
 
-           	//var proveedor= $("#proveedor").val();
-
            	var mes= $("#mes").val();
            	var ano= $("#ano").val();
 
-           	//alert(mes);
-           	//alert(ano);
 
         //validamos si existe las fechas entonces se ejecuta el ajax
 
@@ -326,7 +304,6 @@ function listar()
 	         "ajax":{
 	            url:"../ajax/compras.php?op=buscar_compras_fecha_mes",
                 type : "post",
-				//dataType : "json",
 				data:{mes:mes,ano:ano},						
 				error: function(e){
 					console.log(e.responseText);
@@ -389,8 +366,6 @@ function listar()
 			    }
 
 			   }, //cerrando language
-
-			    //"scrollX": true
 
 
 

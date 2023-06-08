@@ -165,6 +165,7 @@
                             <option value="">SELECCIONE TIPO DE PAGO</option>
                             <option value="EFECTIVO">PAGAR CON EFECTIVO</option>
                             <option value="TRANSFERENCIA">PAGAR CON TRANSFERENCIA</option>
+                            <option value="TARJETA">PAGAR CON TARJETA</option>
                           </select>
                     </div>
                   </div>

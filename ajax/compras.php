@@ -24,10 +24,10 @@
 				foreach($datos as $row)
 				{
 					
-					$output["proveedor"] = $row["nombre_proveedor"];
+					$output["nombre_proveedor"] = $row["nombre_proveedor"];
 					$output["numero_compra"] = $row["numero_compra"];
 					$output["cuit_proveedor"] = $row["cuit_proveedor"];
-					$output["direccion"] = $row["direccion_proveedor"];
+					$output["direccion_proveedor"] = $row["direccion_proveedor"];
 					$output["fecha_compra"] = date("d-m-Y", strtotime($row["fecha_compra"]));
 									
 				}

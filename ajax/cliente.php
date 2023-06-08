@@ -59,22 +59,26 @@
 						$datos=$clientes->get_cliente_por_dni($_POST["dni"]);
 
 						// si existe el id del cliente entonces recorre el array
-						if(is_array($datos)==true and count($datos)>0){
+						if(is_array($datos)==true  and count($datos)>0){
 							foreach($datos as $row)
 							{
 								$id_cliente=$row["id_cliente"];
 							
+								require_once("../modelos/consolelog.php");
+						
+								echo Console::log('un_nombre',$id_cliente );
 						  
 							}
 
 							if($_POST["habilitar_cc"]=="1"){
-									//me dijo si existe ya la cuenta corriente
-									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
-								if(is_array($datos_cc)==false){
+								//me fijo si existe ya la cuenta corriente
+								$datos_cc=$cuentas_corrientes->get_idcc_por_cliente($id_cliente);
+								if(is_array($datos_cc)==true and count($datos_cc)==0){
+									
 								//se crea la cuenta corriente del usuario
 								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								//edita el estado del cliente
-								$messages[]="cc creada";
+								$messages[]="cuenta corriente creada con exito.";
 								}
 							}
 						
@@ -124,18 +128,22 @@
 							}
 
 							if($_POST["habilitar_cc"]=="1"){
+								require_once("../modelos/consolelog.php");
+						
+								echo Console::log('un_nombre',$id_cliente );
 								
-									//me dijo si existe ya la cuenta corriente
-									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
-									if(is_array($datos_cc==false)){
-								//se crea la cuenta corriente del usuario
-								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
-								//edita el estado del cliente
-									}
+								//me dijo si existe ya la cuenta corriente
+								$datos_cc=$cuentas_corrientes->get_idcc_por_cliente($id_cliente);
+								if(is_array($datos_cc==true and count($datos_cc)==0)){
+									echo Console::log('un_nombre',"se quiere crear la cc" );
+									//se crea la cuenta corriente del usuario
+									$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
+									//edita el estado del cliente
+								}
 							}else if($_POST["habilitar_cc"]=="0"){
 								$cuentas_corrientes->editar_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
-								
-								
+									
+									
 							}
 						
 

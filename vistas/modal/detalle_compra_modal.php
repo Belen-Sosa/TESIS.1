@@ -26,7 +26,7 @@
                             <tr>
                               <th>Proveedor</th>
                               <th>Número Compra</th>
-                              <th>Cédula Proveedor</th>
+                              <th>Cuit Proveedor</th> 
                               <th>Dirección</th>
                               <th>Fecha Compra</th>
                             </tr>

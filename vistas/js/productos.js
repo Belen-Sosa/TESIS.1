@@ -278,7 +278,7 @@ function guardaryeditar(e)
 
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
-				setTimeout('document.location.reload()',5000);
+				setTimeout('document.location.reload()',10);
                limpiar();
 					
 		    }
