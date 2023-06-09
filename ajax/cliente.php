@@ -70,7 +70,7 @@
 							if($_POST["habilitar_cc"]=="1"){
 									//me dijo si existe ya la cuenta corriente
 									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
-								if(is_array($datos_cc)==false){
+								if(is_array($datos_cc)==true and count($datos_cc)==0 ){
 								//se crea la cuenta corriente del usuario
 								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								//edita el estado del cliente
@@ -113,34 +113,33 @@
 
 	             $clientes->editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario);
 				 $datos=$clientes->get_cliente_por_dni($_POST["dni"]);
-
 						// si existe el id del cliente entonces recorre el array
 						if(is_array($datos)==true and count($datos)>0){
+																
 							foreach($datos as $row)
 							{
 								$id_cliente=$row["id_cliente"];
-							
-						  
+						
 							}
-
+							
 							if($_POST["habilitar_cc"]=="1"){
 								
-									//me dijo si existe ya la cuenta corriente
-									$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
-									if(is_array($datos_cc==false)){
+								//me dijo si existe ya la cuenta corriente
+								$datos_cc=$cuentas_corrientes->get_cc_por_cliente($id_cliente);
+								
+								if(is_array($datos_cc)==true and count($datos_cc)==0 ){									
 								//se crea la cuenta corriente del usuario
 								$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 								//edita el estado del cliente
-									}
+								}
 							}else if($_POST["habilitar_cc"]=="0"){
-								$cuentas_corrientes->editar_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
-								
+								$cuentas_corrientes->editar_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);	
 								
 							}
 						
 
 						}
-	            	  $messages[]="El cliente se editó correctamente";
+	            	    $messages[]="El cliente se editó correctamente";
                 
 	            	 
 	            }
