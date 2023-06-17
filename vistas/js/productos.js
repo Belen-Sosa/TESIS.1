@@ -458,7 +458,7 @@ function listar_en_compras(){
 							codProd  : id_producto,
 							codCat   : data.id_categoria,
 							producto : data.producto,
-							precio   : data.precio_compra,
+							precio   : 0,
 							stock    : data.stock,
 							dscto    : 0,
 							importe  : 0,
@@ -541,6 +541,9 @@ function listar_en_compras(){
 		
 		
 			}
+			if(importe==NaN){
+				importe=0;
+			}
 		
 	
 				subtotal = subtotal + importe;  
@@ -585,7 +588,7 @@ obj.value es el valor del campo de texto*/
   function recalcular(idx){
 
 	if(detalles[idx].nombre_categoria == "carnes" ||  detalles[idx].nombre_categoria=="quesos" || detalles[idx].nombre_categoria== "fiambres" ){
-		console.log("hola");
+		
 		var importe =detalles[idx].importe = (detalles[idx].precio/1000)*detalles[idx].cantidad ;
 		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
 		
@@ -601,6 +604,10 @@ obj.value es el valor del campo de texto*/
 
 
 	}
+	if(isNaN(importe)){
+		importe=0;
+	   }
+  	
 
 	
   	
@@ -627,9 +634,10 @@ obj.value es el valor del campo de texto*/
 	for(var i=0; i<detalles.length; i++){
   		if(detalles[i].estado == 1){
 			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
-			if(isNaN(subtotal)){
+			if(subtotal==NaN){
 				subtotal=0;
-			   }
+		
+			}
             subtotalFinal ="$ "+subtotal;
 
             var total= subtotal;
@@ -639,6 +647,11 @@ obj.value es el valor del campo de texto*/
           
 		}
 	}
+	if(subtotal==NaN){
+		subtotal=0;
+
+	}
+
 
 	
 
@@ -707,31 +720,11 @@ obj.value es el valor del campo de texto*/
 			console.log(z);
 		},
          
-         //IMPORTANTE:hay que considerar que esta prueba lo hice sin haber creado la funcion agrega_detalle_compra()
-		 /*IMPORTANTE: para imprimir el sql en registrar_compra.php, se comenta el typeof y se descomenta console.log(data);
-               y en registrar_compra.php que seria la funcion agrega_detalle_compra(); comente $conectar,  $sql=$conectar->prepare($sql); y los parametros enumerados y $sql->execute(),
-               me quede solo con los parametros que estan en el foreach, la consulta $sql (insert) y el echo $sql, luego se me muestra un alert con la consulta 
-               lo que hice fue concatenar y meter las variables en la consulta y sustituirla por ? ejemplo $sql="insert into detalle_compra
-        values(null,'".$numero_compra."','".$producto."','".$precio."','".$cantidad."','".$dscto."','".$cuit_proveedor."','".$fecha_compra."');"; 
-        luego agrego un producto y creo la consulta con los valores reales por ejemplo insert into detalle_compra values(null,'F000001','ganchate','900','1','0','666666','01/01/1970'); y lo inserto en phpmyadmin
-
-        Antes hice un alert con estas variables (antes hay que llenar el formulario para poder mostrar los valores con el alert)
-        var numero_compra = $("#numero_compra").val();
-	    var cuit = $("#cuit").val();
-	    var razon = $("#razon").val();
-	    var direccion = $("#direccion").val();
-	    var datepicker = $("#datepicker").val();
-
-         */
+         
 			
 		success:function(data){
 			//IMPORTANTE: esta se descomenta cuando imprimo el console.log
 		
-			console.log(data);
-    
-
-            //IMPORTANTE:limpia los campos despues de enviarse
-            //cuando se imprime el alert(data) estas variables deben comentarse
 		
 			var cuit = $("#cuit").val("");
 		    var razon = $("#razon").val("");
@@ -961,8 +954,6 @@ function listar_en_ventas(){
   	
   	var subtotal = 0;
 
-  	var total = 0;
-
     var subtotalFinal = 0;
 
   	var totalFinal = 0;
@@ -1049,13 +1040,6 @@ function setCantidad(event, obj, idx){
 
          success:function(data){
 
-         	
-       
-
-
-             //console.log(data);
-
-
             
               $("#resultados_ventas_ajax").html(data);
 
@@ -1113,9 +1097,8 @@ function setCantidad(event, obj, idx){
 	console.log(detalles);
 	console.log(idx);
 	if(detalles[idx].nombre_categoria == "carnes" ||  detalles[idx].nombre_categoria=="quesos" || detalles[idx].nombre_categoria== "fiambres" ){
-		console.log("hola");
+	
 		var importe =detalles[idx].importe = (detalles[idx].precio/1000)*detalles[idx].cantidad ;
-		console.log("el importe " + importe );
 
 		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
 		
@@ -1152,7 +1135,7 @@ function setPrecioCompra(event, obj, idx){
 	
 	event.preventDefault();
   console.log("detalles[idx].precio"+detalles[idx].precio);
-  if( parseInt(obj.value)!=NaN){
+   if( parseInt(obj.value)!=NaN){
 	detalles[idx].precio = parseInt(obj.value);
   }else{
 	detalles[idx].precio =0;
@@ -1198,6 +1181,10 @@ function setPrecioCompra(event, obj, idx){
 		
 		
 			}
+			if(subtotal==NaN){
+				subtotal=0;
+
+			}
 		
 
             subtotalFinal ="$ "+subtotal.toFixed(2);
@@ -1206,6 +1193,7 @@ function setPrecioCompra(event, obj, idx){
             var total= subtotal.toFixed(2);
 
             totalFinal = "$ "+total;
+		
 		}
 	}
 
@@ -1338,13 +1326,8 @@ obj.value es el valor del campo de texto*/
 						
 					success:function(data){
 						
-							
-			
-				
 						
 						console.log(data);
-						
-						//alert(data);
 			
 						//IMPORTANTE:limpia los campos despues de enviarse
 						//cuando se imprime el alert(data) estas variables deben comentarse
@@ -1382,18 +1365,14 @@ obj.value es el valor del campo de texto*/
 			
 		
               //muestra un mensaje de exito
-           // setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
+            setTimeout ("bootbox.alert('Se ha registrado la venta');", 100); 
           
           //refresca la pagina, se llama a la funtion explode
-         // setTimeout ("explode();", 2000); 
+          setTimeout ("explode();", 2000); 
        
 		}
 
 	});	
-
-
-
-	
 
 	
       } 
@@ -1455,7 +1434,6 @@ function habilitar_stock(id_procedente){
 	if(d != "0"){
 		$('#stock').attr('disabled', false);
 			
-	
      	//muestra un mensaje de exito
 
 	}else{
