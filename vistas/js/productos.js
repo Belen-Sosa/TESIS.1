@@ -869,8 +869,7 @@ function listar_en_ventas(){
 	sirve para calcular la longitud del arreglo o el 
 	numero de objetos que tiene el arreglo, que es lo mismo Y es por eso que 
 	lo necesito en el for. Claro que puedes agregarle un id y name al td*/
-    
-    //este es un arreglo vacio
+   
 	var detalles = [];
 
 	
