@@ -2,9 +2,6 @@
 
   //conexion a la base de datos
 
-   //require_once("../config/conexion.php");
-
-
    class Usuarios extends Conectar {
 
 
@@ -45,11 +42,7 @@
                  exit();
 
 
-                }
-
-                
-
-             else {
+             }  else {
 
                   $sql= "select * from usuarios where correo_usuario=? and password_usuario=? and estado_usuario=?";
 
@@ -72,45 +65,42 @@
                        $_SESSION["apellido"] = $resultado["apellido_usuario"];
 
                   
-       //PERMISOS DEL USUARIO PARA ACCEDER A LOS MODULOS
+        //PERMISOS DEL USUARIO PARA ACCEDER A LOS MODULOS
 
-        require_once("Usuarios.php");
+          require_once("Usuarios.php");
 
-        $usuario = new Usuarios();
-        
-       //VERIFICAMOS SI EL USUARIO TIENE PERMISOS A CIERTOS MODULOS
-        $marcados = $usuario->listar_permisos_por_usuario($resultado["id_usuario"]);
-        
-        //print_r($marcados);
-
-      //declaramos el array para almacenar todos los registros marcados
-
-       $valores=array();
-
-      //Almacenamos los permisos marcados en el array
-
-          foreach($marcados as $row){
-
-              $valores[]= $row["id_permiso"];
-          }
-
-
-      ////Determinamos los accesos del usuario
-      //si los id_permiso estan en el array $valores entonces se ejecuta la session=1, en caso contrario el usuario no tendria acceso al modulo
-      
-      in_array(1,$valores)?$_SESSION['categoria']=1:$_SESSION['categoria']=0;
-      //in_array(2,$valores)?$_SESSION['presentacion']=1:$_SESSION['presentacion']=0;
-      in_array(2,$valores)?$_SESSION['productos']=1:$_SESSION['productos']=0;
-      in_array(3,$valores)?$_SESSION['proveedores']=1:$_SESSION['proveedores']=0;
-      in_array(4,$valores)?$_SESSION['compras']=1:$_SESSION['compras']=0;
-      in_array(5,$valores)?$_SESSION['clientes']=1:$_SESSION['clientes']=0;
-      in_array(6,$valores)?$_SESSION['ventas']=1:$_SESSION['ventas']=0;
-      in_array(7,$valores)?$_SESSION['reporte_compras']=1:$_SESSION['reporte_compras']=0;
-      in_array(8,$valores)?$_SESSION['reporte_ventas']=1:$_SESSION['reporte_ventas']=0;
-      in_array(9,$valores)?$_SESSION['usuarios']=1:$_SESSION['usuarios']=0;
-      //in_array(10,$valores)?$_SESSION['backup']=1:$_SESSION['backup']=0;
-      in_array(10,$valores)?$_SESSION['empresa']=1:$_SESSION['empresa']=0;
+          $usuario = new Usuarios();
           
+        //VERIFICAMOS SI EL USUARIO TIENE PERMISOS A CIERTOS MODULOS
+          $marcados = $usuario->listar_permisos_por_usuario($resultado["id_usuario"]);
+          
+
+        //declaramos el array para almacenar todos los registros marcados
+
+        $valores=array();
+
+        //Almacenamos los permisos marcados en el array
+
+            foreach($marcados as $row){
+
+                $valores[]= $row["id_permiso"];
+            }
+
+
+        ////Determinamos los accesos del usuario
+        //si los id_permiso estan en el array $valores entonces se ejecuta la session=1, en caso contrario el usuario no tendria acceso al modulo
+        
+        in_array(1,$valores)?$_SESSION['categoria']=1:$_SESSION['categoria']=0;
+        in_array(2,$valores)?$_SESSION['productos']=1:$_SESSION['productos']=0;
+        in_array(3,$valores)?$_SESSION['proveedores']=1:$_SESSION['proveedores']=0;
+        in_array(4,$valores)?$_SESSION['compras']=1:$_SESSION['compras']=0;
+        in_array(5,$valores)?$_SESSION['clientes']=1:$_SESSION['clientes']=0;
+        in_array(6,$valores)?$_SESSION['ventas']=1:$_SESSION['ventas']=0;
+        in_array(7,$valores)?$_SESSION['reporte_compras']=1:$_SESSION['reporte_compras']=0;
+        in_array(8,$valores)?$_SESSION['reporte_ventas']=1:$_SESSION['reporte_ventas']=0;
+        in_array(9,$valores)?$_SESSION['usuarios']=1:$_SESSION['usuarios']=0;
+        in_array(10,$valores)?$_SESSION['empresa']=1:$_SESSION['empresa']=0;
+            
 
       //FIN PERMISOS DEL USUARIO   
 
@@ -134,22 +124,22 @@
             }//condicion enviar
         }
 
-       //listar los usuarios
-   	    public function get_usuarios(){
+    //listar los usuarios
+      public function get_usuarios(){
 
-   	    	$conectar=parent::conexion();
-   	    	parent::set_names();
+        $conectar=parent::conexion();
+        parent::set_names();
 
-   	    	$sql="select * from usuarios";
+        $sql="select * from usuarios";
 
-   	    	$sql=$conectar->prepare($sql);
-   	    	$sql->execute();
+        $sql=$conectar->prepare($sql);
+        $sql->execute();
 
-   	    	return $resultado=$sql->fetchAll();
-   	    }
+        return $resultado=$sql->fetchAll();
+      }
 
         //metodo para registrar usuario
-   	    public function registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos){
+   	  public function registrar_usuario($nombre,$apellido,$dni_usuario,$telefono,$email,$direccion,$usuario,$password1,$password2,$estado,$permisos){
 
              $conectar=parent::conexion();
              parent::set_names();
@@ -267,7 +257,7 @@
                      $sql_delete->execute();
            
 
-                        //insertamos los permisos
+                   //insertamos los permisos
                     
                     //almacena todos los checkbox que han sido marcados
                     //este es un array tiene un name=permiso[]
@@ -313,8 +303,6 @@
                   id_usuario=?
 
                 ";
-                  
-                 //echo $sql; exit();
 
                   $sql=$conectar->prepare($sql);
 
@@ -336,7 +324,7 @@
                      $sql_delete=$conectar->prepare($sql_delete);
                      $sql_delete->bindValue(1,$_POST["id_usuario"]);
                      $sql_delete->execute();
-                     //$resultado=$sql_delete->fetchAll();
+                    
 
 
                         //insertamos los permisos
@@ -351,9 +339,6 @@
                       }
 
                       
-                     
-
-                       //print_r($_POST);
              
               
                          $num_elementos=0;

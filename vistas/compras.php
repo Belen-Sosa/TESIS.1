@@ -97,10 +97,10 @@
               </div>
 
               <div class="form-group">
-                  <label for="" class="col-lg-3 control-label">Razón Social</label>
+                  <label for="" class="col-lg-3 control-label">Nombre</label>
 
                   <div class="col-lg-9">
-                    <input type="text" class="form-control" id="razon" name="razon" placeholder="Razón Social" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$" readonly>
+                    <input type="text" class="form-control" id="razon" name="razon" placeholder="Nombre" required pattern="^[a-zA-Z_áéíóúñ\s]{0,30}$" readonly>
                   </div>
               </div>
 

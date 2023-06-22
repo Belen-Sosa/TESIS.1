@@ -7,21 +7,6 @@
 	   class CuentaCorriente extends Conectar{
 
 
-      public function get_filas_ventas_cc(){
-
-             $conectar= parent::conexion();
-           
-             $sql="select * from ventas where tipo_pago_venta='CUENTA CORRIENTE'";
-             
-             $sql=$conectar->prepare($sql);
-
-             $sql->execute();
-
-             $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
-
-             return $sql->rowCount();
-        
-        }
       //toma todas las ventas del cliente hechas en cc
         public function get_filas_ventas_cc_cliente($dni_cliente){
 
@@ -141,10 +126,7 @@
         	 $sql="update cuentas_corrientes set 
               
               estado_cc=?
-              where 
-              id_cuentas_corrientes=?
-
-        	 ";
+              where   id_cuentas_corrientes=?	 ";
 
         	 $sql=$conectar->prepare($sql);
 
@@ -377,29 +359,29 @@
 
         //consulta si la cuenta corriente tiene registros 
        
-        public function get_registros_por_cc($id_cliente){
+      public function get_registros_por_cc($id_cliente){
 
-                 
-             $conectar=parent::conexion();
-             parent::set_names();
-
-
-             $sql="select *
-             from detalle_cuentas_corrientes d 
-             
-             INNER JOIN cuentas_corrientes c ON c.id_cliente=d.id_cliente
+                
+            $conectar=parent::conexion();
+            parent::set_names();
 
 
-             where c.id_cliente=?
-              ";
+            $sql="select *
+            from detalle_cuentas_corrientes d 
+            
+            INNER JOIN cuentas_corrientes c ON c.id_cliente=d.id_cliente
 
-             $sql=$conectar->prepare($sql);
-             $sql->bindValue(1,$dni_cliente);
-             $sql->execute();
 
-             return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
-      
-       }
+            where c.id_cliente=?
+            ";
+
+            $sql=$conectar->prepare($sql);
+            $sql->bindValue(1,$dni_cliente);
+            $sql->execute();
+
+            return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+    
+      }
 
 public function get_ventas_por_id_detalle_cc($id_detalle_cc){
 

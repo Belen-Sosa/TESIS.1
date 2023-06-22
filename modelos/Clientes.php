@@ -12,12 +12,9 @@
 
              $conectar= parent::conexion();
            
-             $sql="select * from clientes";
-             
+             $sql="select * from clientes";          
              $sql=$conectar->prepare($sql);
-
              $sql->execute();
-
              $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
              return $sql->rowCount();
@@ -25,16 +22,14 @@
         }
 
            
-       //método para seleccionar registros
+      //método para seleccionar registros
 
       public function get_clientes(){
        
 
             $conectar=parent::conexion();
             parent::set_names();
-
             $sql="select * from clientes";
-
             $sql=$conectar->prepare($sql);
             $sql->execute();
 
@@ -42,7 +37,7 @@
       }
 
 
-   	     //método para insertar registros
+   	//método para insertar registros
 
       public function registrar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario){
 
@@ -63,16 +58,8 @@
          $sql->bindValue(5, $_POST["direccion"]);
          $sql->bindValue(6, $_POST["estado"]);
          $sql->bindValue(7, $_POST["id_usuario"]);
-       
-         
          $sql->execute();
             
-
-         
-
-         
-
-      
       }
 
 
@@ -82,11 +69,8 @@
          
          $conectar= parent::conexion();
          parent::set_names();
-
          $sql="select * from clientes where dni_cliente=?";
-
          $sql=$conectar->prepare($sql);
-
          $sql->bindValue(1, $dni);
          $sql->execute();
          return $resultado=$sql->fetchAll();
@@ -101,34 +85,27 @@
       public function get_cliente_por_id($id_cliente){
 
          $conectar= parent::conexion();
-
-         //$output = array();
-
          $sql="select * from clientes where id_cliente=?";
 
-               $sql=$conectar->prepare($sql);
-
-               $sql->bindValue(1, $id_cliente);
-               $sql->execute();
-
-               return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+         $sql=$conectar->prepare($sql);
+         $sql->bindValue(1, $id_cliente);
+         $sql->execute();
+         return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
       } 
 
-         //método para editar un registro
+      //método para editar un registro
        
-        public function editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario){
+      public function editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario){
 
         	$conectar=parent::conexion();
         	parent::set_names();
 
-        	 require_once("Clientes.php");
-
-            $cliente = new Cliente();
-
-              //verifica si la dni tiene registro asociado a ventas
-          $cliente_ventas=$cliente->get_cliente_por_dni_ventas($_POST["dni_cliente"]);
+         require_once("Clientes.php");
+         $cliente = new Cliente();
+         //verifica si la dni tiene registro asociado a ventas
+         $cliente_ventas=$cliente->get_cliente_por_dni_ventas($_POST["dni_cliente"]);
 
           //verifica si la dni tiene registro asociado a detalle_ventas
           $cliente_detalle_ventas=$cliente->get_cliente_por_dni_detalle_ventas($_POST["dni_cliente"]);
@@ -151,25 +128,23 @@
                 ";
                 
 
-                      $sql=$conectar->prepare($sql);
-
-                      $sql->bindValue(1, $_POST["dni"]);
-                      $sql->bindValue(2, $_POST["nombre"]);
-                      $sql->bindValue(3, $_POST["apellido"]);
-                      $sql->bindValue(4, $_POST["telefono"]);
-                      $sql->bindValue(5, $_POST["direccion"]);
-                      $sql->bindValue(6, $_POST["estado"]);
-                      $sql->bindValue(7, $_POST["id_usuario"]);
-                      $sql->bindValue(8, $_POST["dni_cliente"]);
-                      $sql->execute();
+               $sql=$conectar->prepare($sql);
+               $sql->bindValue(1, $_POST["dni"]);
+               $sql->bindValue(2, $_POST["nombre"]);
+               $sql->bindValue(3, $_POST["apellido"]);
+               $sql->bindValue(4, $_POST["telefono"]);
+               $sql->bindValue(5, $_POST["direccion"]);
+               $sql->bindValue(6, $_POST["estado"]);
+               $sql->bindValue(7, $_POST["id_usuario"]);
+               $sql->bindValue(8, $_POST["dni_cliente"]);
+               $sql->execute();
 
             } else{
 
 
                      //si el cliente tiene registros asociados en ventas y detalle_ventas entonces NO se edita la dni del dni, nombre y apellido
 
-                     $sql="update clientes set 
-                             
+                     $sql="update clientes set                       
                          telefono_cliente=?,
                          direccion_cliente=?,
                          estado_cliente=?,
@@ -220,7 +195,7 @@
          }
 
 
-          //método para activar Y/0 desactivar el estado del cliente
+         //método para activar Y/0 desactivar el estado del cliente
 
         public function editar_estado($id_cliente,$estado){
 
@@ -258,16 +233,11 @@
         public function get_datos_cliente($dni,$cliente){
 
            $conectar=parent::conexion();
-
            $sql= "select * from clientes where dni_cliente=? or nombre_cliente=? ";
-
 	        $sql=$conectar->prepare($sql);
-
 	        $sql->bindValue(1, $dni);
 	        $sql->bindValue(2, $cliente);
 	        $sql->execute();
-
-           //print_r($email); exit();
 
            return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -278,9 +248,7 @@
                 $conectar=parent::conexion();
 
                 $sql="delete from clientes where id_cliente=?";
-
                 $sql=$conectar->prepare($sql);
-
                 $sql->bindValue(1, $id_cliente);
                 $sql->execute();
 
@@ -290,40 +258,30 @@
 
          public function get_cliente_por_id_usuario($id_usuario){
 
-           $conectar= parent::conexion();
+         $conectar= parent::conexion();
+         $sql="select * from clientes where id_usuario=?";
+         $sql=$conectar->prepare($sql);
+         $sql->bindValue(1, $id_usuario);
+         $sql->execute();
 
- 
-           $sql="select * from clientes where id_usuario=?";
-
-            $sql=$conectar->prepare($sql);
-
-            $sql->bindValue(1, $id_usuario);
-            $sql->execute();
-
-            return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+         return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
 
       }
 
 
-         //consulta si la dni del cliente con tiene un detalle_venta asociado
-    public function get_cliente_por_dni_ventas($dni_cliente){
+      //consulta si la dni del cliente con tiene un detalle_venta asociado
+      public function get_cliente_por_dni_ventas($dni_cliente){
 
              
              $conectar=parent::conexion();
              parent::set_names();
 
 
-             $sql="select c.dni_cliente,v.dni_cliente
-                 
-              from clientes c 
-              
+             $sql="select c.dni_cliente,v.dni_cliente              
+              from clientes c       
               INNER JOIN ventas v ON c.dni_cliente=v.dni_cliente
-
-
-              where c.dni_cliente=?
-
-              ";
+              where c.dni_cliente=? ";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$dni_cliente);
@@ -344,19 +302,13 @@
 
 
              $sql="select c.dni_cliente,d.dni_cliente
-              from clientes c 
-              
+              from clientes c    
               INNER JOIN detalle_ventas d ON c.dni_cliente=d.dni_cliente
-
-
-              where c.dni_cliente=?
-
-              ";
+              where c.dni_cliente=? ";
 
              $sql=$conectar->prepare($sql);
              $sql->bindValue(1,$dni_cliente);
              $sql->execute();
-
              return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
       
        }

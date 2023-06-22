@@ -8,16 +8,12 @@
       class Compras extends Conectar{
 
 
-             public function get_filas_compra(){
+        public function get_filas_compra(){
 
-             $conectar= parent::conexion();
-           
-             $sql="select * from compras";
-             
+             $conectar= parent::conexion();   
+             $sql="select * from compras";          
              $sql=$conectar->prepare($sql);
-
              $sql->execute();
-
              $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
 
              return $sql->rowCount();
@@ -25,25 +21,19 @@
         }
 
 
-      	     public function get_compras(){
+      	public function get_compras(){
 
-             $conectar= parent::conexion();
-           
-             $sql="select * from compras";
-             
+             $conectar= parent::conexion();          
+             $sql="select * from compras";        
              $sql=$conectar->prepare($sql);
-
              $sql->execute();
-
              return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
         
         }
 
-        public function get_compras_por_id($id_compras){
+   public function get_compras_por_id($id_compras){
 
              $conectar= parent::conexion();
-
-           
              $sql="select * from compras where id_compras=?";
              
              $sql=$conectar->prepare($sql);
@@ -69,29 +59,29 @@
 		    $sql->execute();
 		    $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
-		       //aqui selecciono solo un campo del array y lo recorro que es el campo numero_compra
-		       foreach($resultado as $k=>$v){
+        //aqui selecciono solo un campo del array y lo recorro que es el campo numero_compra
+        foreach($resultado as $k=>$v){
 
-		                 $numero_compra["numero"]=$v["numero_compra"];
+                  $numero_compra["numero"]=$v["numero_compra"];
 
-		                 
-		             }
-		          //luego despues de tener seleccionado el numero_compra digo que si el campo numero_compra està vacio entonces se le asigna un F000001 de lo contrario ira sumando
+                  
+       }
+		   //luego despues de tener seleccionado el numero_compra digo que si el campo numero_compra està vacio entonces se le asigna un F000001 de lo contrario ira sumando
 
 		        
 
-		                   if(empty($numero_compra["numero"]))
-		                {
-		                  echo 'F000001';
-		                }else
-		          
-		                  {
-		                    $num     = substr($numero_compra["numero"] , 1);
-		                    $dig     = $num + 1;
-		                    $fact = str_pad($dig, 6, "0", STR_PAD_LEFT);
-		                    echo 'F'.$fact;
-		                    
-		                  } 
+        if(empty($numero_compra["numero"]))
+        {
+          echo 'F000001';
+        }else
+  
+          {
+            $num     = substr($numero_compra["numero"] , 1);
+            $dig     = $num + 1;
+            $fact = str_pad($dig, 6, "0", STR_PAD_LEFT);
+            echo 'F'.$fact;
+            
+          } 
 
 		  }
 
@@ -108,30 +98,6 @@
 
     
 
-        /*IMPORTANTE:Esas variables NO las puedes usar fuera del foreach
-      Por que se crean dentro. con cada producto para el INSERT, 
-
-      hay dos formas de hacer esto:
-      1,. Es la más fácil, que es dentro del bucle 
-      2..- La más difícil, que es fuera del bucle
-      Cuando es dentro, lo que vas a hacer es un insert por cada producto
-      Imagina que son 10 productos los que seleccionaste, entonces dentro del bucle , tendrías 1 insert por esos 10, es decir en total harías 10 inserts
-      Por que le envías producto por producto
-      En cambio cuando es fuera del bucle, haces 1 solo insert pero le envías TODO los 10 productos.
-
-      -con las variables del proveedor no hay problema, las puedes usar directo
-      Si no estan en el arreglo, las puedes usar directo, se haria $proveedor = $_POST["debe ir el nombre que le has asignado en el ajax"], Y luego en la consulta INSERT pones la variable que has creado $proveedor 
-
-      - cuando armo un insert lo hago en el mismo orden que he creado las columnas de la tabla de la bd
-
-
-      - en esas variables ($cantidad, $codProd, $producto etc) ya están la información de cada producto seleccionado en el formulario
-
-
-  - //IMPORTANTE SOBRE IMPRIMIR EL SQL PARTE 1:hay que considerar que esta prueba lo hice sin haber creado la funcion agrega_detalle_compra(), se hizo desde registrar_compra.php, pero tambien se puede hacer desde comprasModulo.php y funciona igual, ya se hizo la prueba
-  
-
-          */
     
     $conectar=parent::conexion();
 
@@ -242,21 +208,18 @@
 
 	     //SUMO EL TOTAL DE IMPORTE SEGUN EL CODIGO DE DETALLES DE COMPRA
 
-         $sql5="select sum(importe_dc) as total from detalle_compras where numero_compra=?";
-      
+         $sql5="select sum(importe_dc) as total from detalle_compras where numero_compra=?"; 
          $sql5=$conectar->prepare($sql5);
-
          $sql5->bindValue(1,$numero_compra);
-
          $sql5->execute();
 
          $resultado2 = $sql5->fetchAll();
 
-             foreach($resultado2 as $c=>$d){
+        foreach($resultado2 as $c=>$d){
 
-                $row["total"]=$d["total"];
-               
-             }
+            $row["total"]=$d["total"];
+          
+        }
           $total=$d["total"];
 
            
@@ -271,8 +234,6 @@
 
 
            $sql2=$conectar->prepare($sql2);
-           
-      
            $sql2->bindValue(1,$numero_compra);
            $sql2->bindValue(2,$proveedor);
            $sql2->bindValue(3,$cuit_proveedor);
@@ -281,8 +242,7 @@
            $sql2->bindValue(6,$tipo_pago);
            $sql2->bindValue(7,$estado);
            $sql2->bindValue(8,$id_usuario);
-           $sql2->bindValue(9,$id_proveedor);
-          
+           $sql2->bindValue(9,$id_proveedor);         
            $sql2->execute();
 
 
@@ -290,21 +250,24 @@
   }
 
   	   //metodo para ver el detalle del proveedor en una compra
-       public function get_detalle_proveedor($numero_compra){
+    public function get_detalle_proveedor($numero_compra){
 
-          $conectar=parent::conexion();
-           parent::set_names();
+      $conectar=parent::conexion();
+        parent::set_names();
 
-          $sql="select c.fecha_compra,c.numero_compra, c.nombre_proveedor, c.cuit_proveedor,c.total_compra,p.id_proveedor,p.cuit_proveedor,p.nombre_proveedor,p.telefono_proveedor,p.correo_proveedor,p.direccion_proveedor,p.fecha_alta_proveedor,p.estado_proveedor
-          from compras as c, proveedor as p
-          where c.cuit_proveedor=p.cuit_proveedor
-          and c.numero_compra=?;";
+      $sql="select c.fecha_compra,c.numero_compra, c.nombre_proveedor, c.cuit_proveedor,c.total_compra,p.id_proveedor,p.cuit_proveedor,p.nombre_proveedor,p.telefono_proveedor,p.correo_proveedor,p.direccion_proveedor,p.fecha_alta_proveedor,p.estado_proveedor
+      from compras as c, proveedor as p
+      where 
+      
+      c.cuit_proveedor_compra=p.cuit_proveedor
+      and
+      c.numero_compra=?;";
 
-          $sql=$conectar->prepare($sql);          
-          $sql->bindValue(1,$numero_compra);
-          $sql->execute();
-          return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC); 
-       }
+      $sql=$conectar->prepare($sql);          
+      $sql->bindValue(1,$numero_compra);
+      $sql->execute();
+      return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC); 
+    }
 
 
        public function get_detalle_compras_proveedor($numero_compra){
@@ -779,10 +742,10 @@
       $sql="SELECT MONTHname(fecha_compra) as mes, MONTH(fecha_compra) as numero_mes, YEAR(fecha_compra) as ano, SUM(total_compra) as total_compra FROM compras where estado_compra='1' AND YEAR(fecha_compra)=? GROUP BY YEAR(fecha_compra) desc, month(fecha_compra) desc";
 
       $año= date("Y");
-         $sql=$conectar->prepare($sql);
-         $sql->bindValue(1,$año );
-         $sql->execute();
-         return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+      $sql=$conectar->prepare($sql);
+      $sql->bindValue(1,$año );
+      $sql->execute();
+      return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
      }
      

@@ -117,16 +117,15 @@
 
 	             $clientes->editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario);
 				 $datos=$clientes->get_cliente_por_dni($_POST["dni"]);
-
 						// si existe el id del cliente entonces recorre el array
 						if(is_array($datos)==true and count($datos)>0){
+																
 							foreach($datos as $row)
 							{
 								$id_cliente=$row["id_cliente"];
-							
-						  
+						
 							}
-
+							
 							if($_POST["habilitar_cc"]=="1"){
 								require_once("../modelos/consolelog.php");
 						
@@ -148,7 +147,7 @@
 						
 
 						}
-	            	  $messages[]="El cliente se editó correctamente";
+	            	    $messages[]="El cliente se editó correctamente";
                 
 	            	 
 	            }
