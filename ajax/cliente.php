@@ -133,7 +133,7 @@
 								
 								//me dijo si existe ya la cuenta corriente
 								$datos_cc=$cuentas_corrientes->get_idcc_por_cliente($id_cliente);
-								if(is_array($datos_cc==true and count($datos_cc)==0)){
+								if(is_array($datos_cc)==true and count($datos_cc)==0){
 									echo Console::log('un_nombre',"se quiere crear la cc" );
 									//se crea la cuenta corriente del usuario
 									$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
