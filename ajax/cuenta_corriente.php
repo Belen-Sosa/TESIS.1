@@ -252,18 +252,21 @@
 		break;
 
 		case "ver_estado":
+			//me dijo si existe ya la cuenta corriente
+		$datos_cc=$cuentaCorriente->get_idcc_por_cliente($id_cliente);
+		if(is_array($datos_cc)==true and count($datos_cc)>0){
+			$datos=$cuentaCorriente->ver_estado($_GET["id_cliente"]);
+			$output= array();
+			foreach($datos as $row){
+			   $output["estado_cc"] = $row["estado_cc"];
+			}
+		}elseif(is_array($datos_cc)==true and count($datos_cc)==0) {  
+			//si es 2 es porque no tiene cuenta corriente 
+			$output["estado_cc"] =2;
+	    }
 			
 			
-		$datos=$cuentaCorriente->ver_estado($_GET["id_cliente"]);
-		$output= array();
-	    foreach($datos as $row)
-			{
-				$output["estado_cc"] = $row["estado_cc"];
-				
-
-				
-
-				}
+	
 		echo json_encode($output);
 		break;
 	 	

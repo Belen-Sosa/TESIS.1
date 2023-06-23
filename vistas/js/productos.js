@@ -1264,6 +1264,7 @@ obj.value es el valor del campo de texto*/
 		async:false,
 		success:function(data){
 		data = JSON.parse(data);
+
 	
 		cuenta_corriente_habilitada=data.estado;
 	
@@ -1279,6 +1280,9 @@ obj.value es el valor del campo de texto*/
 		
 		if(tipo_pago=="CUENTA CORRIENTE" &&   cuenta_corriente_habilitada==0){
 			bootbox.alert("El Cliente no tiene Cuenta Corriente habilitada");
+			return false;
+		}else if(tipo_pago=="CUENTA CORRIENTE" &&   cuenta_corriente_habilitada==2){
+			bootbox.alert("El Cliente no tiene creada una Cuenta Corriente");
 			return false;
 		}
 		else{
