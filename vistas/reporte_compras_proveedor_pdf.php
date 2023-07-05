@@ -173,23 +173,39 @@ ob_start();
         <?php
         
         $pagoTotal=0;
-
+        $cantidad=0;
 
        
          for($j=0;$j<count($pedidos);$j++){
 
-           $decision=$pedidos[$j]["precio_compra_dc"] * $pedidos[$j]["cantidad_compra_dc"];
+          
+            if($pedidos[$j]["id_categoria"]==9 or $pedidos[$j]["id_categoria"]==11 ){
+              $decision=$pedidos[$j]["precio_compra_dc"] * ($pedidos[$j]["cantidad_compra_dc"]/1000);
+              $pagoTotal= $pagoTotal + $decision;
+              $cantidad= $cantidad +1;
 
-          $pagoTotal= $pagoTotal + $decision;
+            }else{
+              $decision=$pedidos[$j]["precio_compra_dc"] * $pedidos[$j]["cantidad_compra_dc"];
 
+              $pagoTotal= $pagoTotal + $decision;
+              $cantidad= $cantidad + $pedidos[$j]["cantidad_compra_dc"];
 
+            }
          ?>
+         
     <tr class="even_row" style="font-size:10pt">
     <td style="text-align: center"><span><?php echo $fecha=date("d-m-Y",strtotime($pedidos[$j]["fecha_compra_dc"])); ?></span></td>
       <td style="text-align: center"><span><?php echo $pedidos[$j]["nombre_producto"];?></span></td>
        <td style="text-align: center"><span><?php echo "$ ".$pedidos[$j]["precio_compra_dc"];?></span></td>
-      <td style="text-align: center"><span><?php echo $pedidos[$j]["cantidad_compra_dc"];?></span></td>
-        <td style="text-align: center"><span class=""><?php echo "$ ".$pedidos[$j]["cantidad_compra_dc"] * $pedidos[$j]["precio_compra_dc"];?></span></td>
+      
+      <td style="text-align: center"><span><?php
+      if($pedidos[$j]["id_categoria"]==9){ echo $pedidos[$j]["cantidad_compra_dc"]." grs.";}
+      else{echo $pedidos[$j]["cantidad_compra_dc"]; }?></span></td>
+
+        
+      <td style="text-align: center"><span class=""><?php 
+      if($pedidos[$j]["id_categoria"]==9 or $pedidos[$j]["id_categoria"]==11 )echo "$ ".$pedidos[$j]["cantidad_compra_dc"] * ($pedidos[$j]["precio_compra_dc"]/1000);
+      else{echo "$ ".$pedidos[$j]["cantidad_compra_dc"] * $pedidos[$j]["precio_compra_dc"];}?></span></td>
    
      
       </tr>
@@ -220,9 +236,6 @@ ob_start();
         echo "$ ".$pagoTotal;
 
 
-        
-
-      //echo $pagoTotal;
 
       ?>
       </strong>
@@ -239,7 +252,7 @@ ob_start();
 
       if($pagoTotal!=0){
 
-        echo $total_productos["total"];
+        echo $cantidad;
 
        } else {
 
