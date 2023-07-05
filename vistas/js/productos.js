@@ -161,14 +161,11 @@ function mostrar(id_producto)
 				$('#categoria').val(data.categoria);
 
 				//desactiva el campo
-                $("#categoria").attr('disabled', 'disabled');
-                
-								
+                $("#categoria").attr('disabled', 'disabled');					
                 $('#producto').val(data.producto);
 
                 //desactiva el campo
                 $("#producto").attr('disabled', 'disabled');
-
 				$('#presentacion').val(data.presentacion);
 				$('#unidad').val(data.unidad);
 				$('#precio_venta').val(data.precio_venta);
@@ -198,18 +195,10 @@ function mostrar(id_producto)
 
 		    	    $('#productoModal').modal('show');
 					$('#categoria').val(data.categoria);
-
-
-					$('#categoria').attr('disabled', false);
-                  
+					$('#categoria').attr('disabled', false);                 
 					$('#producto').val(data.producto);
-
 					$("#producto").attr('disabled', false);
-
-
 					$('#presentacion').val(data.presentacion);
-	
-
 					$('#unidad').val(data.unidad);
 					
 					if(data.categoria_nombre=="carnes"){
@@ -234,21 +223,16 @@ function mostrar(id_producto)
 					$("#producto_data").DataTable().ajax.reload();
 					
 
-		    }
-				
-				
-				
+		    }		
 				
 		});
-		
-        
+		     
         
 	}
 
 
 	//la funcion guardaryeditar(e); se llama cuando se da click al boton submit
-function guardaryeditar(e)
-	{   
+function guardaryeditar(e){   
 	
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 	var formData = new FormData($("#producto_form")[0]);
@@ -263,11 +247,7 @@ function guardaryeditar(e)
 
 		    success: function(datos)
 		    {                    
-		          /*bootbox.alert(datos);	          
-		          mostrarform(false);
-		          tabla.ajax.reload();*/
-
-                 
+		         
                  /*imprimir consulta en la consola debes hacer un print_r($_POST) al final del metodo 
                     y si se muestran los valores es que esta bien, y se puede imprimir la consulta desde el metodo
                     y se puede ver en la consola o desde el mensaje de alerta luego pegar la consulta en phpmyadmin*/
@@ -275,7 +255,6 @@ function guardaryeditar(e)
 
 	            $('#producto_form')[0].reset();
 				$('#productoModal').modal('hide');
-
 				$('#resultados_ajax').html(datos);
 				$('#producto_data').DataTable().ajax.reload();
 				setTimeout('document.location.reload()',10);
@@ -292,7 +271,7 @@ function guardaryeditar(e)
 //importante:id_categoria, est se envia por post via ajax
 
 
-    function cambiarEstado(id_categoria, id_producto, est){
+function cambiarEstado(id_categoria, id_producto, est){
 
 
  bootbox.confirm("¿Está Seguro de cambiar de estado?", function(result){
@@ -322,7 +301,7 @@ function guardaryeditar(e)
 
 
 
-   }
+}
 
 
 
@@ -431,11 +410,9 @@ function listar_en_compras(){
 		        $.ajax({
 					url:"../ajax/producto.php?op=buscar_producto",
 					 method:"POST",
-
 					data:{id_producto:id_producto, producto:producto, estado:estado},
 					cache: false,
 					dataType:"json",
-
 					success:function(data){
                      
 
@@ -621,47 +598,58 @@ obj.value es el valor del campo de texto*/
   }
 
   function calcularTotales(){
-   
-   var subtotal = 0;
+ 
+	var subtotal = 0;
 
-  	var total = 0;
+	var total = 0;
 
-    var subtotalFinal = 0;
+  var subtotalFinal = 0;
 
-  	var totalFinal = 0;
+	var totalFinal = 0;
 
-   
-	for(var i=0; i<detalles.length; i++){
-  		if(detalles[i].estado == 1){
-			subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
-			if(subtotal==NaN){
-				subtotal=0;
+ 
+  for(var i=0; i<detalles.length; i++){
+		if(detalles[i].estado == 1){
+			if(detalles[i].nombre_categoria == "carnes" ||  detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
 		
-			}
-            subtotalFinal ="$ "+subtotal;
-
-            var total= subtotal;
-        
-            totalFinal = "$ "+total;
-
-          
-		}
-	}
-	if(subtotal==NaN){
-		subtotal=0;
-
-	}
-
-
+			
 	
+				subtotal = subtotal +  (detalles[i].precio/1000)*detalles[i].cantidad  - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+				
+			}
+			else{
+				subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+			}
+				if(subtotal==NaN){
+					subtotal=0;
+			
+				}
+	
+	  
+				var total= subtotal.toFixed(2);
+			
+				totalFinal = "$ "+total;
+	  
+			
+		 
+		
+	  }
+  }
+  if(subtotal==NaN){
+	  subtotal=0;
 
-	//subtotal
-	$('#subtotal').html(subtotalFinal);
-	$('#subtotal_compra').html(subtotalFinal);
+  }
 
-	//total
-	$('#total').html(totalFinal);
-	$('#total_compra').html(totalFinal);
+
+  
+
+  //subtotal
+  $('#subtotal').html(subtotalFinal);
+  $('#subtotal_compra').html(subtotalFinal);
+
+  //total
+  $('#total').html(totalFinal);
+  $('#total_compra').html(totalFinal);
   }
 
 
@@ -906,7 +894,8 @@ function listar_en_ventas(){
 							stock    : data.stock,
 							dscto    : 0,
 							importe  : 0,
-							estado   : data.estado
+							estado   : data.estado,
+							nombre_categoria: data.nombre_categoria
 						};
 		                
 		 /*IMPORTANTE: detalles.push(obj);: Para agregar elementos a un arreglo en javascript, se utiliza el metodo push()
@@ -966,6 +955,7 @@ function listar_en_ventas(){
 
 
 				var importe = detalles[i].importe = (detalles[i].precio/1000)*detalles[i].cantidad ;		
+				//aplico descuento
 				importe = detalles[i].importe = detalles[i].importe - (detalles[i].importe * detalles[i].dscto/100);
 			
 				var filas = filas + "<tr><td>"+(i+1)+"</td> <td name='producto[]'>"+detalles[i].producto+"</td> <td name='precio[]' id='precio[]'>$ "+detalles[i].precio+"</td> <td>"+detalles[i].stock+"</td> <td> <input type='text' class='cantidad' name='cantidad[]' id=cantidad_"+i+" onClick='setCantidad(event, this, "+(i)+");' onKeyUp='setCantidadAjax(event, this, "+(i)+");' value='"+detalles[i].cantidad+"'>  grs.</td>  <td><input type='text' name='descuento[]' id='descuento[]' onClick='setDescuento(event, this, "+(i)+");' onKeyUp='setDescuento(event, this, "+(i)+");' value='"+detalles[i].dscto+"'></td> <td> <span name='importe[]' id=importe"+i+">$ "+detalles[i].importe+"</span> </td> <td>  <button href='#' class='btn btn-danger btn-lg' role='button' onClick='eliminarProd(event, "+(i)+");' aria-pressed='true'><span class='glyphicon glyphicon-trash'></span> </button></td>   </tr>";
@@ -981,11 +971,7 @@ function listar_en_ventas(){
 		
 			}
        
-            
-        
-		   
-		
-
+    
 			subtotal = subtotal + importe;
             
 
@@ -1058,13 +1044,12 @@ function setCantidad(event, obj, idx){
 	                 $("#btn_enviar").addClass("oculta_boton");
 
 	                
-                     // $("div[id=resultados_ajax]").remove();
+
                      
 
 	              } else {
                      
-                     //despues de eliminar agrega el id del mensaje de ajax, ya que se habia removido el mensaje "campo vacio" en la funcion eliminar
-	              	 //$("#resultados_ajax").attr("id");
+          
                        
                      // si la cantidad seleccionada es menor al stock entonces remueve la clase rojo
 	              	 $("#cantidad_"+idx).removeClass("rojo");
@@ -1096,16 +1081,15 @@ function setCantidad(event, obj, idx){
 	console.log(detalles);
 	console.log(idx);
 	if(detalles[idx].nombre_categoria == "carnes" ||  detalles[idx].nombre_categoria=="quesos" || detalles[idx].nombre_categoria== "fiambres" ){
-	
+		
 		var importe =detalles[idx].importe = (detalles[idx].precio/1000)*detalles[idx].cantidad ;
-
 		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
 		
 		
 	}
 	else{
 
-	    
+	
 
 		var importe =detalles[idx].importe = detalles[idx].cantidad * detalles[idx].precio;
 		importe = detalles[idx].importe = detalles[idx].importe - (detalles[idx].importe * detalles[idx].dscto/100);
@@ -1113,7 +1097,6 @@ function setCantidad(event, obj, idx){
 
 
 	}
-
 	if(isNaN(importe)){
 		importe=0;
 	   }
@@ -1148,61 +1131,58 @@ function setPrecioCompra(event, obj, idx){
 
 
   function calcularTotales(){
-  	
-  	var subtotal = 0;
+	 
+	var subtotal = 0;
 
-  	var total = 0;
+	var total = 0;
 
-    var subtotalFinal = 0;
+  var subtotalFinal = 0;
 
-  	var totalFinal = 0;
+	var totalFinal = 0;
 
  
-
-	for(var i=0; i<detalles.length; i++){
-  		if( detalles[i].estado == 1 ){
-
-
-
-			if(detalles[i].nombre_categoria == "carnes" || detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
-				
+  for(var i=0; i<detalles.length; i++){
+		if(detalles[i].estado == 1){
+			if(detalles[i].nombre_categoria == "carnes" ||  detalles[i].nombre_categoria=="quesos" || detalles[i].nombre_categoria== "fiambres" ){
+		
 			
-				
-				subtotal = subtotal + ( (detalles[i].precio/1000)*detalles[i].cantidad ) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
+	
+				subtotal = subtotal +  (detalles[i].precio/1000)*detalles[i].cantidad  - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
 				
 			}
 			else{
-		
-				
 				subtotal = subtotal + (detalles[i].cantidad * detalles[i].precio) - (detalles[i].cantidad*detalles[i].precio*detalles[i].dscto/100);
-		
-				
-		
-		
 			}
-			if(subtotal==NaN){
-				subtotal=0;
-
-			}
+				if(subtotal==NaN){
+					subtotal=0;
+			
+				}
+	
+	  
+				var total= subtotal.toFixed(2);
+			
+				totalFinal = "$ "+total;
+	  
+			
+		 
 		
+	  }
+  }
+  if(subtotal==NaN){
+	  subtotal=0;
 
-            subtotalFinal ="$ "+subtotal.toFixed(2);
+  }
 
-          
-            var total= subtotal.toFixed(2);
 
-            totalFinal = "$ "+total;
-		
-		}
-	}
+  
 
-	//subtotal
-	$('#subtotal').html(subtotalFinal);
-	$('#subtotal_venta').html(subtotalFinal);
+  //subtotal
+  $('#subtotal').html(subtotalFinal);
+  $('#subtotal_compra').html(subtotalFinal);
 
-	//total
-	$('#total').html(totalFinal);
-	$('#total_venta').html(totalFinal);
+  //total
+  $('#total').html(totalFinal);
+  $('#total_compra').html(totalFinal);
   }
 
 
@@ -1222,7 +1202,6 @@ obj.value es el valor del campo de texto*/
 			detalles.splice(idx,1);
 		}
 
-  	    //$("#cantidad_"+idx).val(1);
 
   		listarDetallesVentas();
   	}

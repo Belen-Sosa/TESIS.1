@@ -1021,7 +1021,7 @@ $mes=date("n");
             $fecha_final = date("Y-m-d", strtotime($date));
 
 
-            $sql="select * from detalle_compras where cuit_proveedor=? and fecha_compra_dc>=? and fecha_compra_dc<=? and estado_dc='1';";
+            $sql="i";
 
     
               $sql=$conectar->prepare($sql);

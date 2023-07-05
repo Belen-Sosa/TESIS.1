@@ -176,8 +176,6 @@ $(document).on('click', '.detalle', function(){
 
 	  //CONSULTA COMPRAS-FECHA
            $(document).on("click","#btn_compra_fecha", function(){
-
-
            	var fecha_inicial= $("#datepicker").val();
            	var fecha_final= $("#datepicker2").val();
 
@@ -265,7 +263,6 @@ $(document).on('click', '.detalle', function(){
 
 			   }, //cerrando language
 
-			    //"scrollX": true
 
 
 
