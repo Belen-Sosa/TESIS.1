@@ -78,7 +78,7 @@
 				    <tbody>
 				     
                    <?php
-                    
+                    $total_final=0;
          
                    
                     for($i=0;$i<count($datos);$i++){
@@ -92,7 +92,7 @@
                        
                        //aqui se imprime el nombre del mes en español
                        $fecha_mes = $meses[date("n", strtotime($fecha))-1];
-
+                      $total_final=$total_final+$datos[$i]["total_compra"];
 
 				     ?>
 
@@ -102,16 +102,22 @@
 					        <td><?php echo $fecha_mes?></td>
 					     
 					        <td><?php echo "$ ".$datos[$i]["total_compra"]?></td>
-					      </tr>
+						
+                       </tr>
 					      
 				      <?php
 
                        
                        }//cierre del for
                    
-
+					  
 				      ?>
-                      
+					<tr>
+					     <td>TOTAL</td>
+					     
+						 <td><?php echo "$ ".$total_final; ?></td>
+					</tr>
+					   
                   
 				    </tbody>
 				  </table>

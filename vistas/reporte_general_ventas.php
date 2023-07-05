@@ -77,8 +77,8 @@
 				     
                    <?php
                     
-         
                    
+					$total_final=0;
                     for($i=0;$i<count($datos);$i++){
 
 
@@ -88,6 +88,7 @@
                        $fecha= $datos[$i]["mes"];
 
                        $fecha_mes = $meses[date("n", strtotime($fecha))-1];
+					   $total_final=$total_final+$datos[$i]["total_venta"];
 
 
 				     ?>
@@ -107,6 +108,11 @@
                    
 
 				      ?>
+					  <tr>
+					     <td>TOTAL</td>
+					     
+						 <td><?php echo "$ ".$total_final; ?></td>
+					</tr>
                       
                   
 				    </tbody>

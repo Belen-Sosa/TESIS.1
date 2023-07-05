@@ -26,6 +26,7 @@
 
      $fecha_ventas_mes= $ventas->get_mes_ventas();
 	 $fecha_ventas_año= $ventas->get_año_ventas();
+
 ?>
 
 
@@ -74,51 +75,20 @@
                 <!--<label for="staticEmail" class="col-sm-2 col-form-label">Año</label>-->
                  <div class="col-sm-10">
                   <select class="form-control" name="mes" id="mes">
-						 <option value="0">Seleccione mes...</option>
-						 <?php
-                       
-					   $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-                       //si se envia el POST
-                       if(isset($_POST["mes"])){
-                          
-                          
-
-						 for($i=0; $i<count($fecha_ventas_mes); $i++){
-
-                          
-
-                          	if($fecha_ventas_mes[$i]["fecha_mes"]==$_POST["fecha_mes"]){
-
-
-                          	echo '<option value="'.$fecha_ventas_mes[$i]["fecha_mes"].'" selected=selected>'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
-                                  
-       	      
-                            }else{ 
-
-                                   	echo '<option value="'.$fecha_ventas_mes[$i]["fecha_mes"].'">'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
-                             } 
-
-                        }//cierre del ciclo for
-
-                       
-                       //SI NO SE ENVIA EL POST
-                       } else {
-
-                            
-
-						 for ($i=0; $i<count($fecha_ventas_mes); $i++){
-
-
-
-                    echo '<option value="'. $fecha_ventas_mes[$i]["fecha_mes"].'" selected=selected>'.$meses[$fecha_ventas_mes[$i]["fecha_mes"]-1].'</option>';
-                           
-						       
-
-                        }//cierre del ciclo for
-
-                      }//cierre del ese*/
-
-					  ?>
+						 <option value="0" selected>Seleccione mes...</option>
+						 <option value="1">Enero</option>
+						 <option value="2">Febrero</option>
+						 <option value="3">Marzo</option>
+						 <option value="4">Abril</option>
+						 <option value="5">Mayo</option>
+						 <option value="6">Junio</option>
+						 <option value="7">Julio</option>
+						 <option value="8">Agosto</option>
+						 <option value="9">Septiembre.</option>
+						 <option value="10">Octubre</option>
+						 <option value="11">Nombiembre</option>
+						 <option value="12">Diciembre</option>
+				
 						 
 					 </select>
 					 
@@ -133,47 +103,17 @@
 						 <option value="0">Seleccione año...</option>
 						 <?php
                        
-					 
-                       //si se envia el POST
-                       if(isset($_POST["year"])){
-                          
-                          
 
-						 for($i=0; $i<count($fecha_ventas_año); $i++){
+							for($i=0; $i<count($fecha_ventas_año); $i++){
 
-                          
+							
+										echo '<option value="'.$fecha_ventas_año[$i]["fecha_año"].'">'.$fecha_ventas_año[$i]["fecha_año"].'</option>';
+								
 
-                          	if($fecha_ventas_año[$i]["year"]==$_POST["year"]){
-
-
-                          	echo '<option value="'.$fecha_ventas_año[$i]["fecha_año"].'" selected=selected>'.$fecha_ventas_año[$i]["fecha_año"].'</option>';
-                                  
-       	      
-                            }else{ 
-
-                                   	echo '<option value="'.$fecha_ventas_año[$i]["fecha_año"].'">'.$fecha_ventas_año[$i]["fecha_año"].'</option>';
-                             } 
-
-                        }//cierre del ciclo for
+							}//cierre del ciclo for
 
                        
-                       //SI NO SE ENVIA EL POST
-                       } else {
-
-                            
-
-						 for ($i=0; $i<count($fecha_ventas_año); $i++){
-
-
-
-                    echo '<option value="'. $fecha_ventas_año[$i]["fecha"].'" selected=selected>'.$fecha_ventas_año[$i]["fecha"].'</option>';
-                           
-						       
-
-                        }//cierre del ciclo for
-
-                      }//cierre del ese*/
-
+                      
 					  ?>
 						 
 					 </select>
@@ -200,8 +140,8 @@
 	       <div class="">
 
 				  <h2 class="reporte_compras_general container-fluid bg-primary text-white col-lg-12 text-center mh-50">REPORTE DE VENTAS MENSUAL</h2>
-				  <h3 class="col-lg-12 ">  AÑO:  <?php if(isset($_POST["year"])){ echo" ".$_POST["year"];}else{ echo " ".$año;} ?></h3>
-				  <h3 class="col-lg-12">  MES: <?php if(isset($_POST["mes"])){ echo" ".$meses[$_POST["mes"]-1];}else{ echo " ".$nombre_mes;} ?></h3>
+				  <h3 class="col-lg-12 ">  AÑO:  <?php if(isset($_POST["year"])){ echo" ".$_POST["year"];}else{ echo "No seleccionado ";} ?></h3>
+				  <h3 class="col-lg-12">  MES: <?php if(isset($_POST["mes"])){ echo" ".$meses[$_POST["mes"]];}else{ echo "No seleccionado";} ?></h3>
 				              
 				  <table class="table table-bordered">
 				    <thead>
