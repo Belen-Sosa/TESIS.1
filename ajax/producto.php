@@ -639,6 +639,7 @@
      break;
 
      case "registrar_venta";
+	    $id_cliente = $_POST["id_cliente"];
 
         //se llama al modelo Ventas.php
 
@@ -646,7 +647,9 @@
 
 	    $venta = new Ventas();
 
-	    $venta->agrega_detalle_venta();
+		$venta->agrega_detalle_venta();
+
+		
         
 	
 

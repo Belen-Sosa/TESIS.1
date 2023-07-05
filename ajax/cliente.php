@@ -112,29 +112,33 @@
 	            else {
 
 
-	            	/*si ya existe entonces editamos el proveedor*/
+	            	/*si ya existe entonces editamos el cliente*/
 
 
 	             $clientes->editar_cliente($dni,$nombre,$apellido,$telefono,$direccion,$estado,$id_usuario);
-				 $datos=$clientes->get_cliente_por_dni($_POST["dni"]);
+				 $datos=$clientes->get_cliente_por_dni($_POST["dni_cliente"]);
+				 require_once("../modelos/consolelog.php");
+				 echo Console::log('un_nombre',"ESTAMOS ACA" );
+				 echo Console::log('un_nombre',$_POST["dni_cliente"] );	
+				 echo Console::log('un_nombre',$datos );			
 						// si existe el id del cliente entonces recorre el array
 						if(is_array($datos)==true and count($datos)>0){
-																
+							echo Console::log('un_nombre',"ESTAMOS ACA" );				
 							foreach($datos as $row)
 							{
 								$id_cliente=$row["id_cliente"];
-						
+								echo Console::log('un_nombre',$id_cliente );
 							}
 							
 							if($_POST["habilitar_cc"]=="1"){
-								require_once("../modelos/consolelog.php");
+							
 						
 								echo Console::log('un_nombre',$id_cliente );
 								
 								//me dijo si existe ya la cuenta corriente
 								$datos_cc=$cuentas_corrientes->get_idcc_por_cliente($id_cliente);
-								if(is_array($datos_cc==true and count($datos_cc)==0)){
-									echo Console::log('un_nombre',"se quiere crear la cc" );
+								if(is_array($datos_cc)==true and count($datos_cc)==0){
+									echo Console::log('un_nombre',"se quiere crear la cc");
 									//se crea la cuenta corriente del usuario
 									$cuentas_corrientes->crear_cuenta_corriente($id_cliente,$_POST["habilitar_cc"]);
 									//edita el estado del cliente

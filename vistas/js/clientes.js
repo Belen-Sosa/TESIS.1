@@ -221,6 +221,7 @@ function guardaryeditar(e)
                     y si se muestran los valores es que esta bien, y se puede imprimir la consulta desde el metodo
                     y se puede ver en la consola o desde el mensaje de alerta luego pegar la consulta en phpmyadmin*/
 		         console.log(datos);
+				 alert(datos);
 
 	            $('#cliente_form')[0].reset();
 				$('#clienteModal').modal('hide');
